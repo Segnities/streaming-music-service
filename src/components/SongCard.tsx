@@ -1,5 +1,6 @@
 interface Props {
-  children: JSX.Element | string;
+  index: number;
+  children?: JSX.Element | string;
 }
 
 function SongCard({ children }: Props) {

@@ -9,9 +9,9 @@ function Loader(props: Props) {
   return (
     <div className="w-full flex justify-center items-center flex-col">
       <img src={loader} alt={title} className="w-32 h-32 object-contain" />
-      <h2 className="font-bold text-white text-2xl mt-2">
+      <h1 className="font-bold text-white text-2xl mt-2">
         {title || "Loading..."}
-      </h2>
+      </h1>
     </div>
   );
 }

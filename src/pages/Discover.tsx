@@ -1,6 +1,6 @@
 import SongCard from "../components/SongCard";
 import Loader from "../components/UI/Loader";
-import Error from "../components/Error";
+import Error from "../components/UI/Error";
 
 import { genres } from "../data/genres";
 
@@ -35,8 +35,8 @@ function Discover() {
         </select>
       </div>
       <div className="flex flex-wrap justify-center gap-8 sm:justify-start sm:gap-5">
-        {data?.map((song) => (
-          <SongCard key={song.key}>Song Card</SongCard>
+        {data?.map((song, idx) => (
+          <SongCard key={song.key} index={idx}>Song Card</SongCard>
         ))}
       </div>
     </div>
