@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import SongCard from "../components/SongCard";
 import Loader from "../components/UI/Loader";
@@ -7,28 +7,17 @@ import Error from "../components/UI/Error";
 import { genres } from "../data/genres";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
-import { RootObject } from "../API/types";
+import { SelectorPlayerState } from "../API/types";
 
 type Genre = {
   title: string;
   value: string;
 };
 
-interface SelectorState {
-  player: {
-    currentSongs: [];
-    currentIndex: number;
-    isActive: boolean;
-    isPlaying: boolean;
-    activeSong: RootObject;
-  };
-}
-
 function Discover() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
-  const dispath = useDispatch();
   const { activeSong, isPlaying } = useSelector(
-    (state: SelectorState) => state.player
+    (state: SelectorPlayerState) => state.player
   );
 
   if (isFetching) {

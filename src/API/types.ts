@@ -13,6 +13,16 @@ export interface RootObject {
   properties: Highlightsurls;
 }
 
+export interface SelectorPlayerState {
+  player: {
+    currentSongs: [];
+    currentIndex: number;
+    isActive: boolean;
+    isPlaying: boolean;
+    activeSong: RootObject;
+  };
+}
+
 export interface Highlightsurls {}
 
 export interface Artist {
