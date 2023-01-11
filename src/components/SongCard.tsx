@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import PlayPause from "./UI/PlayPause";
 
 import { RootObject } from "../API/types";
+import { useDispatch } from "react-redux";
+import { playPause, setActiveSong } from "../store/reducers/player";
 
 interface Props {
   song: RootObject;
@@ -14,11 +16,17 @@ interface Props {
 }
 
 function SongCard(props: Props) {
-  const { song, index, activeSong, isPlaying } = props;
+  const { song, index, activeSong, isPlaying, data } = props;
+  const dispatch = useDispatch();
 
-  const handlePlayClick = () => {};
+  const handlePlayClick = () => {
+    dispatch(setActiveSong({song, data, index}));
+    dispatch(playPause(true));
+  };
 
-  const handlePauseClick = () => {};
+  const handlePauseClick = () => {
+    dispatch(playPause(false))
+  };
 
   return (
     <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
