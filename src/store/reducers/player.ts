@@ -10,11 +10,10 @@ const initialState = {
 };
 
 const playerSlice = createSlice({
-    name: 'player',
-    initialState,
-    reducers: {
-        
-    }
-})
+  name: "player",
+  initialState,
+  reducers: {},
+});
 
-export default playerSlice.reducer;
+
+export default playerSlice;
