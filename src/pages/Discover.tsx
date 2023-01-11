@@ -1,10 +1,10 @@
 import SongCard from "../components/SongCard";
+import Loader from "../components/UI/Loader";
+import Error from "../components/Error";
 
 import { genres } from "../data/genres";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
-import Loader from "../components/UI/Loader";
-import Error from "../components/Error";
 
 type Genre = {
   title: string;
