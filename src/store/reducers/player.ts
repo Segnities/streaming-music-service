@@ -1,6 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RouteObject } from "react-router";
 
-const initialState = {
+interface InitialStateInterface {
+  currentSongs: {
+    track: any;
+  }[];
+  currentIndex: number;
+  isActive: boolean;
+  isPlaying: boolean;
+  activeSong: RouteObject;
+  genreListId: string;
+}
+
+const initialState: InitialStateInterface = {
   currentSongs: [],
   currentIndex: 0,
   isActive: false,
@@ -30,9 +42,29 @@ const playerSlice = createSlice({
     playPause: (state, action: { payload: boolean }) => {
       state.isPlaying = action.payload;
     },
+    nextSong: (state, action: { payload: number }) => {
+      if (state?.currentSongs[action?.payload]?.track) {
+        state.activeSong = state.currentSongs[action?.payload].track;
+      } else {
+        state.activeSong = state.activeSong[action?.payload];
+      }
+      state.currentIndex += action.payload;
+      state.isActive = true;
+    },
+    prevSong: (state, action: { payload: number }) => {
+      if (state.currentSongs[action.payload]?.track) {
+        state.activeSong = state?.currentSongs[action.payload]?.track;
+      } else {
+        state.activeSong = state?.currentSongs[action.payload];
+      }
+
+      state.currentIndex = action.payload;
+      state.isActive = true;
+    },
   },
 });
 
-export const { playPause, setActiveSong } = playerSlice.actions;
+export const { playPause, setActiveSong, nextSong, prevSong } =
+  playerSlice.actions;
 
 export default playerSlice;
