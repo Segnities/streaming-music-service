@@ -1,9 +1,16 @@
+import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import Searchbar from "./components/UI/Searchbar";
 import Sidebar from "./components/UI/Sidebar";
 
+import { SelectorPlayerState } from "./API/types";
+import MusicPlayer from "./components/MusicPlayer";
+
 function App() {
+  const { activeSong } = useSelector(
+    (state: SelectorPlayerState) => state.player
+  );
   return (
     <div className="relative flex">
       <Sidebar />
@@ -20,6 +27,7 @@ function App() {
           </div>
         </div>
       </div>
+      {activeSong?.title && <MusicPlayer />}
     </div>
   );
 }
