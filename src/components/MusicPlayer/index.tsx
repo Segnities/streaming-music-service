@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,6 +10,7 @@ import { playPause, nextSong, prevSong } from "../../store/reducers/player";
 import { SelectorPlayerState } from "../../API/types";
 import Seekbar from "./Seekbar";
 import Player from "./Player";
+import VolumeBar from "./Volume";
 
 function MusicPlayer() {
   const { isActive, isPlaying, activeSong, currentSongs, currentIndex } =
@@ -66,6 +68,10 @@ function MusicPlayer() {
     setAppTime(event.target.currentTime);
   };
 
+  const onVolumeBarChange = (event) => {
+    setVolume(event.target.value);
+  }
+
   return (
     <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
       <div className="relative w-full flex items-center justify-between sm:px-12 px-8">
@@ -106,8 +112,14 @@ function MusicPlayer() {
             onTimeUpdated={onTimeUpdated}
           />
         </div>
-        <div className="volume"></div>
       </div>
+      <VolumeBar
+        min={0}
+        max={1}
+        value={volume}
+        onChange={onVolumeBarChange}
+        setVolume={setVolume}
+      />
     </div>
   );
 }

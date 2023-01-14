@@ -1,4 +1,5 @@
 import { ReactEventHandler, useEffect, useRef } from "react";
+
 import { RootObject } from "../../../API/types";
 
 interface Props {
@@ -34,11 +35,11 @@ function Player(props: Props) {
   }
 
   useEffect(() => {
-    ref.current?.volume = volume;
+    ref.current.volume = volume;
   }, [volume]);
 
   useEffect(() => {
-    ref.current?.currentTime = seekTime;
+    ref.current.currentTime = seekTime;
   }, [seekTime]);
 
   return (
