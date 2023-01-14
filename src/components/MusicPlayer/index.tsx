@@ -8,6 +8,7 @@ import { playPause, nextSong, prevSong } from "../../store/reducers/player";
 
 import { SelectorPlayerState } from "../../API/types";
 import Seekbar from "./Seekbar";
+import Player from "./Player";
 
 function MusicPlayer() {
   const { isActive, isPlaying, activeSong, currentSongs, currentIndex } =
@@ -20,8 +21,6 @@ function MusicPlayer() {
   const [duration, setDuration] = useState(0);
 
   const dispatch = useDispatch();
-
-
 
   const handlePlayPause = () => {
     if (!isActive) {
@@ -57,7 +56,15 @@ function MusicPlayer() {
 
   const onInput = (event) => {
     setSeekTime(event.target.value);
-  }
+  };
+
+  const onLoadedData = (event) => {
+    setDuration(event.target.duration);
+  };
+
+  const onTimeUpdated = (event) => {
+    setAppTime(event.target.currentTime);
+  };
 
   return (
     <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
@@ -88,7 +95,16 @@ function MusicPlayer() {
             setSeekTime={setSeekTime}
             appTime={appTime}
           />
-          <div className="player"></div>
+          <Player
+            activeSong={activeSong}
+            isPlaying={isPlaying}
+            repeat={repeat}
+            seekTime={seekTime}
+            volume={volume}
+            onEnded={handleNextSong}
+            onLoadedData={onLoadedData}
+            onTimeUpdated={onTimeUpdated}
+          />
         </div>
         <div className="volume"></div>
       </div>
