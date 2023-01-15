@@ -7,12 +7,7 @@ import { RiCloseLine } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
 import Logo from "../../../assets/logo.svg";
 
-interface NavLinkProps {
-  handleClick?: () => void;
-}
-
-function NavLinks(props: NavLinkProps) {
-  const { handleClick } = props;
+function NavLinks() {
   return (
     <div className="mt-10">
       {links.map((link) => (
@@ -20,7 +15,6 @@ function NavLinks(props: NavLinkProps) {
           to={link.to}
           key={link.to}
           className="flex flex-row justify-start items-center my-8 text-sm font-medium text-gray-400 hover:text-cyan-400"
-          onClick={() => handleClick && handleClick()}
         >
           <link.icon className="w-6 h-6 mr-2" />
           {link.name}
