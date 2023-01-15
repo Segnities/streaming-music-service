@@ -32,11 +32,11 @@ function Controls(props: Props) {
     handleNextSong,
   } = props;
   return (
-    <div className="md:w-36 lg:w-52 2xl:w-80 flex items-center justify-around">
+    <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
       <BsArrowRepeat
         size={20}
         color={repeat ? "red" : "white"}
-        onClick={() => setRepeat((prev:boolean) => !prev)}
+        onClick={() => setRepeat((prev) => !prev)}
         className="hidden sm:block cursor-pointer"
       />
       {currentSongs?.length && (
@@ -73,7 +73,7 @@ function Controls(props: Props) {
       <BsShuffle
         size={20}
         color={shuffle ? "red" : "white"}
-        onClick={() => setShuffle((prev:boolean) => !prev)}
+        onClick={() => setShuffle((prev) => !prev)}
         className="hidden sm:block cursor-pointer"
       />
     </div>

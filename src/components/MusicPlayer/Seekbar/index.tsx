@@ -14,7 +14,7 @@ interface Props {
 function Seekbar(props: Props) {
   const { value, min, max, onInput, setSeekTime, appTime } = props;
   return (
-    <div className="hidden sm:flex flex-row justify-center">
+    <div className="hidden sm:flex flex-row justify-center cursor-pointer">
       <button
         type="button"
         onClick={() => setSeekTime(appTime - 5)}
