@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -37,22 +36,20 @@ function MusicPlayer() {
   };
 
   const handlePrevSong = () => {
-    dispatch(playPause(false));
-
-    if (!shuffle) {
-      dispatch(nextSong((currentIndex + 1) % currentSongs.length));
-    } else {
-      dispatch(nextSong(Math.floor(Math.random() * currentSongs.length)));
-    }
-  };
-
-  const handleNextSong = () => {
     if (currentIndex === 0) {
       dispatch(prevSong(currentSongs.length - 1));
     } else if (shuffle) {
       dispatch(prevSong(Math.floor(Math.random() * currentSongs.length)));
     } else {
       dispatch(prevSong(currentIndex - 1));
+    }
+  };
+
+  const handleNextSong = () => {
+    if (!shuffle) {
+      dispatch(nextSong((currentIndex + 1) % currentSongs.length));
+    } else {
+      dispatch(nextSong(Math.floor(Math.random() * currentSongs.length)));
     }
   };
 
@@ -70,10 +67,10 @@ function MusicPlayer() {
 
   const onVolumeBarChange = (event) => {
     setVolume(event.target.value);
-  }
+  };
 
   return (
-    <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
+    <div className="fixed h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
       <div className="relative w-full flex items-center justify-between sm:px-12 px-8">
         <Track
           isActive={isActive}

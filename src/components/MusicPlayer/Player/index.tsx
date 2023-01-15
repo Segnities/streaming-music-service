@@ -1,4 +1,4 @@
-import { ReactEventHandler, useEffect, useRef } from "react";
+import { MutableRefObject, ReactElement, ReactEventHandler, useEffect, useRef } from "react";
 
 import { RootObject } from "../../../API/types";
 
@@ -24,7 +24,7 @@ function Player(props: Props) {
     onTimeUpdated,
     onLoadedData,
   } = props;
-  const ref = useRef(null);
+  const ref:MutableRefObject<HTMLAudioElement|null> = useRef(null);
 
   if (ref.current) {
     if (isPlaying) {
