@@ -46,12 +46,10 @@ function MusicPlayer() {
   };
 
   const handleNextSong = () => {
-    if (currentIndex === 0) {
-      dispatch(prevSong(currentSongs.length - 1));
-    } else if (shuffle) {
-      dispatch(prevSong(Math.floor(Math.random() * currentSongs.length)));
+    if (!shuffle) {
+      dispatch(nextSong((currentIndex + 1) % currentSongs.length));
     } else {
-      dispatch(prevSong(currentIndex - 1));
+      dispatch(nextSong(Math.floor(Math.random() * currentSongs.length)));
     }
   };
 
