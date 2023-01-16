@@ -68,7 +68,7 @@ function TopCharts() {
           </Link>
         </div>
         <div className="flex flex-col gap-1 mt-4">
-          {topCharts.map((song, index) => (
+          {topCharts?.map((song, index) => (
             <TopChartCard key={song.key} song={song} index={index} />
           ))}
         </div>
@@ -83,6 +83,23 @@ function TopCharts() {
             </p>
           </Link>
         </div>
+
+      <Swiper
+        slidesPerView={'auto'}
+        spaceBetween={15}
+        freeMode
+        centeredSlides
+        centeredSlidesBounds
+        modules={[FreeMode]}
+        className="mt-4"
+      >
+        {
+          topCharts?.map((song, index) => (
+            <SwiperSlide key={song.key} className="w-[25%] h-auto shadow-lg rounded-full animate-slideright"></SwiperSlide>
+          ))
+        }
+      </Swiper>
+
       </div>
     </div>
   );
