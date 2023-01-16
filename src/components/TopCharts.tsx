@@ -38,6 +38,8 @@ function TopCharts() {
   const containerRef = useRef(null);
   const { data } = useGetTopChartsQuery(null);
 
+  const topCharts = data.map((item) => item).slice(0, 5);
+
   const handlePlayClick = (song: RootObject, index: number) => {
     dispatch(setActiveSong({ song, data, index }));
     dispatch(playPause(true));
@@ -66,7 +68,7 @@ function TopCharts() {
           </Link>
         </div>
         <div className="flex flex-col gap-1 mt-4">
-          {[...data]?.splice(0, 5).map((song, index) => (
+          {topCharts.map((song, index) => (
             <TopChartCard key={song.key} song={song} index={index} />
           ))}
         </div>
