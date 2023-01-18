@@ -91,7 +91,7 @@ function TopCharts() {
   return (
     <div
       ref={containerRef}
-      className="flex flex-1 flex-col xl:ml-6 ml-0 xl:mb-0 mb-6 xl:max-w-[425px] max-w-full"
+      className="flex flex-1 flex-col xl:ml-6 ml-0 xl:mb-0 mb-6 xl:max-w-[400px] max-w-full"
     >
       <div className={"w-full flex flex-col"}>
         <div className="flex flex-row justify-between items-center">
