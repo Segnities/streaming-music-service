@@ -6,6 +6,7 @@ import Sidebar from "./components/UI/Sidebar";
 
 import { SelectorPlayerState } from "./API/types";
 import MusicPlayer from "./components/MusicPlayer";
+import TopCharts from "./components/TopCharts";
 
 function App() {
   const { activeSong } = useSelector(
@@ -18,12 +19,10 @@ function App() {
         <Searchbar />
         <div className="px-6 h-[calc(100vh- 2px)] flex xl:flex-row flex-col-reverse">
           <div className="flex-1 h-fit pb-40">
-            <BrowserRouter>
-              <AppRouter />
-            </BrowserRouter>
+            <AppRouter />
           </div>
           <div className="xl:sticky relative top-0 h-fit">
-            <div className="top-play"></div>
+            <TopCharts />
           </div>
         </div>
       </div>
