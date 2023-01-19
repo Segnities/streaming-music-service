@@ -1,5 +1,5 @@
 function Song() {
-    return <div></div>
+    return <div>Song</div>
 }
 
 export default Song;

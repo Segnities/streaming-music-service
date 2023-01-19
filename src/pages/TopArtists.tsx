@@ -1,5 +1,5 @@
 function TopArtists() {
-    return <div></div>
+    return <div>TopArtists</div>;
 }
 
 export default TopArtists;

@@ -1,5 +1,5 @@
 function Artist() {
-    return <div></div>
+    return <div>Artist</div>
 }
 
 export default Artist;

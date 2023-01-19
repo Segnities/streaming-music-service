@@ -1,5 +1,5 @@
 function TopSongs() {
-    return <div></div>
+    return <div>TopSongs</div>;
 }
 
 export default TopSongs;

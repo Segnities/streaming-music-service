@@ -1,4 +1,9 @@
 import Discover from "../pages/Discover";
+import Artist from "../pages/Artist";
+import AroundYou from "../pages/AroundYou";
+import Song from "../pages/Song";
+import TopArtists from "../pages/TopArtists";
+import TopSongs from "../pages/TopSongs";
 
 import {
   HiOutlineHome,
@@ -13,7 +18,14 @@ type Routing = {
   element: () => JSX.Element;
 }[];
 
-export const routes: Routing = [{ id: "/", path: "/", element: Discover }];
+export const routes: Routing = [
+  { id: "/", path: "/", element: Discover },
+  { id: "/top-artists", path: "/top-artists", element: TopArtists },
+  { id: "/top-songs", path: "/top-songs", element: TopSongs },
+  { id: "/around-you", path: "/around-you", element: AroundYou },
+  { id: "/artists/:id", path: "/artists/:id", element: Artist },
+  { id: "/songs/:songid", path: "/artists/:id", element: Song },
+];
 
 export const links = [
   { name: "Discover", to: "/", icon: HiOutlineHome },
