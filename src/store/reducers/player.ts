@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RouteObject } from "react-router";
-import { RootObject } from "../../API/types";
+import { SongRootObject } from "../../API/types";
 
 interface InitialStateInterface {
   currentSongs: [];

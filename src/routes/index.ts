@@ -24,7 +24,7 @@ export const routes: Routing = [
   { id: "/top-songs", path: "/top-songs", element: TopSongs },
   { id: "/around-you", path: "/around-you", element: AroundYou },
   { id: "/artists/:id", path: "/artists/:id", element: Artist },
-  { id: "/songs/:songid", path: "/artists/:id", element: Song },
+  { id: "/songs/:songid", path: "/songs/:songid", element: Song },
 ];
 
 export const links = [

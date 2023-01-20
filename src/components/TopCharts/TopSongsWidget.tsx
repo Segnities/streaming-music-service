@@ -2,17 +2,17 @@ import { Link } from "react-router-dom";
 
 import TopChartCard from "./TopChartCard";
 
-import { RootObject } from "../../API/types";
+import { SongRootObject } from "../../API/types";
 
-interface TopSongsWidgetProps {
-  topCharts: RootObject[];
+interface Props {
+  topCharts: SongRootObject[];
   isPlaying: boolean;
-  activeSong: RootObject;
+  activeSong: SongRootObject;
   handlePauseClick: () => void;
-  handlePlayClick: (song: RootObject, index: number) => void;
+  handlePlayClick: (song: SongRootObject, index: number) => void;
 }
 
-function TopSongsWidget(props: TopSongsWidgetProps) {
+function TopSongsWidget(props: Props) {
   const {
     topCharts,
     isPlaying,
