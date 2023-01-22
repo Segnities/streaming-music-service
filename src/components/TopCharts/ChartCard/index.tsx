@@ -1,21 +1,19 @@
 import { Link } from "react-router-dom";
 
-import PlayPause from "../UI/PlayPause";
+import PlayPause from "../../UI/PlayPause";
 
-import { RootObject } from "../../API/types";
+import { SongRootObject } from "../../../API/types";
 
-
-
-interface TopChartCardProps {
-  song: RootObject;
+interface Props {
+  song: SongRootObject;
   index: number;
   isPlaying: boolean;
-  activeSong: RootObject;
+  activeSong: SongRootObject;
   handlePauseClick: () => void;
-  handlePlayClick: (song: RootObject, index: number) => void;
+  handlePlayClick: (song: SongRootObject, index: number) => void;
 }
 
-function TopChartCard(props: TopChartCardProps) {
+function TopChartCard(props: Props) {
   const {
     song,
     index,

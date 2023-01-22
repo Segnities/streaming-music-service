@@ -1,16 +1,17 @@
-import { RootObject } from "../../../API/types";
+import { SongRootObject } from "../../../API/types";
 import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
 
 interface Props {
-  song: RootObject;
+  song: SongRootObject;
   isPlaying: boolean;
-  activeSong: RootObject;
+  activeSong: SongRootObject;
   handlePlayClick: () => void;
   handlePauseClick: () => void;
 }
 
 function PlayPause(props: Props) {
-  const { song, isPlaying, activeSong, handlePlayClick, handlePauseClick } = props;
+  const { song, isPlaying, activeSong, handlePlayClick, handlePauseClick } =
+    props;
   return (
     <>
       {isPlaying && activeSong?.title === song?.title ? (

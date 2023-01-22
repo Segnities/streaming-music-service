@@ -1,9 +1,9 @@
-import { RootObject } from "../../../API/types";
+import { SongRootObject } from "../../../API/types";
 
 interface Props {
   isActive: boolean;
   isPlaying: boolean;
-  activeSong: RootObject;
+  activeSong: SongRootObject;
 }
 
 function Track(props: Props) {

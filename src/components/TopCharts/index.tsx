@@ -1,15 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import TopSongsWidget from "./TopSongsWidget";
-import TopArtistsWidget from "./TopArtistsWidget";
+import TopSongsWidget from "./SongsWidget";
+import TopArtistsWidget from "./ArtistsWidget";
 
 import { playPause, setActiveSong } from "../../store/reducers/player";
 
 import { useGetTopChartsQuery } from "../../API/shazamCore";
-import { RootObject, SelectorPlayerState } from "../../API/types";
-
-
+import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopCharts() {
   const { data, isFetching } = useGetTopChartsQuery(null);
@@ -21,7 +19,7 @@ function TopCharts() {
 
   const dispatch = useDispatch();
 
-  const handlePlayClick = (song: RootObject, index: number) => {
+  const handlePlayClick = (song: SongRootObject, index: number) => {
     dispatch(setActiveSong({ song, data, index }));
     dispatch(playPause(true));
   };
@@ -47,7 +45,7 @@ function TopCharts() {
         handlePlayClick={handlePlayClick}
       />
 
-      <TopArtistsWidget topCharts={topCharts}/>
+      <TopArtistsWidget topCharts={topCharts} />
     </div>
   );
 }

@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 
 import PlayPause from "./UI/PlayPause";
 
-import { RootObject } from "../API/types";
+import { SongRootObject } from "../API/types";
 import { useDispatch } from "react-redux";
 import { playPause, setActiveSong } from "../store/reducers/player";
 
 interface Props {
-  song: RootObject;
+  song: SongRootObject;
   index: number;
-  activeSong: RootObject;
+  activeSong: SongRootObject;
   isPlaying: boolean;
   data: [];
   children?: JSX.Element;

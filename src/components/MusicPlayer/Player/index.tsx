@@ -1,9 +1,15 @@
-import { MutableRefObject, ReactElement, ReactEventHandler, useEffect, useRef } from "react";
+import {
+  MutableRefObject,
+  ReactElement,
+  ReactEventHandler,
+  useEffect,
+  useRef,
+} from "react";
 
-import { RootObject } from "../../../API/types";
+import { SongRootObject } from "../../../API/types";
 
 interface Props {
-  activeSong: RootObject | undefined;
+  activeSong: SongRootObject | undefined;
   volume: number | null;
   isPlaying: boolean;
   seekTime: number;
@@ -24,7 +30,7 @@ function Player(props: Props) {
     onTimeUpdated,
     onLoadedData,
   } = props;
-  const ref:MutableRefObject<HTMLAudioElement|null> = useRef(null);
+  const ref: MutableRefObject<HTMLAudioElement | null> = useRef(null);
 
   if (ref.current) {
     if (isPlaying) {

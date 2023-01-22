@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 
-import { RootObject } from "../../API/types";
+import { SongRootObject } from "../../../API/types";
 
 import "swiper/css";
 import "swiper/css/free-mode";
 
-interface TopArtistsWidgetProps {
-  topCharts: RootObject[];
+interface Props {
+  topCharts: SongRootObject[];
 }
 
-function TopArtistsWidget(props: TopArtistsWidgetProps) {
+function TopArtistsWidget(props: Props) {
   const { topCharts } = props;
 
   return (
@@ -35,7 +35,7 @@ function TopArtistsWidget(props: TopArtistsWidgetProps) {
         modules={[FreeMode]}
         className="mt-4"
       >
-        {topCharts.map((song: RootObject, index) => (
+        {topCharts.map((song: SongRootObject, index) => (
           <SwiperSlide
             key={song?.key}
             className="w-1/5 h-1/5 shadow-lg rounded-full animate-slideright"
