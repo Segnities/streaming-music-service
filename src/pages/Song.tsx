@@ -1,12 +1,19 @@
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
+import DetailsHeader from "../components/UI/DetailsHeader";
+import RelatedSongs from "../components/UI/RelatedSongs";
 import Loader from "../components/UI/Loader";
 
 import { setActiveSong, playPause } from "../store/reducers/player";
-import { useGetSongDetailsQuery } from "../API/shazamCore";
+
+import {
+  useGetRelatedSongsQuery,
+  useGetSongDetailsQuery,
+} from "../API/shazamCore";
 
 import { SelectorPlayerState } from "../API/types";
+import Error from "../components/UI/Error";
 
 function Song() {
   const dispath = useDispatch();
@@ -16,15 +23,30 @@ function Song() {
     (state: SelectorPlayerState) => state.player
   );
 
-  const { data, isFetching } = useGetSongDetailsQuery({ songid });
+  const { data: songData, isFetching: isFetchingSongs, error:songsError } =
+    useGetSongDetailsQuery(songid);
+  const {
+    data: relatedSongs,
+    isFetching: isFetchingRelatedSongs,
+    error: relatedSongsError,
+  } = useGetRelatedSongsQuery(songid);
+
+  if (isFetchingSongs || isFetchingRelatedSongs) {
+    return <Loader title="Searching songs..." />;
+  }
+
+  if(relatedSongsError || songsError) {
+    return <Error/>
+  }
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
+      <DetailsHeader songData={songData} artistid={""} />
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>
         <div className="mt-5">
-          {data?.sections[1].type === "LYRICS" ? (
-            data?.sections[1].text.map((line, index) => (
+          {songData?.sections[1].type === "LYRICS" ? (
+            songData?.sections[1].text.map((line, index) => (
               <p key={index} className="text-gray-400 text-base my-1">
                 {line}
               </p>
@@ -36,6 +58,7 @@ function Song() {
           )}
         </div>
       </div>
+      <RelatedSongs />
     </div>
   );
 }
