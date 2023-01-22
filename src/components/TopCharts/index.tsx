@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import TopSongsWidget from "./TopSongsWidget";
-import TopArtistsWidget from "./TopArtistsWidget";
+import TopSongsWidget from "./SongsWidget";
+import TopArtistsWidget from "./ArtistsWidget";
 
 import { playPause, setActiveSong } from "../../store/reducers/player";
 

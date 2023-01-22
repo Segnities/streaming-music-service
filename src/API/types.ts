@@ -9,7 +9,7 @@ export interface SongRootObject {
   share: SongShare;
   images?: SongImages;
   hub: SongHub;
-  artists?: Artist[];
+  artists?: SongArtist[];
   url: string;
   highlightsurls: SongHighlightsurls;
   properties: SongHighlightsurls;
@@ -25,7 +25,7 @@ export interface SongDetails {
   images?: SongImages;
   sections: { types: string; metapages: {}[] }[];
   hub: SongHub;
-  artists?: Artist[];
+  artists?: SongArtist[];
   url: string;
   highlightsurls: SongHighlightsurls;
   properties: SongHighlightsurls;
@@ -43,7 +43,7 @@ export interface SelectorPlayerState {
 
 export interface SongHighlightsurls {}
 
-export interface Artist {
+export interface SongArtist {
   alias: string;
   id: string;
   adamid: string;
@@ -108,7 +108,7 @@ export interface SongShare {
 
 
 /*TRACK TYPES*/
-interface TrackRootObject {
+export interface TrackRootObject {
   layout: string;
   type: string;
   key: string;
@@ -119,7 +119,7 @@ interface TrackRootObject {
   hub: TrackHub;
   sections: TrackSection[];
   url: string;
-  artists: Artist[];
+  artists: TrackArtist[];
   alias: string;
   isrc: string;
   genres: TrackGenres;
@@ -130,24 +130,24 @@ interface TrackRootObject {
   releasedate: string;
 }
 
-interface TrackHighlightsurls {}
+export interface TrackHighlightsurls {}
 
-interface TrackUrlparams {
+export interface TrackUrlparams {
   "{tracktitle}": string;
   "{trackartist}": string;
 }
 
-interface TrackGenres {
+export interface TrackGenres {
   primary: string;
 }
 
-interface TrackArtist {
+export interface TrackArtist {
   alias: string;
   id: string;
   adamid: string;
 }
 
-interface TrackSection {
+export interface TrackSection {
   type: string;
   metapages?: TrackMetapage[];
   tabname: string;
@@ -157,23 +157,23 @@ interface TrackSection {
   beacondata?: TrackBeacondata2;
 }
 
-interface TrackBeacondata2 {
+export interface TrackBeacondata2 {
   lyricsid: string;
   providername: string;
   commontrackid: string;
 }
 
-interface TrackMetadatum {
+export interface TrackMetadatum {
   title: string;
   text: string;
 }
 
-interface TrackMetapage {
+export interface TrackMetapage {
   image: string;
   caption: string;
 }
 
-interface TrackHub {
+export interface TrackHub {
   type: string;
   image: string;
   actions: TrackAction[];
@@ -182,7 +182,7 @@ interface TrackHub {
   displayname: string;
 }
 
-interface TrackOption {
+export interface TrackOption {
   caption: string;
   actions: TrackAction2[];
   beacondata: TrackBeacondata;
@@ -194,25 +194,25 @@ interface TrackOption {
   providername: string;
 }
 
-interface TrackBeacondata {
+export interface TrackBeacondata {
   type: string;
   providername: string;
 }
 
-interface TrackAction2 {
+export interface TrackAction2 {
   name: string;
   type: string;
   uri: string;
 }
 
-interface TrackAction {
+export interface TrackAction {
   name: string;
   type: string;
   id?: string;
   uri?: string;
 }
 
-interface TrackShare {
+export interface TrackShare {
   subject: string;
   text: string;
   href: string;
@@ -223,7 +223,7 @@ interface TrackShare {
   snapchat: string;
 }
 
-interface TrackImages {
+export interface TrackImages {
   background: string;
   coverart: string;
   coverarthq: string;
