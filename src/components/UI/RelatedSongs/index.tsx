@@ -8,7 +8,7 @@ interface Props {
   artistid: number | string;
   activeSong: SongRootObject;
   handlePauseClick: () => void;
-  handlePlayClick: () => void;
+  handlePlayClick: (song, index) => void;
 }
 
 function RelatedSongs(props: Props) {
@@ -32,7 +32,7 @@ function RelatedSongs(props: Props) {
             artistid={artistid}
             activeSong={activeSong}
             isPlaying={isPlaying}
-            handlePlayClick={handlePlayClick}
+            handlePlayClick={() => handlePlayClick(song, index)}
             handlePauseClick={handlePauseClick}
           />
         ))}
