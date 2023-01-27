@@ -14,16 +14,16 @@ function DetailsHeader(props: Props) {
   const songImagePath = artistid
     ? artistAttributes?.artwork?.url.replace("{w}", "500").replace("{h}", "500")
     : songData?.images?.coverart;
-    
 
   return (
     <div className="relative w-full flex flex-col">
-      <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-48"></div>
+      <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
       <div className="absolute inset-0 flex items-center">
         <img
           src={songImagePath}
           alt="art"
-          className="w-28 sm:w-48 h-28 sm:48 rounded-full object-cover border-2 shadow-xl shadow-black"
+          className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black"
+          onDragStart={(e) => e.preventDefault()}
         />
         <div className="ml-5">
           <p className="font-bold sm:text-3xl text-xl text-white">

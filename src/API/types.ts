@@ -1,10 +1,13 @@
 /*SONG TYPES*/
 
+
+
 export interface SongRootObject {
   layout: string;
   type: string;
   key: string;
   title: string;
+  attributes?: SongAttributes;
   subtitle: string;
   share: SongShare;
   images?: SongImages;
@@ -106,6 +109,13 @@ export interface SongShare {
   snapchat: string;
 }
 
+export interface SongAttributes {
+  name: string;
+  albumName: string;
+  artwork: {
+    url: string;
+  };
+}
 
 /*TRACK TYPES*/
 export interface TrackRootObject {
