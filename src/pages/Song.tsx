@@ -16,27 +16,39 @@ import { SelectorPlayerState } from "../API/types";
 import Error from "../components/UI/Error";
 
 function Song() {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const { songid } = useParams();
 
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
 
-  const { data: songData, isFetching: isFetchingSongs, error:songsError } =
-    useGetSongDetailsQuery(songid);
+  const {
+    data: songData,
+    isFetching: isFetchingSongs,
+    error: songsError,
+  } = useGetSongDetailsQuery(songid);
   const {
     data: relatedSongs,
     isFetching: isFetchingRelatedSongs,
     error: relatedSongsError,
   } = useGetRelatedSongsQuery(songid);
 
+  const handlePlayClick = (song, index) => {
+    dispatch(setActiveSong({ song, relatedSongs, index }));
+    dispatch(playPause(true));
+  };
+
+  const handlePauseClick = () => {
+    dispatch(playPause(false));
+  };
+
   if (isFetchingSongs || isFetchingRelatedSongs) {
     return <Loader title="Searching songs..." />;
   }
 
-  if(relatedSongsError || songsError) {
-    return <Error/>
+  if (relatedSongsError || songsError) {
+    return <Error />;
   }
 
   return (
@@ -58,7 +70,14 @@ function Song() {
           )}
         </div>
       </div>
-      <RelatedSongs />
+      <RelatedSongs
+        relatedSongs={relatedSongs}
+        isPlaying={isPlaying}
+        artistid={""}
+        activeSong={activeSong}
+        handlePauseClick={handlePauseClick}
+        handlePlayClick={handlePlayClick}
+      />
     </div>
   );
 }
