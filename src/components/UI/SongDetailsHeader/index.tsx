@@ -5,10 +5,10 @@ import { TrackRootObject } from "../../../API/types";
 interface Props {
   artistid?: number | string;
   artistData?: any;
-  songData: TrackRootObject;
+  songData?: TrackRootObject;
 }
 
-function DetailsHeader(props: Props) {
+function SongDetailsHeader(props: Props) {
   const { artistData, artistid, songData } = props;
   const artistAttributes = artistData?.artists[artistid].attributes;
   const songImagePath = artistid
@@ -48,4 +48,4 @@ function DetailsHeader(props: Props) {
   );
 }
 
-export default DetailsHeader;
+export default SongDetailsHeader;
