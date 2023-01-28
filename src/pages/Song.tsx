@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
-import DetailsHeader from "../components/UI/DetailsHeader";
+import SongDetailsHeader from "../components/UI/SongDetailsHeader";
 import RelatedSongs from "../components/UI/RelatedSongs";
 import Loader from "../components/UI/Loader";
 
@@ -53,7 +53,7 @@ function Song() {
 
   return (
     <div className="flex flex-col">
-      <DetailsHeader songData={songData} artistid={""} />
+      <SongDetailsHeader songData={songData} />
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>
         <div className="mt-5">

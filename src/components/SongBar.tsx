@@ -4,6 +4,8 @@ import PlayPause from "./UI/PlayPause";
 
 import { SongRootObject } from "../API/types";
 
+import NoImage from "../assets/no_song.jpg";
+
 interface Props {
   key: string;
   song: SongRootObject;
@@ -26,6 +28,13 @@ function SongBar(props: Props) {
     handlePlayClick,
   } = props;
 
+  const songImage =
+    (artistid
+      ? song?.attributes?.artwork?.url
+          .replace("{w}", "125")
+          .replace("{h}", "125")
+      : song?.images?.coverart) || NoImage;
+
   return (
     <div
       className={`w-full flex flex-row items-center hover:bg-[#4c426e] ${
@@ -36,13 +45,7 @@ function SongBar(props: Props) {
       <div className="flex-1 flex flex-row justify-between items-center">
         <img
           className="w-20 h-20 rounded-lg"
-          src={
-            artistid
-              ? song?.attributes?.artwork?.url
-                  .replace("{w}", "125")
-                  .replace("{h}", "125")
-              : song?.images?.coverart
-          }
+          src={songImage}
           alt={song?.title}
         />
         <div className="flex-1 flex flex-col justify-center mx-3">

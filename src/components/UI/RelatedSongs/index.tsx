@@ -5,7 +5,7 @@ import { SongRootObject } from "../../../API/types";
 interface Props {
   relatedSongs: SongRootObject[];
   isPlaying: boolean;
-  artistid: number | string;
+  artistid: string | undefined;
   activeSong: SongRootObject;
   handlePauseClick: () => void;
   handlePlayClick: (song, index) => void;

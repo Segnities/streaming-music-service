@@ -3,17 +3,12 @@ import { Link } from "react-router-dom";
 import { TrackRootObject } from "../../../API/types";
 
 interface Props {
-  artistid?: number | string;
-  artistData?: any;
-  songData: TrackRootObject;
+  songData?: TrackRootObject;
 }
 
-function DetailsHeader(props: Props) {
-  const { artistData, artistid, songData } = props;
-  const artistAttributes = artistData?.artists[artistid].attributes;
-  const songImagePath = artistid
-    ? artistAttributes?.artwork?.url.replace("{w}", "500").replace("{h}", "500")
-    : songData?.images?.coverart;
+function SongDetailsHeader(props: Props) {
+  const { songData } = props;
+  const songImagePath = songData?.images?.coverart;
 
   return (
     <div className="relative w-full flex flex-col">
@@ -27,19 +22,10 @@ function DetailsHeader(props: Props) {
         />
         <div className="ml-5">
           <p className="font-bold sm:text-3xl text-xl text-white">
-            {artistid ? artistAttributes.name : songData?.title}
+            {songData?.title}
           </p>
-          {!artistid && (
-            <Link to={`/artists/${songData?.artists[0].adamid}`}>
-              <p className="text-base text-gray-400 mt-2">
-                {songData?.subtitle}
-              </p>
-            </Link>
-          )}
           <p className="text-base text-gray-400 mt-2">
-            {artistid
-              ? artistAttributes?.genreName[0]
-              : songData?.genres?.primary}
+            {songData?.genres?.primary}
           </p>
         </div>
       </div>
@@ -48,4 +34,4 @@ function DetailsHeader(props: Props) {
   );
 }
 
-export default DetailsHeader;
+export default SongDetailsHeader;
