@@ -13,7 +13,7 @@ function App() {
     (state: SelectorPlayerState) => state.player
   );
   return (
-    <div className="relative flex">
+    <div className="relative flex min-h-screen">
       <Sidebar />
       <div className="flex flex-1 flex-col  bg-gradient-to-br from-black to-[#121286]">
         <Searchbar />

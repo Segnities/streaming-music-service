@@ -53,7 +53,7 @@ function Song() {
 
   return (
     <div className="flex flex-col">
-      <SongDetailsHeader songData={songData} artistid={""} />
+      <SongDetailsHeader songData={songData} />
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>
         <div className="mt-5">
