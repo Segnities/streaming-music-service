@@ -8,6 +8,8 @@ import { SongRootObject } from "../../../API/types";
 import "swiper/css";
 import "swiper/css/free-mode";
 
+import NoImage from "../../../assets/no_artist.jpg";
+
 interface Props {
   topCharts: SongRootObject[];
 }
@@ -42,7 +44,7 @@ function TopArtistsWidget(props: Props) {
           >
             <Link to={`artists/${song?.artists[0]?.adamid}`}>
               <img
-                src={song?.images?.background}
+                src={song?.images?.background || NoImage}
                 alt="artist"
                 className="rounded-full w-full object-cover"
               />

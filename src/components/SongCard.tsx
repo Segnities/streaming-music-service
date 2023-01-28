@@ -6,6 +6,8 @@ import { SongRootObject } from "../API/types";
 import { useDispatch } from "react-redux";
 import { playPause, setActiveSong } from "../store/reducers/player";
 
+import NoImage from "../assets/no_song.jpg";
+
 interface Props {
   song: SongRootObject;
   index: number;
@@ -46,7 +48,11 @@ function SongCard(props: Props) {
             handlePauseClick={handlePauseClick}
           />
         </div>
-        <img src={song?.images?.coverart} alt="song-img" />
+        <img
+          src={song?.images?.coverart || NoImage}
+          alt="song-img"
+          className="w-[203px] h-[203px]"
+        />
       </div>
       <div className="mt-4 flex flex-col">
         <p className="font-semibold text-lg text-white truncate">
