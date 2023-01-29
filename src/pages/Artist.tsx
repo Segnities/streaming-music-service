@@ -32,7 +32,7 @@ function ArtistDetailHeader(props: ArtistDetailHeaderProps) {
           onDragStart={(e) => e.preventDefault()}
         />
         <div className="ml-5 mb-3">
-          <p className="text-[5rem] sm:text-3xl text-white mb-2">
+          <p className="text-3xl sm:text-2xl text-white mb-2">
             {attributes?.name}
           </p>
           <ul className="flex flex-row text-gray-500 list-none">
