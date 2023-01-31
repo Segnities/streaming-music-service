@@ -11,7 +11,13 @@ import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopCharts() {
   const { data, isFetching } = useGetTopChartsQuery(null);
-  const topCharts = isFetching ? [] : [...data].slice(0, 5);
+  const topCharts: SongRootObject[] = isFetching
+    ? []
+    : data
+        .slice()
+        .filter((tChart: SongRootObject) => tChart?.artists)
+        .slice(0, 10);
+
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );

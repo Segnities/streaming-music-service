@@ -22,7 +22,7 @@ function PlayPause(props: Props) {
         />
       ) : (
         <FaPlayCircle
-          size={36}
+          size={28}
           className={"text-gray-300"}
           onClick={handlePlayClick}
         />
