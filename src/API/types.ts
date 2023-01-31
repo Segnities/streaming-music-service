@@ -238,7 +238,6 @@ export interface TrackImages {
   joecolor: string;
 }
 
-
 /*Artist Details*/
 export interface Main {
   data: MainDatum[];
