@@ -1,7 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const RAPID_HOST: string = "shazam-core.p.rapidapi.com";
+const ACTIVE_RAPID_KEY: string =
+  "6a60bf0562msh30807a648877b34p16c807jsn43ead18ffe1f";
+
 /*1-st source - Shazam Core
-  baseUrl: https://shazam-core.p.rapidapi.com/v1
   headers: 
   1. "X-RapidAPI-Key": "e60eb95ad5msh3b2acc1834b3709p1474b2jsnf25468328f98",
   2. "X-Rapid-Host": "shazam-core.p.rapidapi.com" 
@@ -9,10 +12,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 */
 
 /*2-nd source - Shazam Core
-  baseUrl: https://shazam-core.p.rapidapi.com/v1
   headers: 
   1. "X-RapidAPI-Key": "2cd15f9448msh8174a3963edb8c4p178072jsnc67906815ff5",
   2. "X-Rapid-Host": "shazam-core.p.rapidapi.com" 
+*/
+
+/*3-rd source - Shazam Core
+  headers: 
+  1. "X-RapidAPI-Key": "6a60bf0562msh30807a648877b34p16c807jsn43ead18ffe1f",
+  2. "X-Rapid-Host": "shazam-core.p.rapidapi.com'" 
+
 */
 
 export const shazamCoreApiV1 = createApi({
@@ -20,11 +29,8 @@ export const shazamCoreApiV1 = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://shazam-core.p.rapidapi.com/v1",
     prepareHeaders: (headers) => {
-      headers.set(
-        "X-RapidAPI-Key",
-        "2cd15f9448msh8174a3963edb8c4p178072jsnc67906815ff5"
-      );
-      headers.set("X-Rapid-Host", "shazam-core.p.rapidapi.com");
+      headers.set("X-RapidAPI-Key", ACTIVE_RAPID_KEY);
+      headers.set("X-Rapid-Host", RAPID_HOST);
 
       return headers;
     },
@@ -48,11 +54,8 @@ export const shazamCoreApiV2 = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://shazam-core.p.rapidapi.com/v2",
     prepareHeaders: (headers) => {
-      headers.set(
-        "X-RapidAPI-Key",
-        "2cd15f9448msh8174a3963edb8c4p178072jsnc67906815ff5"
-      );
-      headers.set("X-RapidAPI-Host", "shazam-core.p.rapidapi.com");
+      headers.set("X-RapidAPI-Key", ACTIVE_RAPID_KEY);
+      headers.set("X-RapidAPI-Host", RAPID_HOST);
 
       return headers;
     },
