@@ -6,7 +6,7 @@ import Error from "../components/UI/Error";
 
 import { genres } from "../data/genres";
 
-import { useGetTopChartsQuery } from "../API/shazamCore";
+import { useGetSongsByGenreQuery } from "../API/shazamCore";
 import { SelectorPlayerState, SongRootObject } from "../API/types";
 import { selectGenreListId } from "../store/reducers/player";
 
@@ -16,11 +16,11 @@ type Genre = {
 };
 
 function Discover() {
-  const dispatch = useDispatch();
-  const { data, isFetching, error } = useGetTopChartsQuery(null);
   const { activeSong, isPlaying, genreListId } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
+  const dispatch = useDispatch();
+  const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
 
   const filledData = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
 
