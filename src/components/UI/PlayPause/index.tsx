@@ -16,13 +16,13 @@ function PlayPause(props: Props) {
     <>
       {isPlaying && activeSong?.title === song?.title ? (
         <FaPauseCircle
-          size={36}
+          size={32}
           className={"text-gray-300"}
           onClick={handlePauseClick}
         />
       ) : (
         <FaPlayCircle
-          size={28}
+          size={32}
           className={"text-gray-300"}
           onClick={handlePlayClick}
         />

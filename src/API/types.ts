@@ -38,6 +38,7 @@ export interface SelectorPlayerState {
     currentIndex: number;
     isActive: boolean;
     isPlaying: boolean;
+    genreListId: "";
     activeSong: SongRootObject;
   };
 }

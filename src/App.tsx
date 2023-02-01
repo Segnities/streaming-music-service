@@ -17,7 +17,7 @@ function App() {
       <Sidebar />
       <div className="flex flex-1 flex-col  bg-gradient-to-br from-black to-[#121286]">
         <Searchbar />
-        <div className="px-6 h-[calc(100vh- 2px)] flex xl:flex-row flex-col-reverse">
+        <div className="px-6 py-8 h-[calc(100vh- 2px)] flex xl:flex-row flex-col-reverse">
           <div className="flex-1 h-fit pb-40">
             <AppRouter />
           </div>

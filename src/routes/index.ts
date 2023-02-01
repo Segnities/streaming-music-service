@@ -4,7 +4,7 @@ import AroundYou from "../pages/AroundYou";
 import Song from "../pages/Song";
 import TopCharts from "../pages/TopCharts";
 import TopArtists from "../pages/TopArtists";
-
+import Search from "../pages/Search";
 
 import {
   HiOutlineHome,
@@ -26,6 +26,7 @@ export const routes: Routing = [
   { id: "/around-you", path: "/around-you", element: AroundYou },
   { id: "/artists/:id", path: "/artists/:id", element: Artist },
   { id: "/songs/:songid", path: "/songs/:songid", element: Song },
+  { id: "/search/:query", path: "/search/:query", element: Search },
 ];
 
 export const links = [

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import SongCard from "../components/SongCard";
 import Loader from "../components/UI/Loader";
@@ -6,8 +6,9 @@ import Error from "../components/UI/Error";
 
 import { genres } from "../data/genres";
 
-import { useGetTopChartsQuery } from "../API/shazamCore";
+import { useGetSongsByGenreQuery } from "../API/shazamCore";
 import { SelectorPlayerState, SongRootObject } from "../API/types";
+import { selectGenreListId } from "../store/reducers/player";
 
 type Genre = {
   title: string;
@@ -15,10 +16,11 @@ type Genre = {
 };
 
 function Discover() {
-  const { data, isFetching, error } = useGetTopChartsQuery(null);
-  const { activeSong, isPlaying } = useSelector(
+  const { activeSong, isPlaying, genreListId } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
+  const dispatch = useDispatch();
+  const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
 
   const filledData = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
 
@@ -34,7 +36,9 @@ function Discover() {
     <div className="flex flex-col">
       <div className="w-full flex flex-col justify-between items-center mt-4 mb-10 sm:flex-row">
         <h2 className="font-bold text-3xl text-white text-left">Discover</h2>
-        <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-0 sm:mt-5">
+        <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-0 sm:mt-5" value={genreListId || "POP"} onChange={(e) => {
+          dispatch(selectGenreListId(e.target.value))
+        }}>
           {genres.map((genre: Genre) => (
             <option key={genre.title} value={genre.value}>
               {genre.title}
