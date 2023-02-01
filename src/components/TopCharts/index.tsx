@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import TopSongsWidget from "./SongsWidget";
 import TopArtistsWidget from "./ArtistsWidget";
+import Loader from "../UI/Loader";
+import Error from "../UI/Error";
 
 import { playPause, setActiveSong } from "../../store/reducers/player";
 
@@ -10,13 +12,12 @@ import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopCharts() {
-  const { data, isFetching } = useGetTopChartsQuery(null);
+  const { data, isFetching, error } = useGetTopChartsQuery(null);
   const topCharts: SongRootObject[] = isFetching
     ? []
     : data
-        .slice()
-        .filter((tChart: SongRootObject) => tChart?.artists)
-        .slice(0, 10);
+      .filter((tChart: SongRootObject) => tChart?.artists)
+      .slice(0, 10);
 
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
@@ -37,6 +38,14 @@ function TopCharts() {
   useEffect(() => {
     containerRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  if (isFetching || topCharts.length === 0) {
+    return <Loader title="Top charts is loading..." />
+  }
+
+  if (error) {
+    return <Error />
+  }
 
   return (
     <div

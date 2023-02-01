@@ -7,7 +7,7 @@ import Error from "../components/UI/Error";
 import { genres } from "../data/genres";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
-import { SelectorPlayerState } from "../API/types";
+import { SelectorPlayerState, SongRootObject } from "../API/types";
 
 type Genre = {
   title: string;
@@ -20,7 +20,9 @@ function Discover() {
     (state: SelectorPlayerState) => state.player
   );
 
-  if (isFetching) {
+  const filledData = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
+
+  if (isFetching || filledData.length === 0) {
     return <Loader title="Loading songs..." />;
   }
 
@@ -48,7 +50,7 @@ function Discover() {
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
-            data={data}
+            data={filledData}
           />
         ))}
       </div>
