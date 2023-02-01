@@ -61,10 +61,13 @@ const playerSlice = createSlice({
       state.currentIndex = action.payload;
       state.isActive = true;
     },
+    selectGenreListId: (state, action) => {
+      state.genreListId = action.payload;
+    },
   },
 });
 
-export const { playPause, setActiveSong, nextSong, prevSong } =
+export const { playPause, setActiveSong, nextSong, prevSong, selectGenreListId } =
   playerSlice.actions;
 
 export default playerSlice;
