@@ -16,6 +16,7 @@ import {
   HiOutlineUserGroup,
   HiOutlineHashtag,
   HiUser,
+  HiUserAdd,
 } from "react-icons/hi";
 
 type Routing = {
@@ -26,8 +27,6 @@ type Routing = {
 
 export const publicRoutes: Routing = [
   { id: "/", path: "/", element: Discover },
-  { id: "/login", path: "/login", element: Login },
-  { id: "/sign-up", path: "/sign-up", element: SignUp },
   { id: "/top-charts", path: "/top-charts", element: TopCharts },
   { id: "/top-artists", path: "/top-artists", element: TopArtists },
   { id: "/around-you", path: "/around-you", element: AroundYou },
@@ -49,11 +48,17 @@ export const privateRoutes: Routing = [
   { id: "*", path: "*", element: NotFound },
 ];
 
+export const authenticationRoutes: Routing = [
+  { id: "/login", path: "/login", element: Login },
+  { id: "/sign-up", path: "/sign-up", element: SignUp },
+];
+
 export const publicLinks = [
   { name: "Discover", to: "/", icon: HiOutlineHome },
   { name: "Around You", to: "/around-you", icon: HiOutlinePhotograph },
   { name: "Top Artists", to: "/top-artists", icon: HiOutlineUserGroup },
   { name: "Top Charts", to: "/top-charts", icon: HiOutlineHashtag },
+  { name: "Auth", to: "/login", icon: HiUserAdd },
 ];
 
 export const privateLinks = [
