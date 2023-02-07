@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router";
 
 import Sidebar from "../components/UI/Sidebar";
 import Searchbar from "../components/UI/Searchbar";
-import TopCharts from "../components/TopCharts";
+import TopChartsWidget from "../components/TopCharts";
 import MusicPlayer from "../components/MusicPlayer";
 
 import { publicRoutes } from "../routes";
@@ -28,7 +28,7 @@ function AppTemplate() {
                     </Routes>
                 </div>
                 <div className="xl:sticky relative top-0 h-fit">
-                    <TopCharts />
+                    <TopChartsWidget />
                 </div>
             </div>
         </div>

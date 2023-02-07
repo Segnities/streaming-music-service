@@ -9,6 +9,7 @@ import NotFound from "../pages/NotFound";
 import User from "../pages/User";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
+import ForgotPassword from "../pages/ForgotPassword";
 
 import {
   HiOutlineHome,
@@ -51,6 +52,7 @@ export const privateRoutes: Routing = [
 export const authenticationRoutes: Routing = [
   { id: "/login", path: "/login", element: Login },
   { id: "/sign-up", path: "/sign-up", element: SignUp },
+  { id: "/forgot-password ", path: "/forgot-password", element: ForgotPassword },
 ];
 
 export const publicLinks = [
