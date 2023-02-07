@@ -52,7 +52,7 @@ function Login() {
                             />
                         </div>
                         <p className="mt-2">
-                            <NavLink to={'/'} className="underline text-base font-semibold"> Forgot your password?</NavLink>
+                            <NavLink to='/forgot-password' className="underline text-base font-semibold hover:text-[#1ED760]"> Forgot your password?</NavLink>
                         </p>
                         <div className="flex justify-between items-center mt-3">
                             <div className="flex flex-row-reverse items-center">

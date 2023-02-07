@@ -52,7 +52,11 @@ export const privateRoutes: Routing = [
 export const authenticationRoutes: Routing = [
   { id: "/login", path: "/login", element: Login },
   { id: "/sign-up", path: "/sign-up", element: SignUp },
-  { id: "/forgot-password ", path: "/forgot-password", element: ForgotPassword },
+  {
+    id: "/forgot-password",
+    path: "/forgot-password",
+    element: ForgotPassword,
+  },
 ];
 
 export const publicLinks = [
