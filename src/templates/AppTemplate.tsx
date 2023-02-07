@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router";
 
 import Sidebar from "../components/UI/Sidebar";
 import Searchbar from "../components/UI/Searchbar";
-import TopCharts from "../pages/TopCharts";
+import TopCharts from "../components/TopCharts";
 import MusicPlayer from "../components/MusicPlayer";
 
 import { publicRoutes } from "../routes";
