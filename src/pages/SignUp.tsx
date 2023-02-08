@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 import { RiErrorWarningFill } from "react-icons/ri";
+import { useState } from "react";
 
 
 const validationSchema = Yup.object().shape({
@@ -17,9 +18,19 @@ const validationSchema = Yup.object().shape({
         then: Yup.string().oneOf([Yup.ref("password")], "Both password need to be the same")
     }).required('Confirm password is required'),
     username: Yup.string().min(4).required('Username is required'),
-    day: Yup.string().min(2).max(2).required('Day of birth is required'),
+    day: Yup.string().min(2).max(2).test('day', 'Invalid day', (value) => {
+        if (Number(value) < 1 || Number(value) > 31) {
+            return false;
+        }
+        return true
+    }).matches(/\d/g, 'Day must contain only numbers!').required('Day of birth is required'),
     mounth: Yup.string().required('Mounth of birth is required'),
-    year: Yup.string().min(4).required('Year of birth is required'),
+    year: Yup.string().min(4).max(4).test('year', 'Invalid year', (value) => {
+        if (Number(value) < 1918 || Number(value) > new Date().getFullYear()) {
+            return false;
+        }
+        return true;
+    }).matches(/\d/g, 'Year must contain only numbers!').required('Year of birth is required'),
     gender: Yup.string().required('Gender is required')
 })
 
@@ -55,6 +66,7 @@ function SignUp() {
                         initialValues={{
                             email: '',
                             password: '',
+                            username: '',
                             confirmPassword: '',
                             day: '',
                             mounth: '',
@@ -77,10 +89,10 @@ function SignUp() {
                                             placeholder="Enter your email address"
                                             className={`
                                             text-base normal-case my-1 
+                                            outline-none
                                             line tracking-normal p-3 border-[1px] 
                                             focus-visible:border-[3px] 
-                                            ${errors.email ? "border-red-700" : "border-gray-800"}
-                                            ${errors.email && "outline-none"}`}
+                                            ${errors.email ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
                                             errors.email && touched.email ? (
@@ -98,10 +110,20 @@ function SignUp() {
                                             name="password"
                                             id="password"
                                             placeholder="Password"
-                                            className="text-base normal-case line my-1 tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800"
+                                            className={`
+                                                text-base normal-case line my-1 tracking-normal 
+                                                p-3 border-[1px] 
+                                                outline-none
+                                                focus-visible:border-[3px] 
+                                                ${errors.password ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
-                                            errors.password
+                                            errors.password && touched.password ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.password}</span>
+                                                </div>
+                                            ) : null
                                         }
                                     </div>
                                     <div className="flex flex-col">
@@ -111,8 +133,20 @@ function SignUp() {
                                             id="confirm-password"
                                             name="confirmPassword"
                                             placeholder="Confirm password"
-                                            className="text-base normal-case line my-1 tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800"
+                                            className={`
+                                                text-base normal-case line my-1 tracking-normal 
+                                                p-3 border-[1px] 
+                                                outline-none
+                                                focus-visible:border-[3px] 
+                                                ${errors.confirmPassword ? "border-red-700" : "border-gray-800"}`}
                                         />
+                                        {
+                                            errors.confirmPassword ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.confirmPassword}</span>
+                                                </div>) : null
+                                        }
                                     </div>
                                     <div className="flex flex-col">
                                         <label htmlFor="username" className="text-sm font-bold my-1">Username</label>
@@ -121,9 +155,20 @@ function SignUp() {
                                             name="username"
                                             id="username"
                                             placeholder="Name of profile"
-                                            className="text-base normal-case line my-1 tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800"
+                                            className={`
+                                                text-base normal-case line my-1 tracking-normal 
+                                                p-3 border-[1px] 
+                                                outline-none
+                                                focus-visible:border-[3px] 
+                                                ${errors.username ? "border-red-700" : "border-gray-800"}`}
                                         />
-
+                                        {
+                                            errors.username ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.username}</span>
+                                                </div>) : null
+                                        }
                                     </div>
                                     <div className="flex flex-col justify-between">
                                         <p className="my-3 font-bold text-sm">Enter your birthday</p>
@@ -137,12 +182,22 @@ function SignUp() {
                                                     maxLength={2}
                                                     minLength={2}
                                                     placeholder="DD"
-                                                    className="p-2 border-[1px] border-gray-500 hover:border-black"
+                                                    className={`
+                                                        p-2 outline-none 
+                                                        border-[1px] hover:border-2 
+                                                        ${errors.day ? "border-red-700" : "border-gray-500"}
+                                                        hover:${errors.day ? "border-red-800" : "border-black"}`}
                                                 />
                                             </div>
                                             <div className="flex flex-col w-2/3 px-3">
                                                 <label htmlFor="mounth" className="text-base font-medium mb-2">Mounth</label>
-                                                <select name="mounth" id="mounth" className="p-2 border-[1px] border-gray-500 hover:border-black">
+                                                <Field
+                                                    as="select"
+                                                    name="mounth"
+                                                    id="mounth"
+                                                    className="p-2 border-[1px] hover:border-2 border-gray-500 hover:border-black"
+                                                >
+                                                    <option value="" disabled>Mounth</option>
                                                     <option value="January">January</option>
                                                     <option value="February">February</option>
                                                     <option value="March">March</option>
@@ -155,7 +210,7 @@ function SignUp() {
                                                     <option value="October">October</option>
                                                     <option value="November">November</option>
                                                     <option value="December">December</option>
-                                                </select>
+                                                </Field>
                                             </div>
                                             <div className="flex flex-col w-1/5">
                                                 <label htmlFor="year" className="text-base font-medium mb-2">Year</label>
@@ -163,13 +218,39 @@ function SignUp() {
                                                     type="text"
                                                     name="year"
                                                     id="year"
-                                                    maxLength={4}
-                                                    minLength={4}
                                                     placeholder="YYYY"
-                                                    className="p-2 border-[1px] border-gray-500 hover:border-black"
+                                                    minLength={4}
+                                                    maxLength={4}
+                                                    className={`
+                                                        p-2 
+                                                        border-[1px] hover:border-2 
+                                                        ${errors.year ? "border-red-700" : "border-gray-500"} 
+                                                        hover:${errors.year ? "border-red-700" : "border-black"} 
+                                                        outline-none`}
                                                 />
                                             </div>
                                         </div>
+                                        {
+                                            errors.day ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.day}</span>
+                                                </div>) : null
+                                        }
+                                        {
+                                            errors.mounth ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.mounth}</span>
+                                                </div>) : null
+                                        }
+                                        {
+                                            errors.year ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.year}</span>
+                                                </div>) : null
+                                        }
                                     </div>
                                     <div className="mt-3">
                                         <p className="text-base my-2 font-bold">Enter your gender</p>
