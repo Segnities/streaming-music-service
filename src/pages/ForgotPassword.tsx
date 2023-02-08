@@ -24,7 +24,11 @@ function ForgotPassword() {
                         ({ errors, touched }) => (
                             <Form className="w-full flex flex-col text-start mt-4">
                                 <label htmlFor="email-or-username" className="text-sm font-bold my-1">Enter email address or username</label>
-                                <Field name='emailOrUsername' type="text" id="email-or-username" placeholder="Enter email address or username" className="text-base normal-case my-1 line tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800" />
+                                <Field
+                                    name='emailOrUsername'
+                                    type="text" id="email-or-username"
+                                    placeholder="Enter email address or username"
+                                    className={`text-base normal-case my-1 line tracking-normal p-3 border-[1px] focus-visible:border-[3px] ${errors.emailOrUsername ? "border-red-700" : "border-gray-800"}`} />
                                 {
                                     errors.emailOrUsername && touched.emailOrUsername ?
                                         (<div className="flex items-center mt-1">
