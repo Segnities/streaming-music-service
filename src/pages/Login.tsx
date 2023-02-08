@@ -1,10 +1,34 @@
 import { NavLink } from "react-router-dom";
+import { useFormik } from "formik";
+
+import * as Yup from "yup";
 
 import { FcGoogle } from "react-icons/fc";
 import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 
 
+const validationSchema = Yup.object().shape({
+    email: Yup.string().email().min(1).required('Email'),
+    password: Yup.string().min(1).required('Password'),
+    rememberMe: Yup.boolean()
+
+})
+
 function Login() {
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            rememberMe: false,
+        },
+        validationSchema: validationSchema,
+        onSubmit(values, formikHelpers) {
+            alert(JSON.stringify(values, null, 2))
+        },
+    })
+
+    const formikFieldErrors = formik.errors.email || formik.errors.password;
+
     return (
         <div className="flex flex-1 flex-col items-center">
             <p className="text-base font-bold">To continue, log to Vite.</p>
@@ -29,11 +53,13 @@ function Login() {
                     <hr role="presentation" className="flex-1 border-[1px] border-solid border-gray-300" />
                 </div>
                 <div className="flex flex-col flex-1 mt-4">
-                    <form autoComplete="off">
+                    <form onSubmit={formik.handleSubmit} autoComplete="off">
                         <div className="flex flex-col">
                             <label htmlFor="email" className="text-sm font-bold my-1">Email address or username</label>
                             <input
                                 type="text"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
                                 id="email"
                                 autoComplete="off"
                                 name="email"
@@ -46,6 +72,8 @@ function Login() {
                             <input
                                 type="password"
                                 name="password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
                                 id="password"
                                 placeholder="Password"
                                 className="text-base normal-case line my-1 tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800"
@@ -57,10 +85,10 @@ function Login() {
                         <div className="flex justify-between items-center mt-3">
                             <div className="flex flex-row-reverse items-center">
                                 <label htmlFor="remember-me" className="font-medium text-base ml-4">Remember me</label>
-                                <input type="checkbox" className="w-4 h-4" id="remember-me" />
+                                <input type="checkbox" name="rememberMe" checked={formik.values.rememberMe} onChange={formik.handleChange} className="w-4 h-4" id="remember-me" />
                             </div>
                             <div>
-                                <button className="bg-[#1ED760] w-32 text-sm p-4 rounded-3xl text-black font-medium">LOG IN</button>
+                                <button type="submit" className="bg-[#1ED760] w-32 text-sm p-4 rounded-3xl text-black font-medium">LOG IN</button>
                             </div>
                         </div>
                     </form>
@@ -69,7 +97,6 @@ function Login() {
                         <p className="text-center font-bold text-lg">Don't have an account?</p>
                         <NavLink to={'/sign-up'} className="flex justify-center my-3 rounded-3xl p-4 border-[1px] text-gray-500 hover:border-gray-800 border-gray-500"> SIGN UP FOR VITE </NavLink>
                     </div>
-
                 </div>
             </div>
         </div>

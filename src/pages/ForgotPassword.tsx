@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 
-const forgotPasswordSchema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
     emailOrUsername: Yup.string().required('Required')
 })
 
@@ -16,7 +16,7 @@ function ForgotPassword() {
                     We'll send you an email with your username and a link to reset your password.</p>
                 <Formik
                     initialValues={{ emailOrUsername: "" }}
-                    validationSchema={forgotPasswordSchema}
+                    validationSchema={validationSchema}
                     onSubmit={values => {
                         console.log(values);
                     }}>
@@ -28,7 +28,7 @@ function ForgotPassword() {
                                 {
                                     errors.emailOrUsername && touched.emailOrUsername ?
                                         (<div className="flex items-center mt-1">
-                                            <RiErrorWarningFill color="red" size={16} className="mr-1" /><span className="text-sm text-red-700">{errors.emailOrUsername}</span>
+                                            <RiErrorWarningFill color="red" size={16} className="mr-1" /><span className="text-sm font-semibold text-red-700">{errors.emailOrUsername}</span>
                                         </div>) : null
                                 }
                                 <button type="submit" className="bg-[#1ED760] w-32 text-base mt-4 self-center p-3 rounded-3xl text-black font-medium hover:scale-105 hover:transition-transform">Send</button>
