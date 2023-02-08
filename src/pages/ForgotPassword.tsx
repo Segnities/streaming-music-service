@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 
-const forgotPasswordSchema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
     emailOrUsername: Yup.string().required('Required')
 })
 
@@ -16,7 +16,7 @@ function ForgotPassword() {
                     We'll send you an email with your username and a link to reset your password.</p>
                 <Formik
                     initialValues={{ emailOrUsername: "" }}
-                    validationSchema={forgotPasswordSchema}
+                    validationSchema={validationSchema}
                     onSubmit={values => {
                         console.log(values);
                     }}>
@@ -24,11 +24,15 @@ function ForgotPassword() {
                         ({ errors, touched }) => (
                             <Form className="w-full flex flex-col text-start mt-4">
                                 <label htmlFor="email-or-username" className="text-sm font-bold my-1">Enter email address or username</label>
-                                <Field name='emailOrUsername' type="text" id="email-or-username" placeholder="Enter email address or username" className="text-base normal-case my-1 line tracking-normal p-3 border-[1px] focus-visible:border-[3px] border-gray-800" />
+                                <Field
+                                    name='emailOrUsername'
+                                    type="text" id="email-or-username"
+                                    placeholder="Enter email address or username"
+                                    className={`text-base normal-case my-1 line tracking-normal p-3 border-[1px] focus-visible:border-[3px] ${errors.emailOrUsername ? "border-red-700" : "border-gray-800"}`} />
                                 {
                                     errors.emailOrUsername && touched.emailOrUsername ?
                                         (<div className="flex items-center mt-1">
-                                            <RiErrorWarningFill color="red" size={16} className="mr-1" /><span className="text-sm text-red-700">{errors.emailOrUsername}</span>
+                                            <RiErrorWarningFill color="red" size={16} className="mr-1" /><span className="text-sm font-semibold text-red-700">{errors.emailOrUsername}</span>
                                         </div>) : null
                                 }
                                 <button type="submit" className="bg-[#1ED760] w-32 text-base mt-4 self-center p-3 rounded-3xl text-black font-medium hover:scale-105 hover:transition-transform">Send</button>
