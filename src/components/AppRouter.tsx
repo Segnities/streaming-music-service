@@ -1,15 +1,24 @@
-import { Route, Routes } from "react-router";
+import { useLocation } from "react-router";
 
-import { routes } from "../routes";
+import AppTemplate from "../templates/AppTemplate";
+import AuthenticationTemplate from "../templates/AuthenticationTemplate";
+import { authenticationRoutes } from "../routes"
 
 function AppRouter() {
+    const location = useLocation();
+    const pathname = location.pathname;
+    const isAuthPath = authenticationRoutes.filter(route => route.path === pathname).length > 0
+
     return (
-      <Routes>
-        {routes.map((route) => (
-          <Route key={route.id} path={route.path} element={<route.element />} />
-        ))}
-      </Routes>
+        <div className="relative flex min-h-screen">
+            {
+                isAuthPath ?
+                    <AuthenticationTemplate /> : <AppTemplate />
+            }
+
+        </div>
+
     );
 }
 
-export default AppRouter;
+export default AppRouter

@@ -11,7 +11,7 @@ import { playPause, setActiveSong } from "../../store/reducers/player";
 import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
-function TopCharts() {
+function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
   const topCharts: SongRootObject[] = isFetching
     ? []
@@ -65,4 +65,4 @@ function TopCharts() {
   );
 }
 
-export default TopCharts;
+export default TopChartsWidget;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { links } from "../../../routes";
+import { publicLinks } from "../../../routes";
 
 import { RiCloseLine } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
@@ -10,7 +10,7 @@ import Logo from "../../../assets/logo.svg";
 function NavLinks() {
   return (
     <div className="mt-10">
-      {links.map((link) => (
+      {publicLinks.map((link) => (
         <NavLink
           to={link.to}
           key={link.to}
@@ -51,9 +51,8 @@ function Sidebar() {
       </div>
 
       <div
-        className={`absolute w-2/3 top-0 min-h-full bg-gradient-to-tl from-white/10 to-[#483d8b] backdrop-blur-lg z-10 p-6 md:hidden smooth-transition ${
-          isMobileMenuOpen ? "left-0" : "-left-full"
-        }`}
+        className={`absolute w-2/3 top-0 min-h-full bg-gradient-to-tl from-white/10 to-[#483d8b] backdrop-blur-lg z-10 p-6 md:hidden smooth-transition ${isMobileMenuOpen ? "left-0" : "-left-full"
+          }`}
       >
         <img src={Logo} alt="logo" className="w-full h-14 object-contain" />
         <NavLinks />
