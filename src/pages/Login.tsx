@@ -8,8 +8,8 @@ import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 
 
 const validationSchema = Yup.object().shape({
-    email: Yup.string().email().min(1).required('Email'),
-    password: Yup.string().min(1).required('Password'),
+    email: Yup.string().email().min(1).required('Email is required'),
+    password: Yup.string().min(1).required('Password is required'),
     rememberMe: Yup.boolean()
 
 })
