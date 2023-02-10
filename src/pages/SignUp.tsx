@@ -3,7 +3,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, DocumentData, getDocs, query, QueryDocumentSnapshot, QuerySnapshot } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -47,25 +47,37 @@ function SignUp() {
 
     const navigate = useNavigate();
 
-    const [isAccountDuplicate, setIsAccountDuplicate] = useState({
-        username: false,
-        email: false
+    const [errors, setErrors] = useState({
+        email: false,
+        username: false
     });
 
+    const getUsers = async (username, email: string) => {
+        const userList: { id: string, data: { username: string, email: string, password: string, gender: string, birhday: string } }[] = [];
+        const querySnapshot = await getDocs(collectionRef);
+        querySnapshot.forEach((doc) => {
+            userList.push({ id: doc.id, data: doc.data() });
+        });
+        const isUsernameDuplicate = userList.filter(user => user.data.username === username).length === 0;
+        const isEmailDupcicate = userList.filter(user => user.data.email === email).length === 0;
+
+        setErrors({ ...errors, email: isEmailDupcicate, username: isUsernameDuplicate });
+
+
+    }
 
     const signUpUserWithEmailAndPassword = ({ email, password, username, day, mounth, year, gender }) => {
+        getUsers(username, email);
 
-        if (!isAccountDuplicate.email) {
+        if (errors.username === false && errors.username === false) {
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                localStorage.setItem("success-user-sign-up", JSON.stringify(userCredential.user.email))
+            }).catch((error) => setErrors({ ...errors, email: true }));
             addDoc(collectionRef, {
                 email, password, username, birhday: `${day} ${mounth} ${year}`, gender
             });
-        }
-        createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
             navigate('/login');
-            localStorage.setItem("success-user-sign-up", JSON.stringify(userCredential.user.email))
-            console.log(userCredential)
-        }).catch((error) => setIsAccountDuplicate({ ...isAccountDuplicate, email: true }));
-
+        }
     }
 
     const singUpWithGoogleProvider = () => {
@@ -134,7 +146,7 @@ function SignUp() {
                                             outline-none
                                             line tracking-normal p-3 border-[1px] 
                                             focus-visible:border-[3px] 
-                                            ${errors.email || isAccountDuplicate.email ? "border-red-700" : "border-gray-800"}`}
+                                            ${errors.email ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
                                             errors.email && touched.email ? (
@@ -144,14 +156,7 @@ function SignUp() {
                                                 </div>
                                             ) : null
                                         }
-                                        {
-                                            isAccountDuplicate.email ? (
-                                                <div className="flex items-center mt-1">
-                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
-                                                    <span className="text-sm font-semibold text-red-700">This email already exists! </span>
-                                                </div>
-                                            ) : null
-                                        }
+
                                     </div>
                                     <div className="flex flex-col">
                                         <label htmlFor="password" className="text-sm font-bold my-1">Create a password</label>
@@ -360,7 +365,7 @@ function SignUp() {
                                             errors.gender && touched.gender ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
-                                                    <span className="text-sm font-semibold text-red-700">{errors.day}</span>
+                                                    <span className="text-sm font-semibold text-red-700">{errors.gender}</span>
                                                 </div>) : null
                                         }
                                     </div>
