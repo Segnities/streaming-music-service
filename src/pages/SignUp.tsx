@@ -1,4 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { addDoc, collection, DocumentData, getDocs } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -7,12 +10,25 @@ import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 import { RiErrorWarningFill } from "react-icons/ri";
+
+import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 import { useState } from "react";
 
+interface UserDoc {
+    email: string;
+    password: string;
+    gender: string;
+    birthday: string;
+}
+
+interface UserDocList {
+    id: string;
+    data: DocumentData
+}
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
-    password: Yup.string().min(8, 'Password is too short - should be 8 chars minimum.').matches(/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(^A-Za-z0-9)/).required('Password is required'),
+    password: Yup.string().min(8, 'Password is too short - should be 8 chars minimum.').required('Password is required'),
     confirmPassword: Yup.string().min(8).when("password", {
         is: (val: any) => (val && val.length > 0 ? true : false),
         then: Yup.string().oneOf([Yup.ref("password")], "Both password need to be the same")
@@ -35,6 +51,53 @@ const validationSchema = Yup.object().shape({
 })
 
 function SignUp() {
+    const auth = getAuth(firebaseApp);
+    const googleProvider = new GoogleAuthProvider();
+    const collectionRef = collection(firebaseDatabase, "users");
+
+    const [isFieldUnique, setIsFieldUnique] = useState({
+        email: true,
+        username: true
+    });
+
+    const navigate = useNavigate();
+
+    const getUsers = async () => {
+        const userList: UserDocList[] = [];
+        const querySnapshot = await getDocs(collectionRef);
+
+        querySnapshot.forEach((doc) => {
+            userList.push({
+                id: doc.id, data: doc.data()
+            })
+        });
+        return userList;
+    }
+
+    const signUpUserWithEmailAndPassword = async ({ email, password, username, day, mounth, year, gender }) => {
+        const users = await getUsers();
+        const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
+        const isUsernameUnique: boolean = users.filter(usr => usr.data.username === username).length > 1 ? false : true;
+
+        setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique })
+
+        if (isEmailUnique && isUsernameUnique) {
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                localStorage.setItem("success-user-sign-up", JSON.stringify(userCredential.user.email))
+            }).catch((error) => console.log(error));
+            addDoc(collectionRef, {
+                email, password, username, birhday: `${day} ${mounth} ${year}`, gender
+            });
+            navigate('/login');
+        }
+    }
+
+    const singUpWithGoogleProvider = () => {
+        signInWithPopup(auth, googleProvider).then((result) => {
+            alert(JSON.stringify(result, null, 2));
+        }).catch(error => alert(error.code + ":" + error.message));
+    }
+
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
@@ -48,7 +111,7 @@ function SignUp() {
                         <AiOutlineTwitter size={21} color={"white"} />
                         <span className="text-white font-semibold text-base pl-2">START WITH TWITTER</span>
                     </button>
-                    <button className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
+                    <button onClick={singUpWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <FcGoogle size={21} />
                         <span className="text-base text-gray-600 pl-2 font-semibold">START WITH GOOGLE</span>
                     </button>
@@ -71,13 +134,16 @@ function SignUp() {
                             day: '',
                             mounth: '',
                             year: '',
+                            gender: ''
 
                         }}
                         validationSchema={validationSchema}
-                        onSubmit={(values) => alert(JSON.stringify(values))}
+                        onSubmit={(values) => {
+                            signUpUserWithEmailAndPassword(values)
+                        }}
                     >
                         {
-                            ({ errors, touched }) => (
+                            ({ errors, touched, values }) => (
                                 <Form autoComplete="off">
                                     <div className="flex flex-col">
                                         <label htmlFor="email" className="text-sm font-bold my-1">Enter your email address</label>
@@ -92,13 +158,21 @@ function SignUp() {
                                             outline-none
                                             line tracking-normal p-3 border-[1px] 
                                             focus-visible:border-[3px] 
-                                            ${errors.email ? "border-red-700" : "border-gray-800"}`}
+                                            ${errors.email || isFieldUnique.email === false ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
                                             errors.email && touched.email ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.email}</span>
+                                                </div>
+                                            ) : null
+                                        }
+                                        {
+                                            isFieldUnique.email === false && touched.email ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">This email already exist!</span>
                                                 </div>
                                             ) : null
                                         }
@@ -141,7 +215,7 @@ function SignUp() {
                                                 ${errors.confirmPassword ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
-                                            errors.confirmPassword ? (
+                                            errors.confirmPassword && touched.confirmPassword ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.confirmPassword}</span>
@@ -160,15 +234,23 @@ function SignUp() {
                                                 p-3 border-[1px] 
                                                 outline-none
                                                 focus-visible:border-[3px] 
-                                                ${errors.username ? "border-red-700" : "border-gray-800"}`}
+                                                ${errors.username || isFieldUnique.username === false ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
-                                            errors.username ? (
+                                            errors.username && touched.username ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.username}</span>
                                                 </div>) : null
                                         }
+                                        {
+                                            isFieldUnique.username === false && touched.username ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">This username already exist!</span>
+                                                </div>) : null
+                                        }
+
                                     </div>
                                     <div className="flex flex-col justify-between">
                                         <p className="my-3 font-bold text-sm">Enter your birthday</p>
@@ -195,7 +277,10 @@ function SignUp() {
                                                     as="select"
                                                     name="mounth"
                                                     id="mounth"
-                                                    className="p-2 border-[1px] hover:border-2 border-gray-500 hover:border-black"
+                                                    className={`
+                                                    p-2 border-[1px] hover:border-2 
+                                                    ${errors.mounth ? "border-red-700" : "border-gray-500"} 
+                                                    hover:${errors.mounth ? "border-red-700" : "border-black"}`}
                                                 >
                                                     <option value="" disabled>Mounth</option>
                                                     <option value="January">January</option>
@@ -231,21 +316,21 @@ function SignUp() {
                                             </div>
                                         </div>
                                         {
-                                            errors.day ? (
+                                            errors.day && touched.day ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.day}</span>
                                                 </div>) : null
                                         }
                                         {
-                                            errors.mounth ? (
+                                            errors.mounth && touched.mounth && values.mounth.length === 0 ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.mounth}</span>
                                                 </div>) : null
                                         }
                                         {
-                                            errors.year ? (
+                                            errors.year && touched.year ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.year}</span>
@@ -306,6 +391,13 @@ function SignUp() {
                                                 />
                                             </div>
                                         </div>
+                                        {
+                                            errors.gender && touched.gender ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">{errors.gender}</span>
+                                                </div>) : null
+                                        }
                                     </div>
                                     <div className="flex justify-center items-center my-8">
                                         <button type="submit" className="bg-[#1ED760] w-2/6 text-2xl p-3 rounded-[32px] text-black font-medium hover:scale-x-110 hover:scale-y-105 hover:transition-transform">Sign Up</button>
