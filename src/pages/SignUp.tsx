@@ -1,9 +1,7 @@
-import { useState } from "react";
-
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { addDoc, collection, DocumentData, getDocs, query, QueryDocumentSnapshot, QuerySnapshot } from "firebase/firestore";
+import { addDoc, collection, DocumentData, getDocs } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -14,7 +12,19 @@ import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 import { RiErrorWarningFill } from "react-icons/ri";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
+import { useState } from "react";
 
+interface UserDoc {
+    email: string;
+    password: string;
+    gender: string;
+    birthday: string;
+}
+
+interface UserDocList {
+    id: string;
+    data: DocumentData
+}
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
@@ -45,34 +55,36 @@ function SignUp() {
     const googleProvider = new GoogleAuthProvider();
     const collectionRef = collection(firebaseDatabase, "users");
 
-    const navigate = useNavigate();
-
-    const [errors, setErrors] = useState({
-        email: false,
-        username: false
+    const [isFieldUnique, setIsFieldUnique] = useState({
+        email: true,
+        username: true
     });
 
-    const getUsers = async (username, email: string) => {
-        const userList: { id: string, data: { username: string, email: string, password: string, gender: string, birhday: string } }[] = [];
+    const navigate = useNavigate();
+
+    const getUsers = async () => {
+        const userList: UserDocList[] = [];
         const querySnapshot = await getDocs(collectionRef);
+
         querySnapshot.forEach((doc) => {
-            userList.push({ id: doc.id, data: doc.data() });
+            userList.push({
+                id: doc.id, data: doc.data()
+            })
         });
-        const isUsernameDuplicate = userList.filter(user => user.data.username === username).length === 0;
-        const isEmailDupcicate = userList.filter(user => user.data.email === email).length === 0;
-
-        setErrors({ ...errors, email: isEmailDupcicate, username: isUsernameDuplicate });
-
-
+        return userList;
     }
 
-    const signUpUserWithEmailAndPassword = ({ email, password, username, day, mounth, year, gender }) => {
-        getUsers(username, email);
+    const signUpUserWithEmailAndPassword = async ({ email, password, username, day, mounth, year, gender }) => {
+        const users = await getUsers();
+        const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
+        const isUsernameUnique: boolean = users.filter(usr => usr.data.username === username).length > 1 ? false : true;
 
-        if (errors.username === false && errors.username === false) {
+        setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique })
+
+        if (isEmailUnique && isUsernameUnique) {
             createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
                 localStorage.setItem("success-user-sign-up", JSON.stringify(userCredential.user.email))
-            }).catch((error) => setErrors({ ...errors, email: true }));
+            }).catch((error) => console.log(error));
             addDoc(collectionRef, {
                 email, password, username, birhday: `${day} ${mounth} ${year}`, gender
             });
@@ -146,7 +158,7 @@ function SignUp() {
                                             outline-none
                                             line tracking-normal p-3 border-[1px] 
                                             focus-visible:border-[3px] 
-                                            ${errors.email ? "border-red-700" : "border-gray-800"}`}
+                                            ${errors.email || isFieldUnique.email === false ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
                                             errors.email && touched.email ? (
@@ -156,7 +168,14 @@ function SignUp() {
                                                 </div>
                                             ) : null
                                         }
-
+                                        {
+                                            isFieldUnique.email === false && touched.email ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">This email already exist!</span>
+                                                </div>
+                                            ) : null
+                                        }
                                     </div>
                                     <div className="flex flex-col">
                                         <label htmlFor="password" className="text-sm font-bold my-1">Create a password</label>
@@ -215,7 +234,7 @@ function SignUp() {
                                                 p-3 border-[1px] 
                                                 outline-none
                                                 focus-visible:border-[3px] 
-                                                ${errors.username ? "border-red-700" : "border-gray-800"}`}
+                                                ${errors.username || isFieldUnique.username === false ? "border-red-700" : "border-gray-800"}`}
                                         />
                                         {
                                             errors.username && touched.username ? (
@@ -224,6 +243,14 @@ function SignUp() {
                                                     <span className="text-sm font-semibold text-red-700">{errors.username}</span>
                                                 </div>) : null
                                         }
+                                        {
+                                            isFieldUnique.username === false && touched.username ? (
+                                                <div className="flex items-center mt-1">
+                                                    <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                    <span className="text-sm font-semibold text-red-700">This username already exist!</span>
+                                                </div>) : null
+                                        }
+
                                     </div>
                                     <div className="flex flex-col justify-between">
                                         <p className="my-3 font-bold text-sm">Enter your birthday</p>
@@ -250,7 +277,10 @@ function SignUp() {
                                                     as="select"
                                                     name="mounth"
                                                     id="mounth"
-                                                    className="p-2 border-[1px] hover:border-2 border-gray-500 hover:border-black"
+                                                    className={`
+                                                    p-2 border-[1px] hover:border-2 
+                                                    ${errors.mounth ? "border-red-700" : "border-gray-500"} 
+                                                    hover:${errors.mounth ? "border-red-700" : "border-black"}`}
                                                 >
                                                     <option value="" disabled>Mounth</option>
                                                     <option value="January">January</option>
@@ -293,7 +323,7 @@ function SignUp() {
                                                 </div>) : null
                                         }
                                         {
-                                            errors.mounth && touched.mounth && values.email.length === 0 ? (
+                                            errors.mounth && touched.mounth && values.mounth.length === 0 ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                     <span className="text-sm font-semibold text-red-700">{errors.mounth}</span>
