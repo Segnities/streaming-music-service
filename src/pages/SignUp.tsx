@@ -1,6 +1,7 @@
+import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, User, UserCredential } from "firebase/auth";
 import { addDoc, collection, DocumentData, getDocs } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
@@ -12,7 +13,8 @@ import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 import { RiErrorWarningFill } from "react-icons/ri";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
-import { useState } from "react";
+
+import { AuthContext } from "../context"
 
 interface UserDoc {
     email: string;
@@ -55,6 +57,9 @@ function SignUp() {
     const googleProvider = new GoogleAuthProvider();
     const collectionRef = collection(firebaseDatabase, "users");
 
+    const authContext = useContext(AuthContext);
+
+
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: true,
         username: true
@@ -93,8 +98,11 @@ function SignUp() {
     }
 
     const singUpWithGoogleProvider = () => {
-        signInWithPopup(auth, googleProvider).then((result) => {
-            alert(JSON.stringify(result, null, 2));
+        signInWithPopup(auth, googleProvider).then((res: UserCredential) => {
+            alert(JSON.stringify(res?.user, null, 2));
+            authContext?.setIsAuth(true);
+            authContext?.setUser(res?.user);
+            navigate('/');
         }).catch(error => alert(error.code + ":" + error.message));
     }
 
