@@ -88,7 +88,7 @@ function SignUp() {
 
         if (isEmailUnique && isUsernameUnique) {
             createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                localStorage.setItem("success-user-sign-up", JSON.stringify(userCredential.user.email))
+                localStorage.setItem("success-user-sign-up", "true")
             }).catch((error) => console.log(error));
             addDoc(collectionRef, {
                 email, password, username, birhday: `${day} ${mounth} ${year}`, gender
@@ -97,10 +97,18 @@ function SignUp() {
         }
     }
 
-    const singUpWithGoogleProvider = () => {
+    const singUpWithGoogleProvider = async () => {
+        const users = await getUsers();
         signInWithPopup(auth, googleProvider).then((res: UserCredential) => {
             alert(JSON.stringify(res?.user, null, 2));
             authContext?.setIsAuth(true);
+
+            if (users.find(usr => usr.data.email === res.user.email) === undefined) {
+                addDoc(collectionRef, {
+                    email: res?.user.email,
+                    username: res?.user.email
+                });
+            }
             authContext?.setUser(res?.user);
             navigate('/');
         }).catch(error => alert(error.code + ":" + error.message));
@@ -113,15 +121,15 @@ function SignUp() {
                 <div className="flex flex-col flex-1 items-center">
                     <button className="w-72 sm:w-96 flex items-center my-2 bg-[#3b5998] justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <AiFillFacebook size={21} color={"white"} />
-                        <span className="text-white font-semibold text-base pl-2">START WITH FACEBOOK</span>
+                        <span className="text-white font-semibold text-base pl-2">CONTINUE WITH FACEBOOK</span>
                     </button>
                     <button className="w-72 sm:w-96 flex items-center my-2 bg-[#1887F2] justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <AiOutlineTwitter size={21} color={"white"} />
-                        <span className="text-white font-semibold text-base pl-2">START WITH TWITTER</span>
+                        <span className="text-white font-semibold text-base pl-2">CONTINUE WITH TWITTER</span>
                     </button>
                     <button onClick={singUpWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <FcGoogle size={21} />
-                        <span className="text-base text-gray-600 pl-2 font-semibold">START WITH GOOGLE</span>
+                        <span className="text-base text-gray-600 pl-2 font-semibold">CONTINUE WITH GOOGLE</span>
                     </button>
                 </div>
                 <div className="flex flex-row mt-5">

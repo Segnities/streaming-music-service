@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { publicLinks } from "../../../routes";
+import { privateLinks, publicLinks } from "../../../routes";
 
 import { RiCloseLine } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
 import Logo from "../../../assets/logo.svg";
+import { AuthContext } from "../../../context";
 
 function NavLinks() {
+  const authContext = useContext(AuthContext);
   return (
     <div className="mt-10">
-      {publicLinks.map((link) => (
+      {authContext?.isAuth ? privateLinks.map((link) => (
+        <NavLink
+          to={link.to}
+          key={link.to}
+          className="flex flex-row justify-start items-center my-8 text-sm font-medium text-gray-400 hover:text-cyan-400"
+        >
+          <link.icon className="w-6 h-6 mr-2" />
+          {link.name}
+        </NavLink>
+      )) : publicLinks.map((link) => (
         <NavLink
           to={link.to}
           key={link.to}
