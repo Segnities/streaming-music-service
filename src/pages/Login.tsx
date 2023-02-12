@@ -5,6 +5,8 @@ import * as Yup from "yup";
 
 import { FcGoogle } from "react-icons/fc";
 import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context";
 
 
 const validationSchema = Yup.object().shape({
@@ -25,12 +27,23 @@ function Login() {
         onSubmit(values, formikHelpers) {
             alert(JSON.stringify(values, null, 2))
         },
+    });
+    const [successSignUp, setSuccessSignUp] = useState(false);
+
+    const authContext = useContext(AuthContext);
+
+    useEffect(() => {
+        if (localStorage.getItem("success-user-sign-up") === "true") {
+            setSuccessSignUp(true);
+        }
     })
 
-    const formikFieldErrors = formik.errors.email || formik.errors.password;
 
     return (
         <div className="flex flex-1 flex-col items-center">
+            {
+                successSignUp && <div className="w-full p-5 font-bold text-2xl color-white bg-green-600">Your successfully sign up to Vite!</div>
+            }
             <p className="text-base font-bold">To continue, log to Vite.</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div>
