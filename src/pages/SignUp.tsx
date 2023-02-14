@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, User, UserCredential } from "firebase/auth";
-import { addDoc, collection, DocumentData, getDocs } from "firebase/firestore";
+import { addDoc, collection, DocumentData } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,7 @@ import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 import { RiErrorWarningFill } from "react-icons/ri";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
+import { getUsers } from "../utils/getUsers";
 
 import { AuthContext } from "../context"
 
@@ -67,18 +68,6 @@ function SignUp() {
 
     const navigate = useNavigate();
 
-    const getUsers = async () => {
-        const userList: UserDocList[] = [];
-        const querySnapshot = await getDocs(collectionRef);
-
-        querySnapshot.forEach((doc) => {
-            userList.push({
-                id: doc.id, data: doc.data()
-            })
-        });
-        return userList;
-    }
-
     const signUpUserWithEmailAndPassword = async ({ email, password, username, day, mounth, year, gender }) => {
         const users = await getUsers();
         const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
@@ -87,9 +76,7 @@ function SignUp() {
         setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique })
 
         if (isEmailUnique && isUsernameUnique) {
-            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                localStorage.setItem("success-user-sign-up", "true")
-            }).catch((error) => console.log(error));
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => userCredential).catch((error) => console.log(error));
             addDoc(collectionRef, {
                 email, password, username, birhday: `${day} ${mounth} ${year}`, gender
             });
