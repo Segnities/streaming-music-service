@@ -22,6 +22,7 @@ function Discover() {
   const dispatch = useDispatch();
   const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
 
+
   const filledData = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
 
   if (isFetching || filledData.length === 0) {
