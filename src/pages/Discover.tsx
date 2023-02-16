@@ -37,7 +37,7 @@ function Discover() {
     <div className="flex flex-col">
       <div className="w-full flex flex-col justify-between items-center mt-4 mb-10 sm:flex-row">
         <h2 className="font-bold text-3xl text-white text-left">Discover</h2>
-        <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-0 sm:mt-5" value={genreListId || "POP"} onChange={(e) => {
+        <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-8 w-full  sm:mt-5 sm:w-auto" value={genreListId || "POP"} onChange={(e) => {
           dispatch(selectGenreListId(e.target.value))
         }}>
           {genres.map((genre: Genre) => (

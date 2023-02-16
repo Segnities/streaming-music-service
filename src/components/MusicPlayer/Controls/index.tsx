@@ -8,11 +8,11 @@ import {
 
 interface Props {
   isPlaying: boolean;
-  isActive:boolean;
+  isActive: boolean;
   repeat: boolean;
-  setRepeat: (prev:any) => void;
+  setRepeat: (prev: any) => void;
   shuffle: boolean;
-  setShuffle: (prev:any) => void;
+  setShuffle: (prev: any) => void;
   currentSongs: [];
   handlePlayPause: () => void;
   handlePrevSong: () => void;
@@ -32,7 +32,7 @@ function Controls(props: Props) {
     handleNextSong,
   } = props;
   return (
-    <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
+    <div className="w-full flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
       <BsArrowRepeat
         size={20}
         color={repeat ? "red" : "white"}
