@@ -9,11 +9,10 @@ interface Props {
 function Track(props: Props) {
   const { isActive, isPlaying, activeSong } = props;
   return (
-    <div className="flex flex-1 items-center justify-start">
+    <div className="flex flex-1 md:flex-initial  items-center justify-start">
       <div
-        className={`w-16 h-16 mr-4 hidden sm:block ${
-          isPlaying && isActive ? "animate-[spin_3s_linear_infinite]" : ""
-        }`}
+        className={`w-16 h-16 mr-4 hidden sm:block ${isPlaying && isActive ? "animate-[spin_3s_linear_infinite]" : ""
+          }`}
       >
         <img
           src={activeSong?.images?.coverart}
