@@ -100,6 +100,7 @@ function SignUp() {
         }).catch(error => alert(error.code + ":" + error.message));
     }
 
+
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>

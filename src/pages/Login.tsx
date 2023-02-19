@@ -15,6 +15,7 @@ import {
     browserSessionPersistence,
     getAuth,
     GoogleAuthProvider,
+    onAuthStateChanged,
     setPersistence,
     signInWithEmailAndPassword,
     signInWithPopup,
@@ -41,7 +42,6 @@ function Login() {
     const handleSignInWithGoogleProvider = async () => {
         await setPersistence(auth, browserLocalPersistence);
         signInWithPopup(auth, googleProvider).then((res: UserCredential) => {
-            localStorage.setItem("x-remember-user", JSON.stringify(res?.user));
             authContext?.setIsAuth(true);
             authContext?.setUser(res?.user);
             navigate("/");
@@ -53,11 +53,16 @@ function Login() {
         signInWithEmailAndPassword(auth, email, password).then(
             (res) => {
                 authContext?.setIsAuth(true);
-                localStorage.setItem("x-remember-user", JSON.stringify(res?.user));
-                authContext?.setUser(res?.user);
                 navigate('/');
             }).catch(err => alert(err.code + ":" + err.message));
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authContext?.setUser(user);
+            } else {
+                console.log('User was sign out :(');
 
+            }
+        })
     }
 
     return (

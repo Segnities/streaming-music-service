@@ -25,7 +25,7 @@ function AppTemplate() {
             <div className="px-6 py-8 h-[calc(100vh- 2px)] flex xl:flex-row flex-col-reverse">
                 <div className="flex-1 h-fit pb-40">
                     <Routes>
-                        {authContext?.isAuth === true ? privateRoutes.map((route) => (
+                        {authContext?.user?.uid ? privateRoutes.map((route) => (
                             <Route key={route.id} path={route.path} element={<route.element />} />
                         )) : publicRoutes.map((route) => (
                             <Route key={route.id} path={route.path} element={<route.element />} />
