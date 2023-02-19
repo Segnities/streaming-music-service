@@ -1,9 +1,4 @@
-import {
-  DocumentData,
-  collection,
-  getDocs,
-} from "firebase/firestore";
-
+import { collection, getDocs, DocumentData } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 interface UserDocList {
@@ -11,10 +6,9 @@ interface UserDocList {
   data: DocumentData;
 }
 
-export const getUsers = async () => {
+export async function getUser(uid:string) {
   const collectionRef = collection(firebaseDatabase, "users");
   const userList: UserDocList[] = [];
-
   const querySnapshot = await getDocs(collectionRef);
 
   querySnapshot.forEach((doc) => {
@@ -24,4 +18,4 @@ export const getUsers = async () => {
     });
   });
   return userList;
-};
+}

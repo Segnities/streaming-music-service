@@ -10,7 +10,17 @@ import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
 
 
 import { AuthContext } from "../context";
-import { browserLocalPersistence, browserSessionPersistence, getAuth, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
+import {
+    browserLocalPersistence,
+    browserSessionPersistence,
+    getAuth,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    setPersistence,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    UserCredential
+} from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
 
 
@@ -25,18 +35,34 @@ function Login() {
     const auth = getAuth(firebaseApp);
     const authContext = useContext(AuthContext);
 
+    const googleProvider = new GoogleAuthProvider();
+
     const navigate = useNavigate();
 
-    const signIn = async (email: string, password: string, rememberMe: boolean) => {
-        await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+    const handleSignInWithGoogleProvider = async () => {
+        await setPersistence(auth, browserLocalPersistence);
+        signInWithPopup(auth, googleProvider).then((res: UserCredential) => {
+            authContext?.setIsAuth(true);
+            authContext?.setUser(res?.user);
+            navigate("/");
+        }).catch(err => alert(err.code + ":" + err.message));
+    }
 
+    const handleSignInWithEmailAndPasswordProvider = async (email: string, password: string, rememberMe: boolean) => {
+        await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         signInWithEmailAndPassword(auth, email, password).then(
             (res) => {
                 authContext?.setIsAuth(true);
-                authContext?.setUser(res?.user);
                 navigate('/');
             }).catch(err => alert(err.code + ":" + err.message));
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authContext?.setUser(user);
+            } else {
+                console.log('User was sign out :(');
 
+            }
+        })
     }
 
     return (
@@ -52,7 +78,7 @@ function Login() {
                         <AiOutlineTwitter size={21} color={"white"} />
                         <span className="text-white font-semibold text-base pl-2">CONTINUE WITH TWITTER</span>
                     </button>
-                    <button className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
+                    <button onClick={handleSignInWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <FcGoogle size={21} />
                         <span className="text-base text-gray-600 pl-2 font-semibold">CONTINUE WITH GOOGLE</span>
                     </button>
@@ -70,7 +96,9 @@ function Login() {
                             rememberMe: false
                         }}
                         validationSchema={validationSchema}
-                        onSubmit={(values) => { signIn(values.email, values.password, values.rememberMe) }}
+                        onSubmit={(values) => {
+                            handleSignInWithEmailAndPasswordProvider(values.email, values.password, values.rememberMe)
+                        }}
                     >
                         {
                             ({ errors, touched, values }) => (

@@ -12,7 +12,7 @@ function NavLinks() {
   const authContext = useContext(AuthContext);
   return (
     <div className="mt-10">
-      {authContext?.isAuth ? privateLinks.map((link) => (
+      {authContext?.user?.uid ? privateLinks.map((link) => (
         <NavLink
           to={link.to}
           key={link.to}

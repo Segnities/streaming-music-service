@@ -15,7 +15,7 @@ interface Props {
 function VolumeBar(props: Props) {
   const { value, min, max, onChange, setVolume } = props;
   return (
-    <div className="hidden lg:flex flex-1 items-center justify-end">
+    <div className="hidden lg:flex flex-1 items-center justify-center lg:pr-7">
       {value <= 1 && value > 0.5 && (
         <BsFillVolumeUpFill
           size={25}

@@ -1,5 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const first = {
+  key: "e60eb95ad5msh3b2acc1834b3709p1474b2jsnf25468328f98",
+  host: "shazam-core.p.rapidapi.com",
+};
+
+enum Accounts {
+  first = "e60eb95ad5msh3b2acc1834b3709p1474b2jsnf25468328f98",
+}
+
 const RAPID_HOST: string = "shazam-core.p.rapidapi.com";
 const ACTIVE_RAPID_KEY: string =
   "6a60bf0562msh30807a648877b34p16c807jsn43ead18ffe1f";
@@ -29,7 +38,7 @@ export const shazamCoreApiV1 = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://shazam-core.p.rapidapi.com/v1",
     prepareHeaders: (headers) => {
-      headers.set("X-RapidAPI-Key", ACTIVE_RAPID_KEY);
+      headers.set("X-RapidAPI-Key", Accounts.first);
       headers.set("X-Rapid-Host", RAPID_HOST);
 
       return headers;
