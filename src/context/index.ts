@@ -1,11 +1,10 @@
 import React, { createContext } from "react";
 
-import { User, UserCredential } from "firebase/auth";
+import { UserCredential, User } from "firebase/auth";
 
-type AuthType = {
+export type AuthType = {
   isAuth: boolean;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };

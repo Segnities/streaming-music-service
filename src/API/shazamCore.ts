@@ -10,8 +10,6 @@ enum Accounts {
 }
 
 const RAPID_HOST: string = "shazam-core.p.rapidapi.com";
-const ACTIVE_RAPID_KEY: string =
-  "6a60bf0562msh30807a648877b34p16c807jsn43ead18ffe1f";
 
 /*1-st source - Shazam Core
   headers: 
@@ -73,7 +71,7 @@ export const shazamCoreApiV2 = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://shazam-core.p.rapidapi.com/v2",
     prepareHeaders: (headers) => {
-      headers.set("X-RapidAPI-Key", ACTIVE_RAPID_KEY);
+      headers.set("X-RapidAPI-Key", Accounts.first);
       headers.set("X-RapidAPI-Host", RAPID_HOST);
 
       return headers;

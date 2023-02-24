@@ -79,7 +79,10 @@ function Artist() {
   const attributes: PurpleAttributes = artist?.attributes;
   const playlist: FeaturedAlbumsDatum[] = artist?.views?.playlists?.data;
 
+  console.dir(artist);
+
   const artistImage =
+    artist?.avatar ||
     attributes?.editorialArtwork?.originalFlowcaseBrick?.url ||
     attributes?.editorialArtwork?.bannerUber?.url ||
     attributes?.editorialArtwork?.subscriptionHero?.url ||

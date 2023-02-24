@@ -1,23 +1,36 @@
-import { useContext, useEffect } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { AuthContext } from "../context";
+import { AuthContext, AuthType } from "../context";
 
-import { signOut, getAuth, onAuthStateChanged } from "firebase/auth"
+import { signOut, getAuth, User as FirestoreUser } from "firebase/auth"
+import { DocumentData } from "firebase/firestore";
 import { firebaseApp } from "../firebase/firebaseConfig";
 
-import NoImage from "../assets/no_artist.jpg";
+import { getUser } from "../utils/getUser";
 
+import NoImage from "../assets/no_artist.jpg";
+interface UserDocList {
+    id: string;
+    data: DocumentData;
+}
 
 function User() {
-    const { user, setUser } = useContext(AuthContext);
+    const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
     const auth = getAuth(firebaseApp);
+    const [firebaseUser, setFirebaseUser] = useState<UserDocList | undefined | null>(null);
 
     const userSignOut = () => {
         signOut(auth);
-        setUser(null);
+        authContext?.setUser(null);
         navigate("/");
     }
+
+    useEffect(() => {
+        getUser(authContext?.user?.email).then((res) => {
+            setFirebaseUser(res);
+        });
+    }, [])
 
     return <div className="relative w-full flex flex-col">
         <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
@@ -30,22 +43,12 @@ function User() {
             />
             <div className="ml-5 mb-3">
                 <p className="text-3xl sm:text-2xl text-white mb-2">
-                    {user?.providerData?.displayName ?? user?.email}
+                    {authContext?.user?.displayName ?? authContext?.user?.email}
                 </p>
 
             </div>
         </div>
         <div className="w-full h-24 sm:h-24"></div>
-        {user?.bio && (
-            <div className="mt-8 w-full text-2xl">
-                <h3 className="text-gray-100 my-3">Bio</h3>
-                <p
-                    className="text-base text-gray-500"
-                >
-                </p>
-            </div>
-        )
-        }
         <div className="flex justify-end">
             <button className="bg-transparent hover:border-gray-400 cursor-pointer rounded-xl text-white hover:text-gray-400  border-2 px-4 py-3 z-10" onClick={userSignOut}>Logout</button>
         </div>
