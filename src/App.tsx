@@ -6,15 +6,14 @@ import { AuthContext } from "./context";
 
 import AppRouter from "./components/AppRouter";
 
-import { onAuthStateChanged, User, getAuth } from "firebase/auth";
+import { onAuthStateChanged, getAuth, UserCredential, User } from "firebase/auth";
 import { firebaseApp } from "./firebase/firebaseConfig";
 
 
 function App() {
 
   const [isAuth, setIsAuth] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState< User | null>(null);
 
   const auth = getAuth(firebaseApp);
 
@@ -29,7 +28,7 @@ function App() {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isAuth, setIsAuth, isLoading, user, setUser }}>
+    <AuthContext.Provider value={{ isAuth, setIsAuth, user, setUser }}>
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>

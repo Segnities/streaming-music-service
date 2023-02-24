@@ -248,6 +248,7 @@ export interface MainDatum {
   id: string;
   type: Type;
   href: string;
+  avatar: string;
   attributes: PurpleAttributes;
   relationships: Relationships;
   views: DatumViews;

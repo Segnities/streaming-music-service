@@ -1,21 +1,14 @@
 import { collection, getDocs, DocumentData } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
+import { getUsers } from "./getUsers";
 
 interface UserDocList {
   id: string;
   data: DocumentData;
 }
 
-export async function getUser(uid:string) {
-  const collectionRef = collection(firebaseDatabase, "users");
-  const userList: UserDocList[] = [];
-  const querySnapshot = await getDocs(collectionRef);
+export async function getUser(email: string | null | undefined) {
+  const userList: UserDocList[] = await getUsers();
 
-  querySnapshot.forEach((doc) => {
-    userList.push({
-      id: doc.id,
-      data: doc.data(),
-    });
-  });
-  return userList;
+  return userList.find((usr: UserDocList) => usr.data.email === email);
 }
