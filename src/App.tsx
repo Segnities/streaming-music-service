@@ -6,14 +6,16 @@ import { AuthContext } from "./context";
 
 import AppRouter from "./components/AppRouter";
 
-import { onAuthStateChanged, getAuth, UserCredential, User } from "firebase/auth";
+import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 import { firebaseApp } from "./firebase/firebaseConfig";
+
+import { browserSessionPersistence, browserLocalPersistence } from "firebase/auth";
 
 
 function App() {
 
   const [isAuth, setIsAuth] = useState(false);
-  const [user, setUser] = useState< User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const auth = getAuth(firebaseApp);
 
@@ -25,7 +27,8 @@ function App() {
         localStorage.clear();
       }
     })
-  }, [])
+  }, []);
+
 
   return (
     <AuthContext.Provider value={{ isAuth, setIsAuth, user, setUser }}>
