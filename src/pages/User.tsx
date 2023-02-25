@@ -1,8 +1,8 @@
-import { SetStateAction, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext, AuthType } from "../context";
 
-import { signOut, getAuth, User as FirestoreUser } from "firebase/auth"
+import { signOut, getAuth } from "firebase/auth"
 import { DocumentData } from "firebase/firestore";
 import { firebaseApp } from "../firebase/firebaseConfig";
 
@@ -48,7 +48,9 @@ function User() {
 
             </div>
         </div>
-        <div className="w-full h-24 sm:h-24"></div>
+        <div className="w-full h-24 sm:h-24">
+            
+        </div>
         <div className="flex justify-end">
             <button className="bg-transparent hover:border-gray-400 cursor-pointer rounded-xl text-white hover:text-gray-400  border-2 px-4 py-3 z-10" onClick={userSignOut}>Logout</button>
         </div>
