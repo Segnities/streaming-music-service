@@ -5,15 +5,11 @@ import {
 } from "firebase/firestore";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
-
-interface UserDocList {
-  id: string;
-  data: DocumentData;
-}
+import { UserDoc } from "./@types";
 
 export const getUsers = async () => {
   const collectionRef = collection(firebaseDatabase, "users");
-  const userList: UserDocList[] = [];
+  const userList:UserDoc[] = [];
 
   const querySnapshot = await getDocs(collectionRef);
 

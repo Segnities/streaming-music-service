@@ -1,14 +1,9 @@
-import { collection, getDocs, DocumentData } from "firebase/firestore";
-import { firebaseDatabase } from "../firebase/firebaseConfig";
 import { getUsers } from "./getUsers";
 
-interface UserDocList {
-  id: string;
-  data: DocumentData;
-}
+import { UserDoc } from "./@types";
 
 export async function getUser(email: string | null | undefined) {
-  const userList: UserDocList[] = await getUsers();
+  const userList: UserDoc[] = await getUsers();
 
-  return userList.find((usr: UserDocList) => usr.data.email === email);
+  return userList.find((usr: UserDoc) => usr.data.email === email);
 }

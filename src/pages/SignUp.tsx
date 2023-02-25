@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, User, UserCredential, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { addDoc, collection, DocumentData } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, UserCredential, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -15,19 +15,6 @@ import { RiErrorWarningFill } from "react-icons/ri";
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 import { getUsers } from "../utils/getUsers";
 import { AuthContext } from "../context";
-
-
-interface UserDoc {
-    email: string;
-    password: string;
-    gender: string;
-    birthday: string;
-}
-
-interface UserDocList {
-    id: string;
-    data: DocumentData
-}
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
