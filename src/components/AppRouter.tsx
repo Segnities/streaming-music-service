@@ -10,18 +10,18 @@ function AppRouter() {
     const location = useLocation();
     const pathname = location.pathname;
     const authContext = useContext(AuthContext);
-    const uid = JSON.parse(localStorage.getItem("x-remember-user"))?.uid;
+
     const isAuthPath = authenticationRoutes.filter(route => route.path === pathname).length > 0;
 
     useEffect(() => {
-        authContext?.setIsAuth(uid ? true : false);
+        authContext?.setIsAuth(authContext?.user ? true : false);
     });
 
 
     return (
         <div className="relative flex min-h-screen">
             {
-                isAuthPath && !uid ?
+                isAuthPath && !authContext?.isAuth ?
                     <AuthenticationTemplate /> : <AppTemplate />
             }
         </div>
