@@ -9,9 +9,6 @@ import AppRouter from "./components/AppRouter";
 import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 import { firebaseApp } from "./firebase/firebaseConfig";
 
-import { browserSessionPersistence, browserLocalPersistence } from "firebase/auth";
-
-
 function App() {
 
   const [isAuth, setIsAuth] = useState(false);
@@ -23,8 +20,10 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        setIsAuth(true);
       } else {
         localStorage.clear();
+        setIsAuth(false);
       }
     })
   }, []);

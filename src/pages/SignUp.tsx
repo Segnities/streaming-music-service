@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, UserCredential, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
@@ -14,7 +14,9 @@ import { RiErrorWarningFill } from "react-icons/ri";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 import { getUsers } from "../utils/getUsers";
-import { AuthContext } from "../context";
+
+import { signInWithGoogleProvider } from "../utils/signInWithGoogleProvider";
+
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
@@ -42,9 +44,7 @@ const validationSchema = Yup.object().shape({
 
 function SignUp() {
     const auth = getAuth(firebaseApp);
-    const googleProvider = new GoogleAuthProvider();
     const collectionRef = collection(firebaseDatabase, "users");
-    const authContext = useContext(AuthContext);
 
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: true,
@@ -69,24 +69,6 @@ function SignUp() {
         }
     }
 
-    const handleSignUpWithGoogleProvider = async () => {
-        const users = await getUsers();
-        signInWithPopup(auth, googleProvider).then((res: UserCredential) => {
-            authContext?.setIsAuth(true);
-            authContext?.setUser(res?.user)
-
-            if (users.find(usr => usr.data.email === res.user.email) === undefined) {
-                addDoc(collectionRef, {
-                    email: res?.user.email,
-                    username: res?.user.email
-                });
-            }
-            authContext?.setUser(res?.user);
-            setPersistence(auth, browserLocalPersistence);
-            navigate('/');
-        }).catch(error => alert(error.code + ":" + error.message));
-    }
-
 
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
@@ -101,7 +83,7 @@ function SignUp() {
                         <AiOutlineTwitter size={21} color={"white"} />
                         <span className="text-white font-semibold text-base pl-2">CONTINUE WITH TWITTER</span>
                     </button>
-                    <button onClick={handleSignUpWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
+                    <button onClick={signInWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
                         <FcGoogle size={21} />
                         <span className="text-base text-gray-600 pl-2 font-semibold">CONTINUE WITH GOOGLE</span>
                     </button>
