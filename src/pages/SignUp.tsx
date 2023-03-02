@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-
-import { FcGoogle } from "react-icons/fc";
-import { AiFillFacebook, AiOutlineTwitter } from "react-icons/ai";
-import { RiErrorWarningFill } from "react-icons/ri";
-
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
+
+import GoogleSignInBtn from "../components/GoogleSignInBtn";
+
 import { getUsers } from "../utils/getUsers";
 
-import { signInWithGoogleProvider } from "../utils/signInWithGoogleProvider";
+import { RiErrorWarningFill } from "react-icons/ri";
+
 
 
 const validationSchema = Yup.object().shape({
@@ -45,13 +47,13 @@ const validationSchema = Yup.object().shape({
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
+    const navigate = useNavigate();
+
 
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: true,
         username: true
     });
-
-    const navigate = useNavigate();
 
     const handleSignUpWithEmailAndPassword = async ({ email, password, username, day, mounth, year, gender }) => {
         const users = await getUsers();
@@ -63,7 +65,7 @@ function SignUp() {
         if (isEmailUnique && isUsernameUnique) {
             createUserWithEmailAndPassword(auth, email, password).then((userCredential) => userCredential).catch((error) => console.log(error));
             addDoc(collectionRef, {
-                email, password, username, birhday: `${day} ${mounth} ${year}`, gender
+                email, password, username, birthday: `${day} ${mounth} ${year}`, gender
             });
             navigate('/login');
         }
@@ -75,18 +77,7 @@ function SignUp() {
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div className="flex flex-col flex-1 items-center">
-                    <button className="w-72 sm:w-96 flex items-center my-2 bg-[#3b5998] justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
-                        <AiFillFacebook size={21} color={"white"} />
-                        <span className="text-white font-semibold text-base pl-2">CONTINUE WITH FACEBOOK</span>
-                    </button>
-                    <button className="w-72 sm:w-96 flex items-center my-2 bg-[#1887F2] justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
-                        <AiOutlineTwitter size={21} color={"white"} />
-                        <span className="text-white font-semibold text-base pl-2">CONTINUE WITH TWITTER</span>
-                    </button>
-                    <button onClick={signInWithGoogleProvider} className="w-72 sm:w-96 flex items-center my-2 justify-center p-3 border-[1px] border-gray-400 hover:border-black rounded-[32px]">
-                        <FcGoogle size={21} />
-                        <span className="text-base text-gray-600 pl-2 font-semibold">CONTINUE WITH GOOGLE</span>
-                    </button>
+                    <GoogleSignInBtn />
                 </div>
                 <div className="flex flex-row mt-5">
                     <hr role="presentation" className="flex-1 border-[1px] border-solid border-gray-300" />
