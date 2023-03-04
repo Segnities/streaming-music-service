@@ -42,7 +42,6 @@ function SignUp() {
         }
     }
 
-
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
@@ -62,7 +61,20 @@ function SignUp() {
                     <UserAuthFields
                         onSubmitCallback={handleSignUpWithEmailAndPassword}
                         isFieldUnique={isFieldUnique}
-                    />
+                        disabledFields={
+                            {
+                                email: false,
+                                password: false,
+                                username: false,
+                                birthday: false,
+                                gender: false,
+                            }
+                        }
+                    >
+                        <div className="flex justify-center items-center my-8">
+                            <button type="submit" className="bg-[#1ED760] w-2/6 text-2xl p-3 rounded-[32px] text-black font-medium hover:scale-x-110 hover:scale-y-105 hover:transition-transform">Sign Up</button>
+                        </div>
+                    </UserAuthFields>
                     <hr />
                     <div className="flex justify-center mt-1">
                         <p>Do you have an account?<NavLink to='/login'><span className="text-[#1ED760] underline-offset-2 underline ml-1">Login.</span></NavLink></p>
