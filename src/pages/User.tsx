@@ -21,6 +21,14 @@ import { userInfoValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 
+interface DisabledFields {
+    email: boolean;
+    username: boolean;
+    birthday: boolean;
+    password: boolean;
+    gender: boolean;
+}
+
 function User() {
     const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
@@ -30,7 +38,7 @@ function User() {
 
     const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
 
-    const [disabledFields, setDisabledFields] = useState({
+    const [disabledFields, setDisabledFields] = useState<DisabledFields>({
         email: true,
         password: true,
         username: true,
@@ -94,27 +102,28 @@ function User() {
             <div className="mt-3 w-full">
                 <Formik
                     initialValues={{
-                        email: '',
+                        email: firebaseUser?.data.email,
                         password: '',
-                        username: '',
                         confirmPassword: '',
-                        day: '',
-                        mounth: '',
-                        year: '',
-                        gender: ''
+                        username: firebaseUser?.data.username,
+                        day: firebaseUser?.data.birthday.split(" ")[0],
+                        mounth: firebaseUser?.data.birthday.split(" ")[1],
+                        year: firebaseUser?.data.birthday.split(" ")[2],
+                        gender: firebaseUser?.data.gender
 
                     }}
                     validationSchema={userInfoValidationSchema}
                     onSubmit={(values) => {
-                        alert("Hello!")
+                        alert("Hello!");
+                        console.log(JSON.stringify(values, null, 2));
                     }}
                 >
                     {
                         ({ errors, touched, values }) => (
                             <Form autoComplete="off">
                                 <div className="flex flex-col">
-                                    <label htmlFor="email" className="text-sm font-bold my-1">Enter your email address</label>
-                                    <Field
+                                    <label htmlFor="email" className="text-sm text-white font-bold my-1">Enter your email address</label>
+                                    <Field disabled={disabledFields.email}
                                         type="text"
                                         id="email"
                                         autoComplete="off"
@@ -122,6 +131,7 @@ function User() {
                                         placeholder="Enter your email address"
                                         className={`
                                             text-base normal-case my-1 
+                                            disabled:text-white
                                             outline-none
                                             line tracking-normal p-3 border-[1px] 
                                             focus-visible:border-[3px] 
@@ -145,15 +155,16 @@ function User() {
                                     }
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="password" className="text-sm font-bold my-1">Create a password</label>
-                                    <Field
+                                    <label htmlFor="password" className="text-sm text-white font-bold my-1">Create a password</label>
+                                    <Field disabled={disabledFields.password}
                                         type="password"
                                         name="password"
                                         id="password"
                                         placeholder="Password"
                                         className={`
                                                 text-base normal-case line my-1 tracking-normal 
-                                                p-3 border-[1px] 
+                                                p-3 border-[1px]
+                                              disabled:text-white
                                                 outline-none
                                                 focus-visible:border-[3px] 
                                                 ${errors.password ? "border-red-700" : "border-gray-800"}`}
@@ -168,8 +179,8 @@ function User() {
                                     }
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="confirm-password" className="text-sm font-bold my-1">Confirm password</label>
-                                    <Field
+                                    <label htmlFor="confirm-password" className="text-sm text-white font-bold my-1">Confirm password</label>
+                                    <Field disabled={disabledFields.password}
                                         type="password"
                                         id="confirm-password"
                                         name="confirmPassword"
@@ -177,6 +188,7 @@ function User() {
                                         className={`
                                                 text-base normal-case line my-1 tracking-normal 
                                                 p-3 border-[1px] 
+                                                disabled:text-white
                                                 outline-none
                                                 focus-visible:border-[3px] 
                                                 ${errors.confirmPassword ? "border-red-700" : "border-gray-800"}`}
@@ -190,8 +202,8 @@ function User() {
                                     }
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="username" className="text-sm font-bold my-1">Username</label>
-                                    <Field
+                                    <label htmlFor="username" className="text-sm text-white font-bold my-1">Username</label>
+                                    <Field disabled={disabledFields.username}
                                         type="text"
                                         name="username"
                                         id="username"
@@ -199,6 +211,7 @@ function User() {
                                         className={`
                                                 text-base normal-case line my-1 tracking-normal 
                                                 p-3 border-[1px] 
+                                                disabled:text-white
                                                 outline-none
                                                 focus-visible:border-[3px] 
                                                 ${errors.username || isFieldUnique.username === false ? "border-red-700" : "border-gray-800"}`}
@@ -220,11 +233,11 @@ function User() {
 
                                 </div>
                                 <div className="flex flex-col justify-between">
-                                    <p className="my-3 font-bold text-sm">Enter your birthday</p>
+                                    <p className="my-3 font-bold text-sm text-white">Enter your birthday</p>
                                     <div className="flex flex-row items-center">
                                         <div className="flex flex-col justify-between w-1/6">
-                                            <label htmlFor="day" className="text-base font-medium mb-2">Day</label>
-                                            <Field
+                                            <label htmlFor="day" className="text-base font-medium mb-2 text-white">Day</label>
+                                            <Field disabled={disabledFields.username}
                                                 type="text"
                                                 id="day"
                                                 name="day"
@@ -234,18 +247,25 @@ function User() {
                                                 className={`
                                                         p-2 outline-none 
                                                         border-[1px] hover:border-2 
+                                                        disabled:border-none
+                                                        disabled:outline-none
+                                                        disabled:text-white
                                                         ${errors.day ? "border-red-700" : "border-gray-500"}
                                                         hover:${errors.day ? "border-red-800" : "border-black"}`}
                                             />
                                         </div>
                                         <div className="flex flex-col w-2/3 px-3">
-                                            <label htmlFor="mounth" className="text-base font-medium mb-2">Mounth</label>
-                                            <Field
+                                            <label htmlFor="mounth" className="text-base font-medium mb-2 text-white">Mounth</label>
+                                            <Field disabled={disabledFields.birthday}
                                                 as="select"
                                                 name="mounth"
                                                 id="mounth"
                                                 className={`
                                                     p-2 border-[1px] hover:border-2 
+                                                    disabled:border-none
+                                                    disabled:outline-none
+                                                    disabled:bg-gray-500
+                                                    disabled:text-white
                                                     ${errors.mounth ? "border-red-700" : "border-gray-500"} 
                                                     hover:${errors.mounth ? "border-red-700" : "border-black"}`}
                                             >
@@ -265,8 +285,8 @@ function User() {
                                             </Field>
                                         </div>
                                         <div className="flex flex-col w-1/5">
-                                            <label htmlFor="year" className="text-base font-medium mb-2">Year</label>
-                                            <Field
+                                            <label htmlFor="year" className="text-base font-medium mb-2 text-white">Year</label>
+                                            <Field disabled={disabledFields.birthday}
                                                 type="text"
                                                 name="year"
                                                 id="year"
@@ -276,6 +296,9 @@ function User() {
                                                 className={`
                                                         p-2 
                                                         border-[1px] hover:border-2 
+                                                        disabled:border-none
+                                                        disabled:outline-none
+                                                        disabled:text-white
                                                         ${errors.year ? "border-red-700" : "border-gray-500"} 
                                                         hover:${errors.year ? "border-red-700" : "border-black"} 
                                                         outline-none`}
@@ -290,7 +313,7 @@ function User() {
                                             </div>) : null
                                     }
                                     {
-                                        errors.mounth && touched.mounth && values.mounth.length === 0 ? (
+                                        errors.mounth && touched.mounth && values?.mounth?.length === 0 ? (
                                             <div className="flex items-center mt-1">
                                                 <RiErrorWarningFill color="red" size={16} className="mr-1" />
                                                 <span className="text-sm font-semibold text-red-700">{errors.mounth}</span>
@@ -305,11 +328,11 @@ function User() {
                                     }
                                 </div>
                                 <div className="mt-3">
-                                    <p className="text-base my-2 font-bold">Enter your gender</p>
+                                    <p className="text-base my-2 font-bold text-white">Enter your gender</p>
                                     <div className="flex flex-row flex-wrap">
                                         <div className="flex flex-row-reverse items-center mr-2">
-                                            <label htmlFor="male-gender" className="ml-1">Male</label>
-                                            <Field
+                                            <label htmlFor="male-gender" className="ml-1 text-white">Male</label>
+                                            <Field disabled={disabledFields.gender}
                                                 type="radio"
                                                 name="gender"
                                                 value="Male"
@@ -318,8 +341,8 @@ function User() {
                                             />
                                         </div>
                                         <div className="flex flex-row-reverse mx-2 items-center">
-                                            <label htmlFor="female-gender" className="ml-1">Female</label>
-                                            <Field
+                                            <label htmlFor="female-gender" className="ml-1 text-white">Female</label>
+                                            <Field disabled={disabledFields.gender}
                                                 type="radio"
                                                 name="gender"
                                                 value="Female"
@@ -328,8 +351,8 @@ function User() {
                                             />
                                         </div>
                                         <div className="flex flex-row-reverse mx-2 items-center">
-                                            <label htmlFor="non-binary-gender" className="ml-1">Non-binary</label>
-                                            <Field
+                                            <label htmlFor="non-binary-gender" className="ml-1 text-white">Non-binary</label>
+                                            <Field disabled={disabledFields.gender}
                                                 type="radio"
                                                 name="gender"
                                                 value="Non-binary"
@@ -338,8 +361,8 @@ function User() {
                                             />
                                         </div>
                                         <div className="flex flex-row-reverse mx-0 sm:mx-2 items-center">
-                                            <label htmlFor="another-gender" className="ml-1">Another</label>
-                                            <Field
+                                            <label htmlFor="another-gender" className="ml-1 text-white">Another</label>
+                                            <Field disabled={disabledFields.gender}
                                                 type="radio"
                                                 name="gender"
                                                 value="Another"
@@ -348,8 +371,8 @@ function User() {
                                             />
                                         </div>
                                         <div className="flex flex-row-reverse mx-0 sm:mx-2 items-center">
-                                            <label htmlFor="not-specified-gender" className="ml-1">I don't want to specify</label>
-                                            <Field
+                                            <label htmlFor="not-specified-gender" className="ml-1 text-white">I don't want to specify</label>
+                                            <Field disabled={disabledFields.gender}
                                                 type="radio"
                                                 name="gender"
                                                 value="I don't want to specify"
