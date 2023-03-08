@@ -17,7 +17,8 @@ import {
     onAuthStateChanged
 } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
-import GoogleSignInBtn from "../components/GoogleSignInBtn";
+import GoogleSignInBtn from "../components/GoogleBtn";
+import GoogleBtn from "../components/GoogleBtn";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().min(1).required('Email is required'),
@@ -52,7 +53,7 @@ function Login() {
             <p className="text-base font-bold">To continue, log to Vite.</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div>
-                    <GoogleSignInBtn />
+                    <GoogleBtn />
                 </div>
                 <div className="flex flex-row mt-5">
                     <hr role="presentation" className="flex-1 border-[1px] border-solid border-gray-300" />

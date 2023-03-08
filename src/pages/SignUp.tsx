@@ -12,12 +12,13 @@ import { addDoc, collection } from "firebase/firestore";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
-import GoogleSignInBtn from "../components/GoogleSignInBtn";
+import GoogleSignInBtn from "../components/GoogleBtn";
 
 import { getUsers } from "../utils/getUsers";
 import { userInfoValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
+import GoogleBtn from "../components/GoogleBtn";
 
 
 function SignUp() {
@@ -51,7 +52,7 @@ function SignUp() {
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div className="flex flex-col flex-1 items-center">
-                    <GoogleSignInBtn />
+                    <GoogleBtn />
                 </div>
                 <div className="flex flex-row mt-5">
                     <hr role="presentation" className="flex-1 border-[1px] border-solid border-gray-300" />
