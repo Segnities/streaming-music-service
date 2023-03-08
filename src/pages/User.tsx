@@ -7,13 +7,12 @@ import { signOut, getAuth } from "firebase/auth"
 import { doc, updateDoc } from "firebase/firestore";
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
-import { getUser } from "../utils/getUser";
+import { findUserByEmail } from "../utils/findUserByEmail";
 
 import { UserDoc } from "../utils/@types";
 
 import NoImage from "../assets/no_artist.jpg";
 import Loader from "../components/UI/Loader";
-
 
 function User() {
     const authContext: AuthType | null = useContext(AuthContext);
@@ -40,7 +39,7 @@ function User() {
     }
 
     useEffect(() => {
-        getUser(authContext?.user?.email).then((res) => {
+        findUserByEmail(authContext?.user?.email).then((res) => {
             setFirebaseUser(res);
         }).finally(() => setIsUserLoading(false));
 

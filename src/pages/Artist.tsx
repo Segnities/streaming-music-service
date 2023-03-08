@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
-import ArtistPlaylist from "../components/UI/ArtistPlaylist";
+import ArtistPlaylist from "../components/ArtistPlaylist";
 
 import ArtistHeader from "../components/ArtistHeader";
 import ArtistBio from "../components/ArtistBio";

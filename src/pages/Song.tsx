@@ -1,8 +1,7 @@
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
-import SongDetailsHeader from "../components/UI/SongDetailsHeader";
-import RelatedSongs from "../components/UI/RelatedSongs";
+import RelatedSongs from "../components/RelatedSongs";
 import Loader from "../components/UI/Loader";
 
 import { setActiveSong, playPause } from "../store/reducers/player";
@@ -23,11 +22,16 @@ function Song() {
     (state: SelectorPlayerState) => state.player
   );
 
+
   const {
     data: songData,
     isFetching: isFetchingSongs,
     error: songsError,
   } = useGetSongDetailsQuery(songid);
+
+  const songImagePath = songData?.images?.coverart;
+
+
   const {
     data: relatedSongs,
     isFetching: isFetchingRelatedSongs,
@@ -53,7 +57,26 @@ function Song() {
 
   return (
     <div className="flex flex-col">
-      <SongDetailsHeader songData={songData} />
+      <div className="relative w-full flex flex-col">
+        <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
+        <div className="absolute inset-0 flex items-center">
+          <img
+            src={songImagePath}
+            alt="art"
+            className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black"
+            onDragStart={(e) => e.preventDefault()}
+          />
+          <div className="ml-5">
+            <p className="font-bold sm:text-3xl text-xl text-white">
+              {songData?.title}
+            </p>
+            <p className="text-base text-gray-400 mt-2">
+              {songData?.genres?.primary}
+            </p>
+          </div>
+        </div>
+        <div className="w-full h-24 sm:h-24"></div>
+      </div>
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>
         <div className="mt-5">

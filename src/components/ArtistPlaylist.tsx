@@ -1,11 +1,11 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 
-import { FeaturedAlbumsDatum } from "../../../API/types";
+import { FeaturedAlbumsDatum } from "../API/types";
 
 import "swiper/css";
 import "swiper/css/free-mode";
-import { useResizeObserver } from "../../../hooks/useResizeObserver";
+import { useResizeObserver } from "../hooks/useResizeObserver";
 
 interface Props {
   playlist: FeaturedAlbumsDatum[];

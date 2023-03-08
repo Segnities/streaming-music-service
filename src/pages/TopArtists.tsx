@@ -1,4 +1,4 @@
-import ArtistCard from "../components/UI/ArtistCard";
+import ArtistCard from "../components/ArtistCard";
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
 

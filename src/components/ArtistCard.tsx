@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../API/types";
 
-import NoImage from "../../../assets/no_artist.jpg";
+import NoImage from "../assets/no_artist.jpg";
 
 interface Props {
   track: SongRootObject;
