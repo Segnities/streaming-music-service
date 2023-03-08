@@ -1,4 +1,4 @@
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../API/types";
 import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
 
 interface Props {

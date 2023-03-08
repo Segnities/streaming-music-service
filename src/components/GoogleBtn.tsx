@@ -20,7 +20,7 @@ import { getUsers } from "../utils/getUsers";
 
 import { FcGoogle } from "react-icons/fc";
 
-function GoogleSignInBtn() {
+function GoogleBtn() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
     const googleProvider = new GoogleAuthProvider();
@@ -37,7 +37,7 @@ function GoogleSignInBtn() {
                 if (users.find((usr) => usr.data.email === res.user.email) === undefined) {
                     addDoc(collectionRef, {
                         email: res?.user.email,
-                        username: res?.user.email,
+                        username: res?.user.displayName ?? res?.user?.email,
                     });
                 }
                 authContext?.setUser(res?.user);
@@ -54,4 +54,4 @@ function GoogleSignInBtn() {
     )
 }
 
-export default GoogleSignInBtn;
+export default GoogleBtn;

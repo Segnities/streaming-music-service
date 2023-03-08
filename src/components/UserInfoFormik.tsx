@@ -80,13 +80,9 @@ function UserFormik() {
                             autoComplete="off"
                             name="email"
                             placeholder="Enter your email address"
-                            className={`
-                                            text-base normal-case my-1 
-                                            disabled:text-white
-                                            outline-none
-                                            line tracking-normal p-3 border-[1px] 
-                                            focus-visible:border-[3px] 
-                                            ${errors.email || isFieldUnique.email === false ? "border-red-700" : "border-gray-800"}`}
+                            className={`text-base normal-case my-1 disabled:text-white outline-none line tracking-normal p-3 border-[1px] 
+                            focus-visible:border-[3px] 
+                            ${errors.email || isFieldUnique.email === false ? "border-red-700" : "border-gray-800"}`}
                         />
                         {
                             errors.email && touched.email ? (

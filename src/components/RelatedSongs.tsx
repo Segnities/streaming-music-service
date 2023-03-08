@@ -1,6 +1,6 @@
-import SongBar from "../../SongBar";
+import SongBar from "./SongBar";
 
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../API/types";
 
 interface Props {
   relatedSongs: SongRootObject[];
