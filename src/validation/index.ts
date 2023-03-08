@@ -42,5 +42,4 @@ const userInfoValidationSchema = Yup.object().shape({
  gender: Yup.string().required('Gender is required'),
 });
 
-
-export {userInfoValidationSchema};
+export { userInfoValidationSchema };
