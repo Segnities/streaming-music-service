@@ -19,6 +19,7 @@ import { userInfoValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 
+
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
