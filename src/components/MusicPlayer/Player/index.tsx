@@ -5,10 +5,10 @@ import {
   useRef,
 } from "react";
 
-import { SongRootObject } from "../../../API/types";
+import { SongAction, SongHub, SongRootObject } from "../../../API/types";
 
 interface Props {
-  activeSong: SongRootObject | undefined;
+  activeSong: SongRootObject;
   volume: number | null;
   isPlaying: boolean;
   seekTime: number;
@@ -31,6 +31,11 @@ function Player(props: Props) {
   } = props;
   const ref: MutableRefObject<HTMLAudioElement | null> = useRef(null);
 
+  const hub: SongHub = activeSong?.hub;
+  const actions: SongAction[] | undefined = hub?.actions;
+  const action: SongAction | undefined = actions![1];
+  const uri: string | undefined = action?.uri;
+
   if (ref.current) {
     if (isPlaying) {
       ref.current.play();
@@ -40,16 +45,16 @@ function Player(props: Props) {
   }
 
   useEffect(() => {
-    ref.current.volume = volume;
+    ref.current!.volume = volume ?? 0;
   }, [volume]);
 
   useEffect(() => {
-    ref.current.currentTime = seekTime;
+    ref.current!.currentTime = seekTime;
   }, [seekTime]);
 
   return (
     <audio
-      src={activeSong?.hub?.actions[1]?.uri}
+      src={uri}
       ref={ref}
       loop={repeat}
       onEnded={onEnded}

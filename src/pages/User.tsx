@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { AuthContext, AuthType } from "../context";
 
 import { signOut, getAuth } from "firebase/auth"
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, DocumentData, updateDoc } from "firebase/firestore";
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
 import { findUserByEmail } from "../utils/findUserByEmail";

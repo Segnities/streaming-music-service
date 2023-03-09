@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import TopSongsWidget from "./SongsWidget";
@@ -22,7 +22,7 @@ function TopChartsWidget() {
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
-  const containerRef = useRef(null);
+  const containerRef:MutableRefObject< HTMLDivElement | null> = useRef(null);
 
   const dispatch = useDispatch();
 
