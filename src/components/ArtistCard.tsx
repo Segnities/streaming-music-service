@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { SongRootObject } from "../API/types";
+import { SongArtist, SongRootObject } from "../API/types";
 
 import NoImage from "../assets/no_artist.jpg";
 
@@ -12,8 +12,16 @@ function ArtistCard(props: Props) {
   const { track } = props;
   const navigate = useNavigate();
 
+  const level: number = 0;
+
+  const artists: SongArtist[] | undefined = track?.artists;
+
+  const artist: SongArtist | undefined = artists!.length > 0 ? artists![level] : undefined;
+  const adamid: string | undefined = artist?.adamid;
+
+
   return (
-    <div className="flex flex-col w-[250px] lg:w-[240px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer" onClick={() => navigate(`/artists/${track?.artists[0]?.adamid}`)}>
+    <div className="flex flex-col w-[250px] lg:w-[240px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer" onClick={() => navigate(`/artists/${adamid}`)}>
       <img
         src={track?.images?.coverart || NoImage}
         alt="artist"

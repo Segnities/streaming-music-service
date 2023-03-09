@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RouteObject } from "react-router";
 
 interface InitialStateInterface {
-  currentSongs: [];
+  currentSongs: any[];
   currentIndex: number;
   isActive: boolean;
   isPlaying: boolean;
@@ -43,8 +43,11 @@ const playerSlice = createSlice({
     nextSong: (state: InitialStateInterface, action) => {
       if (state.currentSongs[action.payload]?.track) {
         state.activeSong = state.currentSongs[action.payload]?.track;
+        console.log(JSON.stringify(state.currentSongs, null, 2));
       } else {
         state.activeSong = state.currentSongs[action.payload];
+        console.log(JSON.stringify(state.currentSongs, null, 2));
+
       }
 
       state.currentIndex = action.payload;

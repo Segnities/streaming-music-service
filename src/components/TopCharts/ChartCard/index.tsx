@@ -35,7 +35,7 @@ function TopChartCard(props: Props) {
           <Link to={`songs/${song?.key}`}>
             <h3 className="text-base font-bold text-white">{song?.title}</h3>
           </Link>
-          <Link to={`artists/${song?.artists[0].adamid}`}>
+          <Link to={`artists/${song?.artists![0].adamid}`}>
             <h3 className="text-sm text-gray-400 mt-1 hover:underline">
               {song?.subtitle}
             </h3>

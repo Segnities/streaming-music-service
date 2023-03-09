@@ -42,7 +42,7 @@ function TopArtistsWidget(props: Props) {
             key={song?.key}
             className="w-1/5 h-1/5 shadow-lg rounded-full animate-slideright"
           >
-            <Link to={`artists/${song?.artists[0]?.adamid}`}>
+            <Link to={`artists/${song?.artists![0]?.adamid}`}>
               <img
                 src={song?.images?.background || NoImage}
                 alt="artist"
