@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 
-import { UserCredential, User } from "firebase/auth";
+import { User } from "firebase/auth";
+import { UserDoc } from "../utils/@types";
 
 export type AuthType = {
   isAuth: boolean;
