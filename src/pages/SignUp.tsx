@@ -12,10 +12,9 @@ import { addDoc, collection } from "firebase/firestore";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
-import GoogleSignInBtn from "../components/GoogleBtn";
 
 import { getUsers } from "../utils/getUsers";
-import { userInfoValidationSchema } from "../validation";
+import { signUpValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 import GoogleBtn from "../components/GoogleBtn";
@@ -73,7 +72,7 @@ function SignUp() {
                             gender: ''
 
                         }}
-                        validationSchema={userInfoValidationSchema}
+                        validationSchema={signUpValidationSchema}
                         onSubmit={(values) => {
                             handleSignUpWithEmailAndPassword(values)
                         }}

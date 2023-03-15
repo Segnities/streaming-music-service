@@ -44,7 +44,8 @@ function User() {
 
     return (
         <div className="flex flex-col w-full">
-            <EditProfileModal avatar={authContext?.user?.photoURL ?? NoImage} firebaseUser={firebaseUser} setOpenModal={setOpenModal} openModal={openModal}/>
+            <EditProfileModal avatar={authContext?.user?.photoURL ?? NoImage} firebaseUser={firebaseUser}
+                              setOpenModal={setOpenModal} openModal={openModal}/>
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
             <article className="relative w-full flex flex-col">
                 <h2 className="text-xl sm:text-2xl text-white font-medium my-4">Profile</h2>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {FormEvent} from 'react';
 import {Field, Form, Formik} from "formik";
-import {userInfoValidationSchema} from "../validation";
+import {editProfileValidationSchema} from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
@@ -9,11 +9,18 @@ interface Props {
     firebaseUser: UserDoc | undefined | null;
     openModal: boolean;
     setOpenModal: (visibility: boolean) => void;
-    avatar:string;
+    avatar: string;
 }
+
 
 const EditProfileModal = (props: Props) => {
     const {avatar, firebaseUser, openModal, setOpenModal} = props;
+
+    const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+    }
+
     return (
         <Modal open={openModal} setOpen={setOpenModal}>
             <div className='flex flex-row justify-between'>
@@ -32,13 +39,13 @@ const EditProfileModal = (props: Props) => {
                     year: firebaseUser?.data?.birthday?.split(" ")[2] ?? "",
                     gender: "I don't want to specify"
                 }}
-                validationSchema={userInfoValidationSchema}
+                validationSchema={editProfileValidationSchema}
                 onSubmit={() => console.log('Send it!')}
             >
                 {
                     ({errors, touched, values}) => (
                         <Form autoComplete="off">
-                            <div className="w-full flex flex-col">
+                            <div className="w-full flex flex-col my-3">
                                 <div className="flex flex-col">
                                     <label htmlFor="email" className='text-base font-medium mb-2'>Email</label>
                                     <Field type="email" name="email" id='email'
@@ -46,13 +53,15 @@ const EditProfileModal = (props: Props) => {
                                 </div>
 
                                 <div className="flex flex-col my-3">
-                                    <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current password</label>
+                                    <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
+                                        password</label>
                                     <Field type="password" name="currentPassword" id='currentPassword'
                                            className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
                                 </div>
 
                                 <div className="flex flex-col my-2">
-                                    <label htmlFor="password" className='text-base font-medium mb-2'>New Password</label>
+                                    <label htmlFor="password" className='text-base font-medium mb-2'>New
+                                        Password</label>
                                     <Field type="password" name="password" id='password'
                                            className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
                                 </div>
@@ -63,6 +72,7 @@ const EditProfileModal = (props: Props) => {
                                     <Field type="password" name="confirmPassword" id='confirmPassword'
                                            className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
                                 </div>
+
                                 <div className="flex flex-col">
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
                                     <Field type="text" name="username" id='username'
