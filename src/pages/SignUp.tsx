@@ -19,8 +19,6 @@ import { userInfoValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 import GoogleBtn from "../components/GoogleBtn";
-
-
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
@@ -31,7 +29,7 @@ function SignUp() {
         username: true
     });
 
-    const handleSignUpWithEmailAndPassword = async ({ email, password, username, day, mounth, year, gender }) => {
+    const handleSignUpWithEmailAndPassword = async ({ email, password, username, day, month, year, gender }) => {
         const users = await getUsers();
         const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
         const isUsernameUnique: boolean = users.filter(usr => usr.data.username === username).length > 1 ? false : true;
@@ -41,7 +39,7 @@ function SignUp() {
         if (isEmailUnique && isUsernameUnique) {
             createUserWithEmailAndPassword(auth, email, password).then((userCredential) => userCredential).catch((error) => console.log(error));
             addDoc(collectionRef, {
-                email, password, username, birthday: `${day} ${mounth} ${year}`, gender
+                email, password, username, birthday: `${day} ${month} ${year}`, gender
             });
             navigate('/login');
         }
@@ -70,7 +68,7 @@ function SignUp() {
                             username: '',
                             confirmPassword: '',
                             day: '',
-                            mounth: '',
+                            month: '',
                             year: '',
                             gender: ''
 
@@ -210,17 +208,17 @@ function SignUp() {
                                                 />
                                             </div>
                                             <div className="flex flex-col w-2/3 px-3">
-                                                <label htmlFor="mounth" className="text-base font-medium mb-2">Mounth</label>
+                                                <label htmlFor="month" className="text-base font-medium mb-2">Month</label>
                                                 <Field
                                                     as="select"
-                                                    name="mounth"
-                                                    id="mounth"
+                                                    name="month"
+                                                    id="month"
                                                     className={`
                                                     p-2 border-[1px] hover:border-2 
-                                                    ${errors.mounth ? "border-red-700" : "border-gray-500"} 
-                                                    hover:${errors.mounth ? "border-red-700" : "border-black"}`}
+                                                    ${errors.month ? "border-red-700" : "border-gray-500"} 
+                                                    hover:${errors.month ? "border-red-700" : "border-black"}`}
                                                 >
-                                                    <option value="" disabled>Mounth</option>
+                                                    <option value="" disabled>Month</option>
                                                     <option value="January">January</option>
                                                     <option value="February">February</option>
                                                     <option value="March">March</option>
@@ -261,10 +259,10 @@ function SignUp() {
                                                 </div>) : null
                                         }
                                         {
-                                            errors.mounth && touched.mounth && values.mounth.length === 0 ? (
+                                            errors.month && touched.month && values.month.length === 0 ? (
                                                 <div className="flex items-center mt-1">
                                                     <RiErrorWarningFill color="red" size={16} className="mr-1" />
-                                                    <span className="text-sm font-semibold text-red-700">{errors.mounth}</span>
+                                                    <span className="text-sm font-semibold text-red-700">{errors.month}</span>
                                                 </div>) : null
                                         }
                                         {
