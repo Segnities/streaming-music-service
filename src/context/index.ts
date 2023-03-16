@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 
 import { User } from "firebase/auth";
-import { UserDoc } from "../utils/@types";
+import {DocumentData} from "firebase/firestore";
 
 export type AuthType = {
   isAuth: boolean;

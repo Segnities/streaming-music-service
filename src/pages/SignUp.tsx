@@ -12,16 +12,18 @@ import { addDoc, collection } from "firebase/firestore";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
-
-import { getUsers } from "../utils/getUsers";
 import { signUpValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 import GoogleBtn from "../components/GoogleBtn";
+import {useSelector} from "react-redux";
+import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
     const navigate = useNavigate();
+
+    const {firebaseUsers:users} = useSelector((state:FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: true,
@@ -29,7 +31,6 @@ function SignUp() {
     });
 
     const handleSignUpWithEmailAndPassword = async ({ email, password, username, day, month, year, gender }) => {
-        const users = await getUsers();
         const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
         const isUsernameUnique: boolean = users.filter(usr => usr.data.username === username).length > 1 ? false : true;
 

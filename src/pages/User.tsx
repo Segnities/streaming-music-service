@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router";
 
 import {AuthContext, AuthType} from "../context";
@@ -6,7 +6,6 @@ import {AuthContext, AuthType} from "../context";
 import {signOut, getAuth} from "firebase/auth"
 import {firebaseApp} from "../firebase/firebaseConfig";
 
-import {findUserByEmail} from "../utils/findUserByEmail";
 
 import {UserDoc} from "../utils/@types";
 
@@ -15,14 +14,16 @@ import Loader from "../components/UI/Loader";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 import EditProfileModal from "../components/EditProfileModal";
+import {useSelector} from "react-redux";
+import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 
 function User() {
     const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
+    const {firebaseUsers: users} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
     const auth = getAuth(firebaseApp);
-
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined | null>(null);
-    const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find((usr:UserDoc) => usr.data.email === authContext?.user?.email));
+    const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
 
     const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -32,11 +33,6 @@ function User() {
         navigate("/");
     }
 
-    useEffect(() => {
-        findUserByEmail(authContext?.user?.email).then((res: UserDoc) => {
-            setFirebaseUser(res);
-        }).finally(() => setIsUserLoading(false));
-    }, []);
 
     if (isUserLoading) {
         return <Loader/>

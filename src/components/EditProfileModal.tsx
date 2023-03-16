@@ -1,9 +1,11 @@
-import React, {FormEvent} from 'react';
+import React, {FormEvent, useState} from 'react';
 import {Field, Form, Formik} from "formik";
 import {editProfileValidationSchema} from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
+import {getUsers} from "../utils/getUsers";
+import {DocumentData} from "firebase/firestore";
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -12,13 +14,33 @@ interface Props {
     avatar: string;
 }
 
+interface Fields {
+    email: string,
+    username: string,
+    currentPassword: string,
+    password: string,
+    confirmPassword: '',
+    day: string;
+    month: string;
+    year: string;
+    gender: string;
+}
 
 const EditProfileModal = (props: Props) => {
     const {avatar, firebaseUser, openModal, setOpenModal} = props;
+    const [isFieldUnique, setIsFieldUnique] = useState({
+        email: false,
+        username: false
+    });
 
-    const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e:FormEvent<HTMLFormElement>, values:Fields) => {
         e.preventDefault();
 
+        const firebaseUserData = firebaseUser?.data;
+
+        if(firebaseUserData?.email !== values.email && firebaseUserData || firebaseUserData?.username !== values.username) {
+
+        }
     }
 
     return (
@@ -37,7 +59,7 @@ const EditProfileModal = (props: Props) => {
                     day: firebaseUser?.data?.birthday?.split(" ")[0] ?? "",
                     month: firebaseUser?.data?.birthday?.split(" ")[1] ?? "",
                     year: firebaseUser?.data?.birthday?.split(" ")[2] ?? "",
-                    gender: "I don't want to specify"
+                    gender: firebaseUser?.data?.gender ?? "I don't want to specify"
                 }}
                 validationSchema={editProfileValidationSchema}
                 onSubmit={() => console.log('Send it!')}
