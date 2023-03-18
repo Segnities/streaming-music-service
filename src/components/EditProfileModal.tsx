@@ -1,11 +1,11 @@
-import React, {FormEvent, useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Field, Form, Formik} from "formik";
 import {editProfileValidationSchema} from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
-import {getUsers} from "../utils/getUsers";
-import {DocumentData} from "firebase/firestore";
+import {useSelector} from "react-redux";
+import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -14,34 +14,43 @@ interface Props {
     avatar: string;
 }
 
+type possiblyUndefined = string | undefined;
+
 interface Fields {
-    email: string,
-    username: string,
-    currentPassword: string,
-    password: string,
-    confirmPassword: '',
-    day: string;
-    month: string;
-    year: string;
-    gender: string;
+    email: possiblyUndefined;
+    username: possiblyUndefined;
+    currentPassword: possiblyUndefined;
+    password: possiblyUndefined;
+    confirmPassword: possiblyUndefined;
+    day: possiblyUndefined;
+    month: possiblyUndefined;
+    year: possiblyUndefined;
+    gender: possiblyUndefined;
 }
 
 const EditProfileModal = (props: Props) => {
     const {avatar, firebaseUser, openModal, setOpenModal} = props;
+    const {firebaseUsers} = useSelector((state:FirebaseUsersSelectorInterface) => state.firebaseUsers);
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: false,
         username: false
     });
 
-    const handleSubmit = async (e:FormEvent<HTMLFormElement>, values:Fields) => {
-        e.preventDefault();
+    const handleSubmit =  (values:Fields) => {
+        const isEmailUnique:boolean = firebaseUsers.find((usr) =>  {
+            if(usr.data.email !== firebaseUser?.data.email && usr.data.email === values.email) {
+                return usr.data.email;
+            }
+        }) === undefined;
 
-        const firebaseUserData = firebaseUser?.data;
+        setOpenModal(false);
 
-        if(firebaseUserData?.email !== values.email && firebaseUserData || firebaseUserData?.username !== values.username) {
-
-        }
+        console.log(isEmailUnique);
     }
+
+    useEffect(()=> {
+        console.log(firebaseUser)
+    }, [])
 
     return (
         <Modal open={openModal} setOpen={setOpenModal}>
@@ -62,7 +71,7 @@ const EditProfileModal = (props: Props) => {
                     gender: firebaseUser?.data?.gender ?? "I don't want to specify"
                 }}
                 validationSchema={editProfileValidationSchema}
-                onSubmit={() => console.log('Send it!')}
+                onSubmit={ (values) => handleSubmit(values)}
             >
                 {
                     ({errors, touched, values}) => (
@@ -151,11 +160,11 @@ const EditProfileModal = (props: Props) => {
 
                                 <LineDivider/>
                                 <div className="flex justify-end items-center my-4">
-                                    <button className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
+                                    <button type="button" className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
                                             onClick={() => setOpenModal(false)}>Cancel
                                     </button>
                                     <button type="submit"
-                                            className="bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
+                                            className="z-40 bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
                                     </button>
                                 </div>
                             </div>
