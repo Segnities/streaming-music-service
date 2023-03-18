@@ -27,8 +27,8 @@ function App() {
             if (user) {
                 setUser(user);
                 setIsAuth(true);
-                setIsLoading(false);
                 dispatch(setFirebaseUsers(await getUsers()))
+                setIsLoading(false);
             } else {
                 setIsAuth(false);
                 setIsLoading(false);

@@ -1,11 +1,16 @@
-import React, {FormEvent, useState} from 'react';
+import {useSelector} from "react-redux";
+
+import {getAuth, updateProfile, updateEmail, reauthenticateWithCredential} from "firebase/auth";
+import {doc, updateDoc} from "firebase/firestore";
+
 import {Field, Form, Formik} from "formik";
+
 import {editProfileValidationSchema} from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
-import {getUsers} from "../utils/getUsers";
-import {DocumentData} from "firebase/firestore";
+import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+import {firebaseApp, firebaseDatabase} from '../firebase/firebaseConfig';
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -14,12 +19,14 @@ interface Props {
     avatar: string;
 }
 
+type possiblyUndefined = string | undefined;
+
 interface Fields {
-    email: string,
-    username: string,
-    currentPassword: string,
-    password: string,
-    confirmPassword: '',
+    email: string;
+    username: string;
+    currentPassword: string;
+    password: string;
+    confirmPassword: string;
     day: string;
     month: string;
     year: string;
@@ -27,21 +34,57 @@ interface Fields {
 }
 
 const EditProfileModal = (props: Props) => {
+    const auth = getAuth(firebaseApp);
     const {avatar, firebaseUser, openModal, setOpenModal} = props;
-    const [isFieldUnique, setIsFieldUnique] = useState({
-        email: false,
-        username: false
-    });
+    const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
+    const email: string = firebaseUser?.data.email as string;
+    const username: string = firebaseUser?.data.username as string;
 
-    const handleSubmit = async (e:FormEvent<HTMLFormElement>, values:Fields) => {
-        e.preventDefault();
+    const handleSubmit = (values: Fields) => {
+        const isEmailUnique: boolean = firebaseUsers.find((usr) => {
+            if (usr.data.email !== firebaseUser?.data.email && usr.data.email === values.email) {
+                return usr.data.email;
+            }
+        }) === undefined;
 
-        const firebaseUserData = firebaseUser?.data;
+        const isUsernameUnique: boolean = firebaseUsers.find((usr) => {
+            if (usr.data.email !== firebaseUser?.data.username && usr.data.username === values.username) {
+                return usr.data.username;
+            }
+        }) === undefined;
+        const isCurrentPasswordCorrect: boolean = firebaseUser?.data?.password ? true : firebaseUser?.data.password === values.currentPassword;
+        const notCurrentEmail: boolean = values.email !== firebaseUser?.data.email;
+        const notCurrentUsername: boolean = values.username !== firebaseUser?.data.username;
 
-        if(firebaseUserData?.email !== values.email && firebaseUserData || firebaseUserData?.username !== values.username) {
-
+        if (isEmailUnique) {
+            updateEmail(auth.currentUser!, values.email).then(res => console.log('Email updated!')).catch(err => console.log('Email error'));
+            updateDoc(userDocRef, {
+                email: values.email,
+                gender: values.gender,
+                birthday: `${values.day} ${values.month} ${values.year}`,
+            });
         }
+
+        if (isUsernameUnique) {
+            updateProfile(auth.currentUser!, {
+                displayName: values.username,
+            }).then(res => console.log('Display name updated!')).catch(err => console.log('Username error'));
+            updateDoc(userDocRef, {
+                username: values.username,
+                gender: values.gender,
+                birthday: `${values.day} ${values.month} ${values.year}`,
+            });
+        }
+
+        if (isEmailUnique && isUsernameUnique && isCurrentPasswordCorrect) {
+            updateDoc(userDocRef, {
+                password: values.password
+            }).then(res => console.log(res => console.log('Doc updated!'))).catch((err) => console.log('Update doc error'))
+        }
+        setOpenModal(false);
     }
+
 
     return (
         <Modal open={openModal} setOpen={setOpenModal}>
@@ -51,8 +94,8 @@ const EditProfileModal = (props: Props) => {
             </div>
             <Formik
                 initialValues={{
-                    email: firebaseUser?.data.email,
-                    username: firebaseUser?.data.username,
+                    email: email,
+                    username: username,
                     currentPassword: '',
                     password: '',
                     confirmPassword: '',
@@ -62,7 +105,7 @@ const EditProfileModal = (props: Props) => {
                     gender: firebaseUser?.data?.gender ?? "I don't want to specify"
                 }}
                 validationSchema={editProfileValidationSchema}
-                onSubmit={() => console.log('Send it!')}
+                onSubmit={(values, formikHelpers) => console.log('Submitted!')}
             >
                 {
                     ({errors, touched, values}) => (
@@ -148,14 +191,16 @@ const EditProfileModal = (props: Props) => {
                                         <option value="I don't want to specify">I don't want to specify</option>
                                     </Field>
                                 </div>
-
                                 <LineDivider/>
                                 <div className="flex justify-end items-center my-4">
-                                    <button className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
+                                    <button type="button"
+                                            className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
                                             onClick={() => setOpenModal(false)}>Cancel
                                     </button>
-                                    <button type="submit"
-                                            className="bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
+                                    <button
+                                        type="submit"
+                                        onClick={() => handleSubmit(values)}
+                                        className="z-40 bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
                                     </button>
                                 </div>
                             </div>

@@ -1,41 +1,34 @@
 import {useContext, useState} from "react";
 import {useNavigate} from "react-router";
+import {useSelector} from "react-redux";
+
 
 import {AuthContext, AuthType} from "../context";
 
 import {signOut, getAuth} from "firebase/auth"
 import {firebaseApp} from "../firebase/firebaseConfig";
 
-
 import {UserDoc} from "../utils/@types";
-
-import NoImage from "../assets/no_artist.jpg";
-import Loader from "../components/UI/Loader";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 import EditProfileModal from "../components/EditProfileModal";
-import {useSelector} from "react-redux";
 import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+
+import NoImage from "../assets/no_artist.jpg";
+
 
 function User() {
     const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
     const {firebaseUsers: users} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
     const auth = getAuth(firebaseApp);
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find((usr:UserDoc) => usr.data.email === authContext?.user?.email));
-    const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
-
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === authContext?.user?.email));
     const [openModal, setOpenModal] = useState<boolean>(false);
-
+    false
     const userSignOut = () => {
         signOut(auth);
         authContext?.setUser(null);
         navigate("/");
-    }
-
-
-    if (isUserLoading) {
-        return <Loader/>
     }
 
     return (
