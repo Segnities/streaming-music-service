@@ -27,7 +27,7 @@ const editProfileValidationSchema = Yup.object().shape({
         })
         .matches(/\d/g, 'Day must contain only numbers!')
         .required('Day of birth is required'),
-    month: Yup.string().required('Mounth of birth is required'),
+    month: Yup.string().required('Month of birth is required'),
     year: Yup.string()
         .min(4)
         .max(4)

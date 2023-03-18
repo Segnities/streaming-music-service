@@ -17,7 +17,6 @@ import {
     onAuthStateChanged
 } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
-import GoogleSignInBtn from "../components/GoogleBtn";
 import GoogleBtn from "../components/GoogleBtn";
 
 const validationSchema = Yup.object().shape({
