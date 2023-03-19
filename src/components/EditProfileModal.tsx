@@ -1,16 +1,19 @@
-import {useSelector} from "react-redux";
+import { useState } from "react";
 
-import {getAuth, updateProfile, updateEmail, reauthenticateWithCredential} from "firebase/auth";
-import {doc, updateDoc} from "firebase/firestore";
+import { useSelector } from "react-redux";
 
-import {Field, Form, Formik} from "formik";
+import { getAuth, updateProfile, updateEmail } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
-import {editProfileValidationSchema} from "../validation";
+import { Field, Form, Formik } from "formik";
+
+import { editProfileValidationSchema } from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
-import {UserDoc} from "../utils/@types";
-import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
-import {firebaseApp, firebaseDatabase} from '../firebase/firebaseConfig';
+import { UserDoc } from "../utils/@types";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+import { firebaseApp, firebaseDatabase } from '../firebase/firebaseConfig';
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -18,8 +21,6 @@ interface Props {
     setOpenModal: (visibility: boolean) => void;
     avatar: string;
 }
-
-type possiblyUndefined = string | undefined;
 
 interface Fields {
     email: string;
@@ -34,14 +35,22 @@ interface Fields {
 }
 
 const EditProfileModal = (props: Props) => {
+    const [profileImage, setProfileImage] = useState<File | null | undefined>(undefined);
+
     const auth = getAuth(firebaseApp);
-    const {avatar, firebaseUser, openModal, setOpenModal} = props;
-    const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+    const storage = getStorage(firebaseApp);
+
+    const { avatar, firebaseUser, openModal, setOpenModal } = props;
+    const { firebaseUsers } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+
     const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
+
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
 
-    const handleSubmit = (values: Fields) => {
+    const handleSubmit = async (values: Fields): Promise<void> => {
+        const uploadPathRef = ref(storage, `profileImages/${profileImage?.name}`);
+
         const isEmailUnique: boolean = firebaseUsers.find((usr) => {
             if (usr.data.email !== firebaseUser?.data.email && usr.data.email === values.email) {
                 return usr.data.email;
@@ -54,8 +63,6 @@ const EditProfileModal = (props: Props) => {
             }
         }) === undefined;
         const isCurrentPasswordCorrect: boolean = firebaseUser?.data?.password ? true : firebaseUser?.data.password === values.currentPassword;
-        const notCurrentEmail: boolean = values.email !== firebaseUser?.data.email;
-        const notCurrentUsername: boolean = values.username !== firebaseUser?.data.username;
 
         if (isEmailUnique) {
             updateEmail(auth.currentUser!, values.email).then(res => console.log('Email updated!')).catch(err => console.log('Email error'));
@@ -82,15 +89,25 @@ const EditProfileModal = (props: Props) => {
                 password: values.password
             }).then(res => console.log(res => console.log('Doc updated!'))).catch((err) => console.log('Update doc error'))
         }
+
+        if (uploadPathRef !== undefined || uploadPathRef !== null) {
+            uploadBytes(uploadPathRef, profileImage!).then(res => console.log('Uploaded!')).catch(err => console.log('Upload error!')
+            );
+            const profileImageUrl = await getDownloadURL(ref(storage, `profileImages/${profileImage?.name}`));
+            updateProfile(auth.currentUser!, {
+                photoURL: profileImageUrl
+            }).then(res => console.log('Profile image updated!')).catch(err => console.log('Profile image update error'))
+
+        }
+
         setOpenModal(false);
     }
-
 
     return (
         <Modal open={openModal} setOpen={setOpenModal}>
             <div className='flex flex-row justify-between'>
                 <h3 className='text-3xl text-black font-bold my-5'>Edit user profile</h3>
-                <img src={avatar} alt="avatar" className='rounded-full cursor-pointer' title='Change avatar'/>
+                <img src={avatar} alt="avatar" className='rounded-full cursor-pointer w-20 h-20' title='Change avatar' />
             </div>
             <Formik
                 initialValues={{
@@ -98,6 +115,7 @@ const EditProfileModal = (props: Props) => {
                     username: username,
                     currentPassword: '',
                     password: '',
+                    avatar: '',
                     confirmPassword: '',
                     day: firebaseUser?.data?.birthday?.split(" ")[0] ?? "",
                     month: firebaseUser?.data?.birthday?.split(" ")[1] ?? "",
@@ -108,49 +126,54 @@ const EditProfileModal = (props: Props) => {
                 onSubmit={(values, formikHelpers) => console.log('Submitted!')}
             >
                 {
-                    ({errors, touched, values}) => (
+                    ({ errors, touched, values }) => (
                         <Form autoComplete="off">
                             <div className="w-full flex flex-col my-3">
                                 <div className="flex flex-col">
-                                    <label htmlFor="email" className='text-base font-medium mb-2'>Email</label>
+                                    <label htmlFor="avatar" className='text-base font-medium mb-2'>Change profile avatar</label>
+                                    <input type="file" id="avatar" onChange={(e) => setProfileImage(e?.target?.files![0])} className="text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                </div>
+
+                                <label htmlFor="email" className='text-base font-medium mb-2'>Email</label>
+                                <div className="flex flex-col">
                                     <Field type="email" name="email" id='email'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
 
                                 <div className="flex flex-col my-3">
                                     <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
                                         password</label>
                                     <Field type="password" name="currentPassword" id='currentPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
 
                                 <div className="flex flex-col my-2">
                                     <label htmlFor="password" className='text-base font-medium mb-2'>New
                                         Password</label>
                                     <Field type="password" name="password" id='password'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
 
                                 <div className="flex flex-col">
                                     <label htmlFor="confirmPassword" className='text-base font-medium mb-2'>Repeat new
                                         password</label>
                                     <Field type="password" name="confirmPassword" id='confirmPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
 
                                 <div className="flex flex-col">
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
                                     <Field type="text" name="username" id='username'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
                                 <div className="flex flex-col my-2">
                                     <label htmlFor="birthday" className='text-base font-medium'>Date of birth</label>
                                     <div id='birthday' className='w-full flex flex-row items-center'>
                                         <div className="flex flex-col justify-between w-1/6">
                                             <Field type="text" name="day" maxLength={2}
-                                                   minLength={2}
-                                                   placeholder="DD"
-                                                   className='p-2 outline-none border-[1px] hover:border-2'/>
+                                                minLength={2}
+                                                placeholder="DD"
+                                                className='p-2 outline-none border-[1px] hover:border-2' />
                                         </div>
                                         <div className="flex flex-col w-2/3 px-3">
                                             <Field
@@ -183,7 +206,7 @@ const EditProfileModal = (props: Props) => {
                                 </div>
                                 <div className="flex flex-col my-4">
                                     <Field as="select" name="gender"
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]">
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]">
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Non-binary">Non-binary</option>
@@ -191,11 +214,11 @@ const EditProfileModal = (props: Props) => {
                                         <option value="I don't want to specify">I don't want to specify</option>
                                     </Field>
                                 </div>
-                                <LineDivider/>
+                                <LineDivider />
                                 <div className="flex justify-end items-center my-4">
                                     <button type="button"
-                                            className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
-                                            onClick={() => setOpenModal(false)}>Cancel
+                                        className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
+                                        onClick={() => setOpenModal(false)}>Cancel
                                     </button>
                                     <button
                                         type="submit"
