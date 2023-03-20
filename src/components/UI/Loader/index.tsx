@@ -1,4 +1,3 @@
-import { SongRootObject } from "../../../API/types";
 import loader from "./assets/img/loader.svg";
 
 interface Props {
