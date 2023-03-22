@@ -29,6 +29,11 @@ interface Props {
     setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
 }
 
+enum ProviderID {
+    email = 'email',
+    google = 'google.com'
+}
+
 interface Fields {
     email: string;
     username: string;
@@ -53,7 +58,9 @@ const EditProfileModal = (props: Props) => {
 
 
     const auth = getAuth(firebaseApp);
-    const user:User = auth.currentUser as User
+    const user: User = auth.currentUser as User
+    const providerId: string = user.providerData[0].providerId;
+
     const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
@@ -115,7 +122,7 @@ const EditProfileModal = (props: Props) => {
 
         if (isCurrentPasswordCorrect) {
             const credential = EmailAuthProvider.credential(user.email as string, values.currentPassword);
-            reauthenticateWithCredential(user, credential).then((res)=> {
+            reauthenticateWithCredential(user, credential).then((res) => {
                 console.log('Reauthenticate...');
                 updateFirebaseUser(values);
                 updatePassword(res.user as User, values.password)
@@ -171,27 +178,34 @@ const EditProfileModal = (props: Props) => {
                                     <Field type="email" name="email" id='email'
                                            className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
                                 </div>
+                                {
+                                    providerId === ProviderID.email && (
+                                        <>
+                                            <div className="flex flex-col my-3">
+                                                <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
+                                                    password</label>
+                                                <Field type="password" name="currentPassword" id='currentPassword'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col my-3">
-                                    <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
-                                        password</label>
-                                    <Field type="password" name="currentPassword" id='currentPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                            <div className="flex flex-col my-2">
+                                                <label htmlFor="password" className='text-base font-medium mb-2'>New
+                                                    Password</label>
+                                                <Field type="password" name="password" id='password'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col my-2">
-                                    <label htmlFor="password" className='text-base font-medium mb-2'>New
-                                        Password</label>
-                                    <Field type="password" name="password" id='password'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                            <div className="flex flex-col">
+                                                <label htmlFor="confirmPassword" className='text-base font-medium mb-2'>Repeat
+                                                    new
+                                                    password</label>
+                                                <Field type="password" name="confirmPassword" id='confirmPassword'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col">
-                                    <label htmlFor="confirmPassword" className='text-base font-medium mb-2'>Repeat new
-                                        password</label>
-                                    <Field type="password" name="confirmPassword" id='confirmPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                        </>
+                                    )
+                                }
 
                                 <div className="flex flex-col">
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
