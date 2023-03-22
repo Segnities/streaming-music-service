@@ -21,7 +21,6 @@ import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
-    const navigate = useNavigate();
 
     const {firebaseUsers:users} = useSelector((state:FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
@@ -41,7 +40,6 @@ function SignUp() {
             addDoc(collectionRef, {
                 email, password, username, birthday: `${day} ${month} ${year}`, gender
             });
-            navigate('/login');
         }
     }
 

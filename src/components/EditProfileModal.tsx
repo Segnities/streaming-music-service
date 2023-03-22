@@ -21,9 +21,11 @@ import NoImage from "../assets/no_artist.jpg";
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
-    openModal: boolean;
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    openEditModal: boolean;
+    setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
     photoURL: string;
+    setUpdateImageModal: React.Dispatch<React.SetStateAction<boolean>>
+
     setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
 }
 
@@ -43,8 +45,9 @@ const EditProfileModal = (props: Props) => {
     const {
         photoURL,
         firebaseUser,
-        openModal,
-        setOpenModal,
+        openEditModal,
+        setOpenEditModal,
+        setUpdateImageModal,
         setFirebaseUser,
     } = props;
 
@@ -70,9 +73,7 @@ const EditProfileModal = (props: Props) => {
                 password: values.password
             }
         });
-
     }
-
 
     const handleSubmit = (values: Fields): void => {
 
@@ -118,11 +119,11 @@ const EditProfileModal = (props: Props) => {
             }).then(res => console.log(res => console.log('Doc updated!'))).catch((err) => console.log('Update doc error'))
         }
 
-        setOpenModal(false);
+        setOpenEditModal(false);
     }
 
     return (
-        <Modal open={openModal} setOpen={setOpenModal}>
+        <Modal open={openEditModal} setOpen={setOpenEditModal}>
             <div className='flex flex-row justify-between'>
                 <h3 className='text-3xl text-black font-bold my-5'>Edit user profile</h3>
                 <img
@@ -130,7 +131,10 @@ const EditProfileModal = (props: Props) => {
                     alt="avatar"
                     className='rounded-full cursor-pointer w-20 h-20'
                     title='Change avatar'
-                    onClick={()=> setOpenModal(false)}
+                    onClick={()=> {
+                        setOpenEditModal(false)
+                        setUpdateImageModal(true);
+                    }}
                 />
             </div>
             <Formik
@@ -237,7 +241,7 @@ const EditProfileModal = (props: Props) => {
                                 <div className="flex justify-end items-center my-4">
                                     <button type="button"
                                             className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
-                                            onClick={() => setOpenModal(false)}>Cancel
+                                            onClick={() => setOpenEditModal(false)}>Cancel
                                     </button>
                                     <button
                                         type="submit"

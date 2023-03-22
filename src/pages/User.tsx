@@ -11,8 +11,8 @@ import {UserDoc} from "../utils/@types";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
-const EditProfileModal = lazy(()=> import("../components/EditProfileModal"));
-const UpdateProfileImageModal = lazy(()=> import("../components/UpdateProfileImageModal"));
+const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
+const UpdateProfileImageModal = lazy(() => import("../components/UpdateProfileImageModal"));
 
 import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 
@@ -39,29 +39,40 @@ function User() {
         navigate("/");
     }
 
-    useEffect(()=> {
-        const userProfileImage:string | undefined | null= auth?.currentUser?.photoURL as string;
+    useEffect(() => {
+        const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
         setPhotoURL(userProfileImage !== null && !userProfileImage?.includes('undefined') ? userProfileImage : NoImage);
     }, []);
 
     return (
         <div className="flex flex-col w-full">
-            <Suspense fallback={<Loader title={'Profile is loading...'}/>}>
-                <EditProfileModal
-                    photoURL={photoURL}
-                    firebaseUser={firebaseUser}
-                    openModal={openEditProfile}
-                    setOpenModal={setOpenEditProfile}
-                    setFirebaseUser={setFirebaseUser}
-                />
-            </Suspense>
-            <Suspense fallback={<Loader title={'Profile image modal is loading...'}/>}>
-                <UpdateProfileImageModal
-                    open={openUpdateProfileImage}
-                    setOpen={setOpenUpdateProfileImage}
-                    photoURL={photoURL}
-                />
-            </Suspense>
+            {
+                openEditProfile && (
+                    <Suspense fallback={<Loader title={'Profile is loading...'}/>}>
+                        <EditProfileModal
+                            photoURL={photoURL}
+                            firebaseUser={firebaseUser}
+                            openEditModal={openEditProfile}
+                            setOpenEditModal={setOpenEditProfile}
+                            setUpdateImageModal={setOpenUpdateProfileImage}
+                            setFirebaseUser={setFirebaseUser}
+                        />
+                    </Suspense>
+                )
+            }
+            {
+                openUpdateProfileImage && (
+                    <Suspense fallback={<Loader title={'Profile image modal is loading...'}/>}>
+                        <UpdateProfileImageModal
+                            open={openUpdateProfileImage}
+                            setOpen={setOpenUpdateProfileImage}
+                            photoURL={photoURL}
+                            setPhotoURL={setPhotoURL}
+                        />
+                    </Suspense>
+                )
+            }
+
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
             <article className="relative w-full flex flex-col">
                 <h2 className="text-xl sm:text-2xl text-white font-medium my-4">Profile</h2>
@@ -72,7 +83,7 @@ function User() {
                         alt="art"
                         className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black cursor-pointer"
                         onDragStart={(e) => e.preventDefault()}
-                        onClick={()=> setOpenUpdateProfileImage(true)}
+                        onClick={() => setOpenUpdateProfileImage(true)}
                         title="Click to edit profile"
                     />
 
