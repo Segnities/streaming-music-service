@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
+
 
 import {useSelector} from "react-redux";
 
-import {getAuth, updateProfile, updateEmail} from "firebase/auth";
+import {getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential} from "firebase/auth";
 import {doc, updateDoc} from "firebase/firestore";
 
 import {Field, Form, Formik} from "formik";
@@ -15,9 +16,8 @@ import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
 import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 import {firebaseApp, firebaseDatabase} from '../firebase/firebaseConfig';
-
-import NoImage from "../assets/no_artist.jpg";
-
+import firebase from "firebase/compat";
+import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -53,7 +53,7 @@ const EditProfileModal = (props: Props) => {
 
 
     const auth = getAuth(firebaseApp);
-
+    const user:User = auth.currentUser as User
     const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
@@ -61,7 +61,7 @@ const EditProfileModal = (props: Props) => {
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
 
-    const updateFirebaseUser = (values:Fields) => {
+    const updateFirebaseUser = (values: Fields) => {
         setFirebaseUser({
             id: firebaseUser?.id as string,
             data: {
@@ -110,13 +110,22 @@ const EditProfileModal = (props: Props) => {
                 gender: values.gender,
                 birthday: `${values.day} ${values.month} ${values.year}`,
             });
+
         }
 
-        if (isEmailUnique && isUsernameUnique && isCurrentPasswordCorrect) {
-            updateFirebaseUser(values);
-            updateDoc(userDocRef, {
-                password: values.password
-            }).then(res => console.log(res => console.log('Doc updated!'))).catch((err) => console.log('Update doc error'))
+        if (isCurrentPasswordCorrect) {
+            const credential = EmailAuthProvider.credential(user.email as string, values.currentPassword);
+            reauthenticateWithCredential(user, credential).then((res)=> {
+                console.log('Reauthenticate...');
+                updateFirebaseUser(values);
+                updatePassword(res.user as User, values.password)
+                    .then(res => console.log('Password updated!'))
+                    .catch(err => console.log(err));
+                updateDoc(userDocRef, {
+                    password: values.password
+                });
+
+            }).catch(err => console.log('Update password error'));
         }
 
         setOpenEditModal(false);
@@ -129,9 +138,9 @@ const EditProfileModal = (props: Props) => {
                 <img
                     src={photoURL}
                     alt="avatar"
-                    className='rounded-full cursor-pointer w-20 h-20'
+                    className='rounded-full cursor-pointer w-20 h-20 border-2 border-black'
                     title='Change avatar'
-                    onClick={()=> {
+                    onClick={() => {
                         setOpenEditModal(false)
                         setUpdateImageModal(true);
                     }}
