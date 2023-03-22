@@ -40,8 +40,8 @@ const UpdateProfileImageModal = (props:Props) => {
     return (
         <Modal open={open} setOpen={setOpen}>
             <div className="flex flex-col items-center">
-                <img src={photoURL} className='w-48 h-48 rounded-full' alt=""/>
-                <label htmlFor="avatar" className='text-base font-medium mb-2'>Change profile
+                <img src={photoURL} className='w-48 h-48 rounded-full border-4 border-black' alt=""/>
+                <label htmlFor="avatar" className='text-lg font-medium my-3'>Change profile
                     avatar</label>
                 <input type="file" id="avatar"
                        onChange={(e) => {
