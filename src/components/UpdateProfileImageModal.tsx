@@ -11,10 +11,11 @@ interface Props {
     open: boolean;
     setOpen:  React.Dispatch<React.SetStateAction<boolean>>;
     photoURL:string;
+    setPhotoURL: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const UpdateProfileImageModal = (props:Props) => {
-    const {open, setOpen, photoURL} = props;
+    const {open, setOpen, photoURL, setPhotoURL } = props;
 
     const auth = getAuth(firebaseApp);
     const storage = getStorage(firebaseApp);
@@ -27,6 +28,7 @@ const UpdateProfileImageModal = (props:Props) => {
             uploadBytes(uploadPathRef, profileImage!).then(res => console.log('Uploaded!')).catch(err => console.log('Upload error!')
             );
             const profileImageUrl = await getDownloadURL(ref(storage, `profileImages/${profileImage?.name}`));
+            setPhotoURL(profileImageUrl);
             updateProfile(auth.currentUser!, {
                 photoURL: profileImageUrl
             }).then(res => console.log('Profile image updated!')).catch(err => console.log('Profile image update error'))
@@ -38,13 +40,15 @@ const UpdateProfileImageModal = (props:Props) => {
     return (
         <Modal open={open} setOpen={setOpen}>
             <div className="flex flex-col items-center">
-                <img src={photoURL} className='w-1/5 h-1/5 rounded-full' alt=""/>
+                <img src={photoURL} className='w-48 h-48 rounded-full' alt=""/>
                 <label htmlFor="avatar" className='text-base font-medium mb-2'>Change profile
                     avatar</label>
                 <input type="file" id="avatar"
-                       onChange={(e) => setProfileImage(e?.target?.files![0])}
+                       onChange={(e) => {
+                           setProfileImage(e?.target?.files![0])
+                       }}
                        className="text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                <button onClick={updateProfileImage} className='my-5 self-end bg-[#1ED760] rounded-xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium'>Update</button>
+                <button onClick={updateProfileImage} className='my-5  self-center bg-[#1ED760] rounded-xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium'>Update</button>
             </div>
 
         </Modal>

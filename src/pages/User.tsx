@@ -50,8 +50,9 @@ function User() {
                 <EditProfileModal
                     photoURL={photoURL}
                     firebaseUser={firebaseUser}
-                    openModal={openEditProfile}
-                    setOpenModal={setOpenEditProfile}
+                    openEditModal={openEditProfile}
+                    setOpenEditModal={setOpenEditProfile}
+                    setUpdateImageModal={setOpenUpdateProfileImage}
                     setFirebaseUser={setFirebaseUser}
                 />
             </Suspense>
@@ -60,6 +61,7 @@ function User() {
                     open={openUpdateProfileImage}
                     setOpen={setOpenUpdateProfileImage}
                     photoURL={photoURL}
+                    setPhotoURL={setPhotoURL}
                 />
             </Suspense>
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
