@@ -44,9 +44,9 @@ function App() {
 
 
     return (
-        <AuthContext.Provider value={{isAuth, setIsAuth, user, setUser}}>
+        <AuthContext.Provider value={{isAuth, setIsAuth, user, setUser}} >
             <BrowserRouter>
-                <AppRouter/>
+                <AppRouter />
             </BrowserRouter>
         </AuthContext.Provider>
     );
