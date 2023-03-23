@@ -1,6 +1,5 @@
 import React from "react";
 
-
 import {useSelector} from "react-redux";
 
 import {getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential} from "firebase/auth";
@@ -81,7 +80,6 @@ const EditProfileModal = (props: Props) => {
             }
         });
     }
-
     const handleSubmit = (values: Fields): void => {
 
         const isEmailUnique: boolean = firebaseUsers.find((usr) => {
