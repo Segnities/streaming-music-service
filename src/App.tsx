@@ -37,7 +37,7 @@ function App() {
     }, []);
 
     if (isLoading) {
-        return <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]">
+        return <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]" data-testid='app-loader'>
             <Loader/>
         </div>
     }
