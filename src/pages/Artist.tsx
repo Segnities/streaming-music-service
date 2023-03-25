@@ -30,7 +30,6 @@ function Artist() {
   const attributes: PurpleAttributes = artist?.attributes;
   const playlist: FeaturedAlbumsDatum[] = artist?.views?.playlists?.data;
 
-  console.dir(artist);
 
   const artistImage =
     artist?.avatar ||
@@ -45,7 +44,7 @@ function Artist() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid='artist-page'>
       <ArtistHeader artistImage={artistImage} attributes={attributes} />
       <ArtistPlaylist playlist={playlist} />
       <ArtistBio artistBio={attributes.artistBio} />

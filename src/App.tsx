@@ -37,16 +37,16 @@ function App() {
     }, []);
 
     if (isLoading) {
-        return <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]">
+        return <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]" data-testid='app-loader'>
             <Loader/>
         </div>
     }
 
 
     return (
-        <AuthContext.Provider value={{isAuth, setIsAuth, user, setUser}}>
+        <AuthContext.Provider value={{isAuth, setIsAuth, user, setUser}} >
             <BrowserRouter>
-                <AppRouter/>
+                <AppRouter />
             </BrowserRouter>
         </AuthContext.Provider>
     );

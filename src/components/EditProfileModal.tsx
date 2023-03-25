@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React from "react";
 
 import {useSelector} from "react-redux";
 
-import {getAuth, updateProfile, updateEmail} from "firebase/auth";
+import {getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential} from "firebase/auth";
 import {doc, updateDoc} from "firebase/firestore";
 
 import {Field, Form, Formik} from "formik";
@@ -15,9 +15,8 @@ import Modal from "./UI/Modal";
 import {UserDoc} from "../utils/@types";
 import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
 import {firebaseApp, firebaseDatabase} from '../firebase/firebaseConfig';
-
-import NoImage from "../assets/no_artist.jpg";
-
+import firebase from "firebase/compat";
+import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 interface Props {
     firebaseUser: UserDoc | undefined | null;
@@ -27,6 +26,11 @@ interface Props {
     setUpdateImageModal: React.Dispatch<React.SetStateAction<boolean>>
 
     setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
+}
+
+enum ProviderID {
+    email = 'email',
+    google = 'google.com'
 }
 
 interface Fields {
@@ -53,6 +57,8 @@ const EditProfileModal = (props: Props) => {
 
 
     const auth = getAuth(firebaseApp);
+    const user: User = auth.currentUser as User
+    const providerId: string = user.providerData[0].providerId;
 
     const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
@@ -61,7 +67,7 @@ const EditProfileModal = (props: Props) => {
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
 
-    const updateFirebaseUser = (values:Fields) => {
+    const updateFirebaseUser = (values: Fields) => {
         setFirebaseUser({
             id: firebaseUser?.id as string,
             data: {
@@ -74,7 +80,6 @@ const EditProfileModal = (props: Props) => {
             }
         });
     }
-
     const handleSubmit = (values: Fields): void => {
 
         const isEmailUnique: boolean = firebaseUsers.find((usr) => {
@@ -110,13 +115,22 @@ const EditProfileModal = (props: Props) => {
                 gender: values.gender,
                 birthday: `${values.day} ${values.month} ${values.year}`,
             });
+
         }
 
-        if (isEmailUnique && isUsernameUnique && isCurrentPasswordCorrect) {
-            updateFirebaseUser(values);
-            updateDoc(userDocRef, {
-                password: values.password
-            }).then(res => console.log(res => console.log('Doc updated!'))).catch((err) => console.log('Update doc error'))
+        if (isCurrentPasswordCorrect) {
+            const credential = EmailAuthProvider.credential(user.email as string, values.currentPassword);
+            reauthenticateWithCredential(user, credential).then((res) => {
+                console.log('Reauthenticate...');
+                updateFirebaseUser(values);
+                updatePassword(res.user as User, values.password)
+                    .then(res => console.log('Password updated!'))
+                    .catch(err => console.log(err));
+                updateDoc(userDocRef, {
+                    password: values.password
+                });
+
+            }).catch(err => console.log('Update password error'));
         }
 
         setOpenEditModal(false);
@@ -129,9 +143,9 @@ const EditProfileModal = (props: Props) => {
                 <img
                     src={photoURL}
                     alt="avatar"
-                    className='rounded-full cursor-pointer w-20 h-20'
+                    className='rounded-full cursor-pointer w-20 h-20 border-2 border-black'
                     title='Change avatar'
-                    onClick={()=> {
+                    onClick={() => {
                         setOpenEditModal(false)
                         setUpdateImageModal(true);
                     }}
@@ -162,27 +176,34 @@ const EditProfileModal = (props: Props) => {
                                     <Field type="email" name="email" id='email'
                                            className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
                                 </div>
+                                {
+                                    providerId === ProviderID.email && (
+                                        <>
+                                            <div className="flex flex-col my-3">
+                                                <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
+                                                    password</label>
+                                                <Field type="password" name="currentPassword" id='currentPassword'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col my-3">
-                                    <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
-                                        password</label>
-                                    <Field type="password" name="currentPassword" id='currentPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                            <div className="flex flex-col my-2">
+                                                <label htmlFor="password" className='text-base font-medium mb-2'>New
+                                                    Password</label>
+                                                <Field type="password" name="password" id='password'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col my-2">
-                                    <label htmlFor="password" className='text-base font-medium mb-2'>New
-                                        Password</label>
-                                    <Field type="password" name="password" id='password'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                            <div className="flex flex-col">
+                                                <label htmlFor="confirmPassword" className='text-base font-medium mb-2'>Repeat
+                                                    new
+                                                    password</label>
+                                                <Field type="password" name="confirmPassword" id='confirmPassword'
+                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                            </div>
 
-                                <div className="flex flex-col">
-                                    <label htmlFor="confirmPassword" className='text-base font-medium mb-2'>Repeat new
-                                        password</label>
-                                    <Field type="password" name="confirmPassword" id='confirmPassword'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
-                                </div>
+                                        </>
+                                    )
+                                }
 
                                 <div className="flex flex-col">
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>

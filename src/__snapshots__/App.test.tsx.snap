@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Test app component > Loader before while data loading 1`] = `
+<div
+  class="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]"
+  data-testid="app-loader"
+>
+  <div
+    class="w-full flex justify-center items-center flex-col"
+  >
+    <img
+      class="w-32 h-32 object-contain"
+      src="/src/components/UI/Loader/assets/img/loader.svg"
+    />
+    <h1
+      class="font-bold text-white text-2xl mt-2"
+    >
+      Loading...
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`Test app component > Loader while data is loading 1`] = `
+<div
+  class="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]"
+  data-testid="app-loader"
+>
+  <div
+    class="w-full flex justify-center items-center flex-col"
+  >
+    <img
+      class="w-32 h-32 object-contain"
+      src="/src/components/UI/Loader/assets/img/loader.svg"
+    />
+    <h1
+      class="font-bold text-white text-2xl mt-2"
+    >
+      Loading...
+    </h1>
+  </div>
+</div>
+`;

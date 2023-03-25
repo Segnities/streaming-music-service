@@ -13,7 +13,7 @@ interface Props {
   index: number;
   activeSong: SongRootObject;
   isPlaying: boolean;
-  data: [];
+  data: [] | SongRootObject[];
   children?: JSX.Element;
 }
 

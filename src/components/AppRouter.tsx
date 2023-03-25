@@ -19,7 +19,7 @@ function AppRouter() {
 
 
     return (
-        <div className="relative flex min-h-screen">
+        <div className="relative flex min-h-screen" data-testid='template-id'>
             {
                 isAuthPath && !authContext?.isAuth ?
                     <AuthenticationTemplate /> : <AppTemplate />

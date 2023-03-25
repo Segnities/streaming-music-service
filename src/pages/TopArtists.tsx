@@ -1,3 +1,5 @@
+import {useEffect, useState} from "react";
+
 import ArtistCard from "../components/ArtistCard";
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
@@ -12,9 +14,16 @@ function TopArtists() {
     error: topArtistsError,
   } = useGetTopChartsQuery(null);
 
-  const filledTopArtists = isTopArtistsFetching ? [] : topArtists.filter((tArtist: SongRootObject) => tArtist?.artists)
+  const [filledTopArtists, setFilledTopArtists] = useState<[] | SongRootObject[]>([]);
 
-  if (isTopArtistsFetching || filledTopArtists.length === 0) {
+
+    useEffect(()=> {
+        if(!isTopArtistsFetching) {
+            setFilledTopArtists(topArtists.filter((tArtist: SongRootObject) => tArtist?.artists));
+        }
+    }, [])
+
+  if (isTopArtistsFetching) {
     return <Loader title="Artists is loading..." />;
   }
   if (topArtistsError) {
@@ -22,7 +31,7 @@ function TopArtists() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid='top-artists-page'>
       <h2 className="text-3xl text-white font-bold text-left mt-4 mb-10">
         Top Artists
       </h2>

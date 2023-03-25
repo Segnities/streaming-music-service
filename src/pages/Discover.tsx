@@ -9,6 +9,7 @@ import { genres } from "../data/genres";
 import { useGetSongsByGenreQuery } from "../API/shazamCore";
 import { SelectorPlayerState, SongRootObject } from "../API/types";
 import { selectGenreListId } from "../store/reducers/player";
+import { useEffect, useState } from "react";
 
 type Genre = {
   title: string;
@@ -21,11 +22,17 @@ function Discover() {
   );
   const dispatch = useDispatch();
   const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
+  const [filledData, setFilledData] = useState<[] | SongRootObject[]>([]);
 
+  /* const filledData: [] | SongRootObject[] = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
+   */
+  useEffect(() => {
+    if (!isFetching) {
+      setFilledData(data.filter((chart: SongRootObject) => chart?.artists));
+    }
+  }, [])
 
-  const filledData = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
-
-  if (isFetching || filledData.length === 0) {
+  if (isFetching) {
     return <Loader title="Loading songs..." />;
   }
 
@@ -34,7 +41,7 @@ function Discover() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid='discover-page'>
       <div className="w-full flex flex-col justify-between items-center mt-4 mb-10 sm:flex-row">
         <h2 className="font-bold text-3xl text-white text-left">Discover</h2>
         <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-8 w-full  sm:mt-5 sm:w-auto" value={genreListId || "POP"} onChange={(e) => {
