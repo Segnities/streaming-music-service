@@ -29,7 +29,7 @@ function TopCharts() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="top-charts-page">
       <h2 className="text-3xl text-white font-bold text-left mt-4 mb-10">
         Top Charts
       </h2>

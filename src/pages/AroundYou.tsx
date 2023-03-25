@@ -41,7 +41,7 @@ function AroundYou() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="around-you-page">
       <h2 className="text-3xl text-white font-bold text-left mt-4 mb-10">
         Around you
         <span className="font-black ml-3">{country}</span>

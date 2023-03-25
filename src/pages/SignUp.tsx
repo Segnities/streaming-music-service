@@ -22,6 +22,8 @@ function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
 
+    const [createPasswordError, setCreatePasswordError] = useState<{code:string | number, message:string} | null>(null);
+
     const {firebaseUsers:users} = useSelector((state:FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const [isFieldUnique, setIsFieldUnique] = useState({
@@ -36,7 +38,9 @@ function SignUp() {
         setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique })
 
         if (isEmailUnique && isUsernameUnique) {
-            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => userCredential).catch((error) => console.log(error));
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => userCredential)
+                .catch((error) => setCreatePasswordError(error));
             addDoc(collectionRef, {
                 email, password, username, birthday: `${day} ${month} ${year}`, gender
             });
@@ -45,6 +49,14 @@ function SignUp() {
 
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
+            {
+                createPasswordError && (
+                    <div className='w-full flex flex-col p-5 rounded-md items-center text-center'>
+                        <h4 className='text-red-600 text-2xl font-semibold'>Error!</h4>
+                        <p className='text-red-500 text-base font-medium'>{createPasswordError.code} {createPasswordError.message}</p>
+                    </div>
+                )
+            }
             <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div className="flex flex-col flex-1 items-center">

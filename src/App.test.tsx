@@ -1,15 +1,12 @@
 
-import {describe, expect, test} from "vitest";
+import {describe, expect, it} from "vitest";
 import {screen} from "@testing-library/react";
 
 import {renderWithProviders} from "./utils-for-tests";
 import App from "./App";
-describe('Simple tests', ()=> {
-    test('1 + 1 = 2', ()=> {
-        expect(1 + 1).toBe(2);
-    });
-    test('Test after creating tests util', ()=> {
+describe('Test app component', ()=> {
+    it('Loader while data is loading', ()=> {
         renderWithProviders(<App/>);
         expect(screen.getByTestId('app-loader')).toBeInTheDocument();
-    })
-})
+    });
+});
