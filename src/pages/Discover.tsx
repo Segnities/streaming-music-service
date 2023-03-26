@@ -24,8 +24,6 @@ function Discover() {
   const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
   const [filledData, setFilledData] = useState<[] | SongRootObject[]>([]);
 
-  /* const filledData: [] | SongRootObject[] = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
-   */
   useEffect(() => {
     if (!isFetching) {
       setFilledData(data.filter((chart: SongRootObject) => chart?.artists));

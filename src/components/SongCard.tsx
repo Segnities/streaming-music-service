@@ -31,45 +31,45 @@ function SongCard(props: Props) {
   };
 
   return (
-    <div className="flex flex-col w-[230px] sm:w-[220px] lg:w-[240px] p-4 bg-white/5 bg-opacity bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
-      <div className="relative w-full h-56 group">
-        <div
-          className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title
-            ? "flex bg-black bg-opacity-70"
-            : "hidden"
-            }`}
-        >
-          <PlayPause
-            song={song}
-            activeSong={activeSong}
-            isPlaying={isPlaying}
-            handlePlayClick={handlePlayClick}
-            handlePauseClick={handlePauseClick}
+      <div className="flex flex-col w-[230px] sm:w-[220px] lg:w-[240px] lg:h-[300px] p-4 bg-white/5 bg-opacity bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
+        <div className="relative w-full h-56 group">
+          <div
+              className={`absolute inset-0 justify-center items-center bg-black/20 rounded-lg bg-opacity-50 group-hover:flex ${activeSong?.title === song.title
+                  ? "flex bg-black bg-opacity-70"
+                  : "hidden"
+              }`}
+          >
+            <PlayPause
+                song={song}
+                activeSong={activeSong}
+                isPlaying={isPlaying}
+                handlePlayClick={handlePlayClick}
+                handlePauseClick={handlePauseClick}
+            />
+          </div>
+          <img
+              src={song?.images?.coverart || NoImage}
+              alt="song-img"
+              className="w-[203px] h-[203px]"
           />
         </div>
-        <img
-          src={song?.images?.coverart || NoImage}
-          alt="song-img"
-          className="w-[203px] h-[203px]"
-        />
+        <div className="mt-4 flex flex-col">
+          <p className="font-semibold text-lg text-white truncate text-center">
+            <Link to={`/songs/${song?.key}`}>{song.title}</Link>
+          </p>
+          <p className="text-sm truncate text-gray-300 mt-1 text-center">
+            <Link
+                to={
+                  song?.artists
+                      ? `/artists/${song.artists[0]?.adamid}`
+                      : "/top-artists"
+                }
+            >
+              {song.subtitle}
+            </Link>
+          </p>
+        </div>
       </div>
-      <div className="mt-4 flex flex-col">
-        <p className="font-semibold text-lg text-white truncate">
-          <Link to={`/songs/${song?.key}`}>{song.title}</Link>
-        </p>
-        <p className="text-sm truncate text-gray-300 mt-1">
-          <Link
-            to={
-              song?.artists
-                ? `/artists/${song.artists[0]?.adamid}`
-                : "/top-artists"
-            }
-          >
-            {song.subtitle}
-          </Link>
-        </p>
-      </div>
-    </div>
   );
 }
 
