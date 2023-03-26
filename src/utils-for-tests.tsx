@@ -1,20 +1,15 @@
 
-import {render} from "@testing-library/react";
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import {Provider, useDispatch} from "react-redux";
+import { render } from "@testing-library/react";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
 
 import playerSlice from "./store/reducers/player";
-import firebaseUsersSlice, {setFirebaseUsers} from "./store/reducers/firebaseUsers";
-import {shazamCoreApiV1, shazamCoreApiV2} from "./API/shazamCore";
+import firebaseUsersSlice, { setFirebaseUsers } from "./store/reducers/firebaseUsers";
+import { shazamCoreApiV1, shazamCoreApiV2 } from "./API/shazamCore";
 
-import {getDefaultMiddleware} from "@reduxjs/toolkit";
-
-import {CurriedGetDefaultMiddleware} from "@reduxjs/toolkit/dist/getDefaultMiddleware";
-import {AuthContext} from "./context";
-import {useEffect, useState} from "react";
-import {getAuth, onAuthStateChanged, User} from "firebase/auth";
-import {firebaseApp} from "./firebase/firebaseConfig";
-import {getUsers} from "./utils/getUsers";
+import { getDefaultMiddleware } from "@reduxjs/toolkit";
+import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
 
 const rootReducer = combineReducers({
     player: playerSlice.reducer,
@@ -37,12 +32,13 @@ export function renderWithProviders(
     } = {}
 ) {
 
+    setupListeners(store.dispatch);
 
-    function Wrapper({children}) {
+    function Wrapper({ children }) {
         return <Provider store={store}>
-                {children}
+            {children}
         </Provider>
     }
 
-    return {store, ...render(ui, {wrapper: Wrapper, ...renderOptions})}
+    return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
