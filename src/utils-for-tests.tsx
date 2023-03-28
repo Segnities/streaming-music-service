@@ -1,44 +1,50 @@
 
 import { render } from "@testing-library/react";
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
-import playerSlice from "./store/reducers/player";
-import firebaseUsersSlice, { setFirebaseUsers } from "./store/reducers/firebaseUsers";
-import { shazamCoreApiV1, shazamCoreApiV2 } from "./API/shazamCore";
+import type { RenderOptions } from "@testing-library/react";
 
-import { getDefaultMiddleware } from "@reduxjs/toolkit";
-import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import { PreloadedState } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { MemoryRouter } from "react-router";
+import { RootState, AppStore, setupStore } from "./store";
+import { PropsWithChildren } from "react";
 
-const rootReducer = combineReducers({
-    player: playerSlice.reducer,
-    firebaseUsers: firebaseUsersSlice.reducer,
-    [shazamCoreApiV1.reducerPath]: shazamCoreApiV1.reducer,
-    [shazamCoreApiV2.reducerPath]: shazamCoreApiV2.reducer,
-});
+import AppRouter from "./components/AppRouter";
+import { AuthContext } from "./context";
 
-export function renderWithProviders(
-    ui: JSX.Element,
+
+interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
+    preloadedState?: PreloadedState<RootState>
+    store?: AppStore
+}
+
+export function renderWithReduxToolkit(
+    ui: React.ReactElement,
     {
         preloadedState = {},
-        store = configureStore({
-            reducer: rootReducer,
-            middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) =>
-                getDefaultMiddleware().concat(shazamCoreApiV1.middleware).concat(shazamCoreApiV2.middleware),
-            preloadedState
-        }),
+        store = setupStore(preloadedState),
         ...renderOptions
-    } = {}
+    }: ExtendedRenderOptions = {}
 ) {
 
     setupListeners(store.dispatch);
 
-    function Wrapper({ children }) {
+    function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
         return <Provider store={store}>
             {children}
         </Provider>
     }
 
     return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
+}
+
+export function renderWithReactRouter(path: string = '/', component: JSX.Element) {
+    return (
+        <MemoryRouter initialEntries={[path]}>
+            <AppRouter />
+            {component}
+        </MemoryRouter>
+
+    )
 }

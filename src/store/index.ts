@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { shazamCoreApiV1, shazamCoreApiV2 } from "../API/shazamCore";
+import { PreloadedState } from "@reduxjs/toolkit";
 import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 import playerSlice from "./reducers/player";
 import firebaseUsersSlice from "./reducers/firebaseUsers";
@@ -23,3 +24,18 @@ export const store = configureStore({
       .concat(shazamCoreApiV1.middleware)
       .concat(shazamCoreApiV2.middleware),
 });
+
+export function setupStore(preloadedState?: PreloadedState<RootState>) {
+  return configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .concat(shazamCoreApiV1.middleware)
+      .concat(shazamCoreApiV2.middleware),
+    preloadedState
+  })
+}
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispath = AppStore['dispatch'];

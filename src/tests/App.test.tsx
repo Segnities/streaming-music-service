@@ -1,12 +1,14 @@
-
-import { describe, expect, it } from "vitest";
 import { screen } from "@testing-library/react";
+import { describe, expect } from "vitest";
 
-import { renderWithProviders } from "../utils-for-tests";
 import App from "../App";
-describe('Test app component', () => {
-    it('Loader while data is loading', () => {
-        renderWithProviders(<App />);
-        expect(screen.getByTestId('app-loader')).toBeInTheDocument();
-    });
+
+import { renderWithReduxToolkit } from "../utils-for-tests";
+
+describe('<App/>', () => {
+    test('loader', () => {
+        renderWithReduxToolkit(<App />);
+        expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+        screen.debug();
+    })
 });

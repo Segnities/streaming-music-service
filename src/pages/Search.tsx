@@ -33,7 +33,7 @@ function Search() {
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col" data-testid='search-page'>
             <h2 className="text-3xl text-white font-bold text-left mt-4 mb-10">
                 Showing results of <span className="font-black">{query}</span>
             </h2>

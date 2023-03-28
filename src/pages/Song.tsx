@@ -56,7 +56,7 @@ function Song() {
   }
 
   return (
-    <div className="flex flex-col" data-testid='some-id'>
+    <div className="flex flex-col" data-testid='song-page'>
       <div className="relative w-full flex flex-col">
         <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
         <div className="absolute inset-0 flex items-center">
