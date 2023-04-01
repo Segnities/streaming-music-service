@@ -14,12 +14,6 @@ import { SongRootObject, SelectorPlayerState } from "../../API/types";
 function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
   const [topCharts, setTopCharts] = useState<[] | SongRootObject[]>([]);
-  /* const topCharts: SongRootObject[] = isFetching
-    ? []
-    : data
-      ?.filter((tChart: SongRootObject) => tChart?.artists)
-      .slice(0, 10);
- */
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
@@ -36,14 +30,7 @@ function TopChartsWidget() {
     dispatch(playPause(false));
   };
 
-  useEffect(() => {
-    containerRef?.current?.scrollIntoView({ behavior: "smooth" });
-    if (!isFetching) {
-      setTopCharts([...data]?.filter((tChart: SongRootObject) => tChart?.artists).slice(0, 10));
-    }
-  }, []);
-
-  if (isFetching || topCharts.length === 0) {
+  if (isFetching) {
     return <Loader title="Top charts is loading..." />
   }
 
@@ -58,13 +45,13 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={topCharts}
+        topCharts={[...data].slice(0, 10)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
       />
 
-      <TopArtistsWidget topCharts={topCharts} />
+      <TopArtistsWidget topCharts={[...data].slice(0, 10)} />
     </div>
   );
 }
