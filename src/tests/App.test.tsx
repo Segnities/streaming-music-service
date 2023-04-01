@@ -10,5 +10,5 @@ describe('<App/>', () => {
         renderWithReduxToolkit(<App />);
         expect(screen.getByText(/loading.../i)).toBeInTheDocument();
         screen.debug();
-    })
+    });
 });

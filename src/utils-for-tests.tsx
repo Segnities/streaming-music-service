@@ -42,7 +42,6 @@ export function renderWithReduxToolkit(
 export function renderWithReactRouter(path: string = '/', component: JSX.Element) {
     return (
         <MemoryRouter initialEntries={[path]}>
-            <AppRouter />
             {component}
         </MemoryRouter>
 
