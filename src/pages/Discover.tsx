@@ -24,8 +24,6 @@ function Discover() {
   const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
   const [filledData, setFilledData] = useState<[] | SongRootObject[]>([]);
 
-  /* const filledData: [] | SongRootObject[] = isFetching ? [] : data.filter((chart: SongRootObject) => chart?.artists);
-   */
   useEffect(() => {
     if (!isFetching) {
       setFilledData(data.filter((chart: SongRootObject) => chart?.artists));
@@ -41,10 +39,10 @@ function Discover() {
   }
 
   return (
-    <div className="flex flex-col" data-testid='discover-page'>
-      <div className="w-full flex flex-col justify-between items-center mt-4 mb-10 sm:flex-row">
+    <div className="flex flex-col" >
+      <div className="w-full flex flex-col justify-between items-center mt-4 mb-10 sm:flex-row" data-testid="discoverPage">
         <h2 className="font-bold text-3xl text-white text-left">Discover</h2>
-        <select className="bg-black text-gray-300 p-3  text-sm rounded-lg outline-none mt-8 w-full  sm:mt-5 sm:w-auto" value={genreListId || "POP"} onChange={(e) => {
+        <select className="bg-black text-gray-300 p-3 text-sm rounded-lg outline-none mt-8 w-full  sm:mt-5 sm:w-auto" value={genreListId || "POP"} onChange={(e) => {
           dispatch(selectGenreListId(e.target.value))
         }}>
           {genres.map((genre: Genre) => (

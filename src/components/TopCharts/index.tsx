@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import TopSongsWidget from "./SongsWidget";
@@ -13,16 +13,11 @@ import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
-  const topCharts: SongRootObject[] = isFetching
-    ? []
-    : data
-      .filter((tChart: SongRootObject) => tChart?.artists)
-      .slice(0, 10);
-
+  const [topCharts, setTopCharts] = useState<[] | SongRootObject[]>([]);
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
-  const containerRef:MutableRefObject< HTMLDivElement | null> = useRef(null);
+  const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -35,11 +30,7 @@ function TopChartsWidget() {
     dispatch(playPause(false));
   };
 
-  useEffect(() => {
-    containerRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-  if (isFetching || topCharts.length === 0) {
+  if (isFetching) {
     return <Loader title="Top charts is loading..." />
   }
 
@@ -54,13 +45,13 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={topCharts}
+        topCharts={[...data].slice(0, 10)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
       />
 
-      <TopArtistsWidget topCharts={topCharts} />
+      <TopArtistsWidget topCharts={[...data].slice(0, 10)} />
     </div>
   );
 }
