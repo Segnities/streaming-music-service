@@ -6,12 +6,13 @@ import type { RenderOptions } from "@testing-library/react";
 
 import { PreloadedState } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
-import { MemoryRouter } from "react-router";
+import { createMemoryRouter, MemoryRouter } from "react-router";
 import { RootState, AppStore, setupStore } from "./store";
 import { PropsWithChildren } from "react";
 
 import AppRouter from "./components/AppRouter";
 import { AuthContext } from "./context";
+import { publicRoutes } from "./routes";
 
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
