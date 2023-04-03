@@ -522,3 +522,35 @@ export interface GeoIpifyCountry {
     isp: string;
   };
 }
+
+
+
+export interface YoutubeTrackData {
+    caption: string;
+    image: YoutubeImagesData,
+    actions: YoutubeActionsData[];
+}
+
+export interface YoutubeImagesData {
+  dimensions: {
+    width: number;
+    height: number;
+  },
+  url: string;
+}
+
+export interface YoutubeActionsData {
+  name: string;
+  type: string;
+  share: {
+    subject: string;
+    text: string;
+    href: string;
+    image: string;
+    twitter: string;
+    html: string;
+    avatar: string;
+    snapchat: string;
+  };
+  uri: string;
+}

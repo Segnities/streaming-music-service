@@ -49,6 +49,9 @@ export const shazamCoreApiV1 = createApi({
     getRelatedSongs: builder.query({
       query: (songid) => `/tracks/related?track_id=${songid}`,
     }),
+    getTrackYoutubeVideo: builder.query({
+      query: (song) => `tracks/youtube-video?track_id=${song.songid}&name=${song.songtitle}`,
+    }),
     getArtistDetails: builder.query({
       query: (artistid) => `/artists/details?artist_id=${artistid}`,
     }),
@@ -88,6 +91,7 @@ export const {
   useGetSongsByCountryQuery,
   useGetSongsByGenreQuery,
   useGetSongsBySearchQuery,
+  useGetTrackYoutubeVideoQuery
 } = shazamCoreApiV1;
 
 export const { useGetArtistsDetailsQuery } = shazamCoreApiV2;

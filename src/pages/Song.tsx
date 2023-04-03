@@ -9,10 +9,12 @@ import { setActiveSong, playPause } from "../store/reducers/player";
 import {
   useGetRelatedSongsQuery,
   useGetSongDetailsQuery,
+  useGetTrackYoutubeVideoQuery,
 } from "../API/shazamCore";
 
 import { SelectorPlayerState } from "../API/types";
 import Error from "../components/UI/Error";
+import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
 
 function Song() {
   const dispatch = useDispatch();
@@ -31,12 +33,15 @@ function Song() {
 
   const songImagePath = songData?.images?.coverart;
 
-
   const {
     data: relatedSongs,
     isFetching: isFetchingRelatedSongs,
     error: relatedSongsError,
   } = useGetRelatedSongsQuery(songid);
+
+  const song = { songid, songtitle: songData?.title };
+
+  const { data: youtubeTrackData, isFetching: isYoutubeTrackDataFetching, error: youtubeTrackDataError } = useGetTrackYoutubeVideoQuery(song);
 
   const handlePlayClick = (song, index) => {
     dispatch(setActiveSong({ song, relatedSongs, index }));
@@ -47,11 +52,11 @@ function Song() {
     dispatch(playPause(false));
   };
 
-  if (isFetchingSongs || isFetchingRelatedSongs) {
+  if (isFetchingSongs || isFetchingRelatedSongs || isYoutubeTrackDataFetching) {
     return <Loader title="Searching songs..." />;
   }
 
-  if (relatedSongsError || songsError) {
+  if (relatedSongsError) {
     return <Error />;
   }
 
@@ -93,14 +98,24 @@ function Song() {
           )}
         </div>
       </div>
-      <RelatedSongs
-        relatedSongs={relatedSongs}
-        isPlaying={isPlaying}
-        artistid={""}
-        activeSong={activeSong}
-        handlePauseClick={handlePauseClick}
-        handlePlayClick={handlePlayClick}
-      />
+      {
+        youtubeTrackDataError ? <p>Something went wrong with track...</p> : (
+          <YoutubeTrackVideo youtubeData={youtubeTrackData} />
+        )
+      }
+      {
+        relatedSongsError ? <p>Something went wrong with related songs...</p> : (
+          <RelatedSongs
+            relatedSongs={relatedSongs}
+            isPlaying={isPlaying}
+            artistid={""}
+            activeSong={activeSong}
+            handlePauseClick={handlePauseClick}
+            handlePlayClick={handlePlayClick}
+          />
+        )
+      }
+
     </div>
   );
 }
