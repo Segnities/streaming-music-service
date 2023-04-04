@@ -1,10 +1,8 @@
-import { useContext, useState, lazy, Suspense, useEffect } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
-import { AuthContext, AuthType } from "../context";
-
-import { signOut, getAuth } from "firebase/auth"
+import { signOut, getAuth, User as FUser } from "firebase/auth"
 import { firebaseApp } from "../firebase/firebaseConfig";
 
 import { UserDoc } from "../utils/types";
@@ -16,18 +14,20 @@ const UpdateProfileImageModal = lazy(() => import("../components/UpdateProfileIm
 
 import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
+
 import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
+import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
 
 function User() {
-    const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
-
+    const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
+    const user: FUser = JSON.parse(userData as string);
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
     const auth = getAuth(firebaseApp);
 
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === authContext?.user?.email));
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
     const [openUpdateProfileImage, setOpenUpdateProfileImage] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ function User() {
 
     const userSignOut = () => {
         signOut(auth);
-        authContext?.setUser(null);
+        setUserSignOut();
         navigate("/");
     }
 
@@ -88,7 +88,7 @@ function User() {
                     />
 
                     <h3 className="text-3xl sm:text-xl md:text-2xl text-white mb-5 ml-5">
-                        {authContext?.user?.displayName ?? firebaseUser?.data?.username}
+                        {user?.displayName ?? firebaseUser?.data?.username}
                     </h3>
                 </section>
                 <BlockSpace />
@@ -102,11 +102,11 @@ function User() {
                     <tbody>
                         <tr className="border-b-2 border-[#dedede]">
                             <td className="py-5 text-gray-500 text-lg">Username</td>
-                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? authContext?.user?.displayName}</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? user?.displayName}</td>
                         </tr>
                         <tr className="border-b-2 border-[#dedede]">
                             <td className="py-5 text-gray-500 text-lg">Email</td>
-                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? authContext?.user?.email}</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? user?.email}</td>
                         </tr>
                         <tr className="border-b-2 border-[#dedede]">
                             <td className="py-5 text-gray-500 text-lg">Date of birth</td>

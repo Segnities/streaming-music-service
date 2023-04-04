@@ -1,21 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { User } from "firebase/auth";
-
 interface UserInitialStateInterface {
     isAuth: boolean;
-    user: User | null;
+    user: string | null;
 }
 
 type UserAuthAction = {
     payload: {
-        isAuth: boolean;
-        user: User;
+        user: string;
     }
 
 }
 
 export interface UserAuthSelector {
-    auth: UserInitialStateInterface;
+    userAuth: UserInitialStateInterface;
 }
 
 const initialState = {
@@ -24,20 +21,23 @@ const initialState = {
 }
 
 
- const userAuthSlice = createSlice({
+const userAuthSlice = createSlice({
     name: "userAuth",
     initialState,
     reducers: {
-        setUserSignUp: (state:UserInitialStateInterface, action: UserAuthAction) => {
-            state.isAuth = action.payload.isAuth;
-            state.user = Object.assign({}, action.payload.user);
+        setUserSignUp: (state: UserInitialStateInterface, action: UserAuthAction) => {
+            state.isAuth = true;
+            state.user = action.payload.user;
         },
-        setUserSignOut: (state:UserInitialStateInterface) => {
+        setUserSignOut: (state: UserInitialStateInterface) => {
             state.isAuth = false;
             state.user = null;
+        },
+        changeIsAuth: (state: UserInitialStateInterface, action: { payload: boolean }) => {
+            state.isAuth = action.payload;
         }
     }
 });
 
-export const {setUserSignOut, setUserSignUp} = userAuthSlice.actions;
+export const { setUserSignOut, setUserSignUp, changeIsAuth } = userAuthSlice.actions;
 export default userAuthSlice;

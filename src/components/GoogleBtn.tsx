@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router";
-
 import {
     getAuth,
     signInWithPopup,
@@ -10,37 +8,32 @@ import {
     GoogleAuthProvider
 } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
-
-
-import { AuthType, AuthContext } from "../context";
-
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
-
 import { getUsers } from "../utils/getUsers";
-
+import { useDispatch } from "react-redux";
+import { setUserSignUp } from "../store/reducers/auth";
 import { FcGoogle } from "react-icons/fc";
+
 
 function GoogleBtn() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
     const googleProvider = new GoogleAuthProvider();
-    const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleOnClick = async () => {
         const users = await getUsers();
         signInWithPopup(auth, googleProvider)
             .then((res: UserCredential) => {
-                authContext?.setIsAuth(true);
-                authContext?.setUser(res?.user);
-
+                dispatch(setUserSignUp({ user: JSON.stringify(res?.user) }));
+                
                 if (users.find((usr) => usr.data.email === res.user.email) === undefined) {
                     addDoc(collectionRef, {
                         email: res?.user.email,
                         username: res?.user.displayName ?? res?.user?.email,
                     });
                 }
-                authContext?.setUser(res?.user);
                 setPersistence(auth, browserLocalPersistence);
                 navigate('/');
             })
