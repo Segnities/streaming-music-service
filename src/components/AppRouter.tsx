@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 
-import AppTemplate from "../templates/AppTemplate";
-import AuthenticationTemplate from "../templates/AuthenticationTemplate";
+import AppLayout from "../layouts/AppLayout";
+import AuthenticationLayout from "../layouts/AuthenticationLayout";
 import { authenticationRoutes } from "../routes"
 import { AuthContext } from "../context";
 import { useContext, useEffect } from "react";
@@ -17,16 +17,20 @@ function AppRouter() {
         authContext?.setIsAuth(authContext?.user ? true : false);
     });
 
+    if (isAuthPath && !authContext?.isAuth) {
+        return (
+            <div className="relative flex min-h-screen" data-testid='templateId'>
+                <AuthenticationLayout />
+            </div>
+        );
+    } else {
+        return (
+            <div className="relative flex min-h-screen" data-testid='templateId'>
+                <AppLayout />
+            </div>
+        );
+    }
 
-    return (
-        <div className="relative flex min-h-screen" data-testid='templateId'>
-            {
-                isAuthPath && !authContext?.isAuth ?
-                    <AuthenticationTemplate /> : <AppTemplate />
-            }
-        </div>
-
-    );
 }
 
 export default AppRouter

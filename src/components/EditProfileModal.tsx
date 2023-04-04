@@ -1,20 +1,20 @@
 import React from "react";
 
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
-import {getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential} from "firebase/auth";
-import {doc, updateDoc} from "firebase/firestore";
+import { getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 
-import {Field, Form, Formik} from "formik";
+import { Field, Form, Formik } from "formik";
 
-import {editProfileValidationSchema} from "../validation";
+import { editProfileValidationSchema } from "../validation";
 
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 
-import {UserDoc} from "../utils/@types";
-import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
-import {firebaseApp, firebaseDatabase} from '../firebase/firebaseConfig';
+import { UserDoc } from "../utils/types";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+import { firebaseApp, firebaseDatabase } from '../firebase/firebaseConfig';
 import firebase from "firebase/compat";
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
@@ -60,7 +60,7 @@ const EditProfileModal = (props: Props) => {
     const user: User = auth.currentUser as User
     const providerId: string = user.providerData[0].providerId;
 
-    const {firebaseUsers} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+    const { firebaseUsers } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
 
@@ -167,14 +167,14 @@ const EditProfileModal = (props: Props) => {
                 onSubmit={(values, formikHelpers) => console.log('Submitted!')}
             >
                 {
-                    ({errors, touched, values}) => (
+                    ({ errors, touched, values }) => (
                         <Form autoComplete="off">
                             <div className="w-full flex flex-col my-3">
 
                                 <label htmlFor="email" className='text-base font-medium mb-2'>Email</label>
                                 <div className="flex flex-col">
                                     <Field type="email" name="email" id='email'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
                                 {
                                     providerId === ProviderID.email && (
@@ -183,14 +183,14 @@ const EditProfileModal = (props: Props) => {
                                                 <label htmlFor="currentPassword" className='text-base font-medium mb-2'>Current
                                                     password</label>
                                                 <Field type="password" name="currentPassword" id='currentPassword'
-                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                                    className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                             </div>
 
                                             <div className="flex flex-col my-2">
                                                 <label htmlFor="password" className='text-base font-medium mb-2'>New
                                                     Password</label>
                                                 <Field type="password" name="password" id='password'
-                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                                    className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                             </div>
 
                                             <div className="flex flex-col">
@@ -198,7 +198,7 @@ const EditProfileModal = (props: Props) => {
                                                     new
                                                     password</label>
                                                 <Field type="password" name="confirmPassword" id='confirmPassword'
-                                                       className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                                    className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                             </div>
 
                                         </>
@@ -208,16 +208,16 @@ const EditProfileModal = (props: Props) => {
                                 <div className="flex flex-col">
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
                                     <Field type="text" name="username" id='username'
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"/>
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
                                 </div>
                                 <div className="flex flex-col my-2">
                                     <label htmlFor="birthday" className='text-base font-medium'>Date of birth</label>
                                     <div id='birthday' className='w-full flex flex-row items-center'>
                                         <div className="flex flex-col justify-between w-1/6">
                                             <Field type="text" name="day" maxLength={2}
-                                                   minLength={2}
-                                                   placeholder="DD"
-                                                   className='p-2 outline-none border-[1px] hover:border-2'/>
+                                                minLength={2}
+                                                placeholder="DD"
+                                                className='p-2 outline-none border-[1px] hover:border-2' />
                                         </div>
                                         <div className="flex flex-col w-2/3 px-3">
                                             <Field
@@ -250,7 +250,7 @@ const EditProfileModal = (props: Props) => {
                                 </div>
                                 <div className="flex flex-col my-4">
                                     <Field as="select" name="gender"
-                                           className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]">
+                                        className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]">
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Non-binary">Non-binary</option>
@@ -258,11 +258,11 @@ const EditProfileModal = (props: Props) => {
                                         <option value="I don't want to specify">I don't want to specify</option>
                                     </Field>
                                 </div>
-                                <LineDivider/>
+                                <LineDivider />
                                 <div className="flex justify-end items-center my-4">
                                     <button type="button"
-                                            className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
-                                            onClick={() => setOpenEditModal(false)}>Cancel
+                                        className='text-lg text-gray-500 hover:text-black font-semibold mx-8'
+                                        onClick={() => setOpenEditModal(false)}>Cancel
                                     </button>
                                     <button
                                         type="submit"

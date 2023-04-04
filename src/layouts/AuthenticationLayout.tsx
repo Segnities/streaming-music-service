@@ -5,7 +5,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 import Logo from "../assets/logo.svg";
 
-function AuthenticationTemplate() {
+function AuthenticationLayout() {
     return (
         <div className="flex flex-1 flex-col overflow-x-hidden h-screen">
             <div className="m-2">
@@ -24,4 +24,4 @@ function AuthenticationTemplate() {
     )
 }
 
-export default AuthenticationTemplate;
+export default AuthenticationLayout;

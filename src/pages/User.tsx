@@ -1,20 +1,20 @@
-import {useContext, useState, lazy, Suspense, useEffect} from "react";
-import {useNavigate} from "react-router";
-import {useSelector} from "react-redux";
+import { useContext, useState, lazy, Suspense, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
-import {AuthContext, AuthType} from "../context";
+import { AuthContext, AuthType } from "../context";
 
-import {signOut, getAuth} from "firebase/auth"
-import {firebaseApp} from "../firebase/firebaseConfig";
+import { signOut, getAuth } from "firebase/auth"
+import { firebaseApp } from "../firebase/firebaseConfig";
 
-import {UserDoc} from "../utils/@types";
+import { UserDoc } from "../utils/types";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
 const UpdateProfileImageModal = lazy(() => import("../components/UpdateProfileImageModal"));
 
-import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
 import Loader from "../components/UI/Loader";
 
@@ -24,7 +24,7 @@ function User() {
     const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const {firebaseUsers: users} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
+    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
     const auth = getAuth(firebaseApp);
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === authContext?.user?.email));
@@ -48,7 +48,7 @@ function User() {
         <div className="flex flex-col w-full">
             {
                 openEditProfile && (
-                    <Suspense fallback={<Loader title={'Profile is loading...'}/>}>
+                    <Suspense fallback={<Loader title={'Profile is loading...'} />}>
                         <EditProfileModal
                             photoURL={photoURL}
                             firebaseUser={firebaseUser}
@@ -62,7 +62,7 @@ function User() {
             }
             {
                 openUpdateProfileImage && (
-                    <Suspense fallback={<Loader title={'Profile image modal is loading...'}/>}>
+                    <Suspense fallback={<Loader title={'Profile image modal is loading...'} />}>
                         <UpdateProfileImageModal
                             open={openUpdateProfileImage}
                             setOpen={setOpenUpdateProfileImage}
@@ -91,37 +91,37 @@ function User() {
                         {authContext?.user?.displayName ?? firebaseUser?.data?.username}
                     </h3>
                 </section>
-                <BlockSpace/>
+                <BlockSpace />
             </article>
             <div className="flex flex-col">
                 <table className="w-full">
                     <colgroup>
-                        <col className="w-1/2"/>
-                        <col className="w-1/2"/>
+                        <col className="w-1/2" />
+                        <col className="w-1/2" />
                     </colgroup>
                     <tbody>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Username</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? authContext?.user?.displayName}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Email</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? authContext?.user?.email}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Date of birth</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.birthday || "Unknown"}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Gender</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.gender || "Unknown"}</td>
-                    </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Username</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? authContext?.user?.displayName}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Email</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? authContext?.user?.email}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Date of birth</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.birthday || "Unknown"}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Gender</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.gender || "Unknown"}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div className="flex justify-between mt-12">
                 <button onClick={() => setOpenEditProfile(true)}
-                        className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10">Edit
+                    className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10">Edit
                     profile
                 </button>
                 <button

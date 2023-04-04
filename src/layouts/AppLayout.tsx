@@ -13,7 +13,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context";
 
 
-function AppTemplate() {
+function AppLayout() {
     const { activeSong } = useSelector(
         (state: SelectorPlayerState) => state.player
     );
@@ -41,4 +41,4 @@ function AppTemplate() {
     </>)
 }
 
-export default AppTemplate;
+export default AppLayout;

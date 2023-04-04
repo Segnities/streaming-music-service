@@ -1,6 +1,5 @@
 import YouTube from "react-youtube";
 
-import { useGetTrackYoutubeVideoQuery } from "../API/shazamCore";
 import { YoutubeTrackData } from "../API/types";
 import { getYouTubeVideoId } from "../utils/getYoutubeVideoId";
 
@@ -11,7 +10,6 @@ interface Props {
 
 function YoutubeTrackVideo(props: Props) {
     const { youtubeData } = props;
-    console.log(youtubeData.actions[0].uri);
 
     return (
         <div className="flex flex-col w-full mt-2 mb-8">

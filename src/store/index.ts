@@ -9,10 +9,12 @@ import { PreloadedState } from "@reduxjs/toolkit";
 import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 import playerSlice from "./reducers/player";
 import firebaseUsersSlice from "./reducers/firebaseUsers";
+import userAuthSlice from "./reducers/auth";
 
 const rootReducer = combineReducers({
   player: playerSlice.reducer,
   firebaseUsers: firebaseUsersSlice.reducer,
+  userAuth: userAuthSlice.reducer,
   [shazamCoreApiV1.reducerPath]: shazamCoreApiV1.reducer,
   [shazamCoreApiV2.reducerPath]: shazamCoreApiV2.reducer,
 });
