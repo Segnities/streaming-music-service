@@ -10,8 +10,6 @@ import { MemoryRouter } from "react-router";
 import { RootState, AppStore, setupStore } from "./store";
 import { PropsWithChildren } from "react";
 
-import AppRouter from "./components/AppRouter";
-import { AuthContext } from "./context";
 
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
@@ -39,10 +37,10 @@ export function renderWithReduxToolkit(
     return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
 
-export function renderWithReactRouter(path: string = '/', component: JSX.Element) {
+export function renderWithReactRouter(path: string, component: JSX.Element) {
+
     return (
         <MemoryRouter initialEntries={[path]}>
-            <AppRouter />
             {component}
         </MemoryRouter>
 

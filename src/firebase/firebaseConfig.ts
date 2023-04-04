@@ -18,3 +18,5 @@ const firebaseConfig = {
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseDatabase = getFirestore(firebaseApp);
+
+export const mockFirebaseConfig = Object.assign({}, firebaseConfig);
