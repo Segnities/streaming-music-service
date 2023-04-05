@@ -74,7 +74,7 @@ function User() {
             }
 
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
-            <article className="relative w-full flex flex-col">
+            <section className="relative w-full flex flex-col">
                 <h2 className="text-xl sm:text-2xl text-white font-medium my-4">Profile</h2>
                 <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
                 <section className="absolute inset-0 flex flex-row items-center">
@@ -92,7 +92,7 @@ function User() {
                     </h3>
                 </section>
                 <BlockSpace />
-            </article>
+            </section>
             <div className="flex flex-col">
                 <table className="w-full">
                     <colgroup>
@@ -121,7 +121,7 @@ function User() {
             </div>
             <div className="flex justify-between mt-12">
                 <button onClick={() => setOpenEditProfile(true)}
-                    className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10">Edit
+                    className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10 hover:bg-transparent hover:text-white ease-in duration-200">Edit
                     profile
                 </button>
                 <button

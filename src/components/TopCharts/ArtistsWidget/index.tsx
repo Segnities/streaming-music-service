@@ -46,7 +46,7 @@ function TopArtistsWidget(props: Props) {
               <img
                 src={song?.images?.background || NoImage}
                 alt="artist"
-                className="rounded-full w-full object-cover"
+                className="rounded-full w-full object-cover border-transparent border-2  hover:border-white ease-out duration-300"
               />
             </Link>
           </SwiperSlide>
