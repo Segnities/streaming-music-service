@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import TopSongsWidget from "./SongsWidget";
@@ -12,11 +12,11 @@ import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopChartsWidget() {
-  const { data, isFetching, error } = useGetTopChartsQuery(null);
-  const [topCharts, setTopCharts] = useState<[] | SongRootObject[]>([]);
+  const { data, isFetching, error, isLoading } = useGetTopChartsQuery(null);
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
+
   const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const dispatch = useDispatch();
@@ -38,6 +38,7 @@ function TopChartsWidget() {
     return <Error />
   }
 
+
   return (
     <div
       ref={containerRef}
@@ -45,13 +46,13 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={[...data].slice(0, 10)}
+        topCharts={[...data].filter(chart => chart?.artists).slice(0, 10)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
       />
 
-      <TopArtistsWidget topCharts={[...data].slice(0, 10)} />
+      <TopArtistsWidget topCharts={[...data].filter(chart => chart?.artists).slice(0, 10)} />
     </div>
   );
 }

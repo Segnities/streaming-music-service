@@ -23,8 +23,6 @@ function App() {
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                console.log('works 1');
-                
                 dispatch(setUserSignUp({ user: await JSON.stringify(user) }))
                 dispatch(setFirebaseUsers(await getUsers()))
                 setIsLoading(false);

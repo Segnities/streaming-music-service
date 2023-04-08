@@ -19,8 +19,6 @@ function AppLayout() {
     );
     const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: User = JSON.parse(userData as string) as User;
-    console.log('User data');
-    console.log(user);
 
 
     return (
