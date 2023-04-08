@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {UserDoc} from "../../utils/@types";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserDoc } from "../../utils/types";
 interface InitialStateInterface {
     firebaseUsers: UserDoc[];
 }
@@ -8,7 +8,7 @@ export interface FirebaseUsersSelectorInterface {
     firebaseUsers: InitialStateInterface;
 }
 
-const initialState:InitialStateInterface = {
+const initialState: InitialStateInterface = {
     firebaseUsers: []
 }
 
@@ -22,7 +22,7 @@ const firebaseUsersSlice = createSlice({
     }
 });
 
-export  const {setFirebaseUsers} = firebaseUsersSlice.actions;
+export const { setFirebaseUsers } = firebaseUsersSlice.actions;
 export default firebaseUsersSlice;
 
 

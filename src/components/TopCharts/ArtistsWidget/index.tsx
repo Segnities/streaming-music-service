@@ -17,6 +17,8 @@ interface Props {
 function TopArtistsWidget(props: Props) {
   const { topCharts } = props;
 
+
+
   return (
     <div className="w-full flex flex-col mt-8">
       <div className="flex flex-row justify-between items-center">
@@ -37,16 +39,17 @@ function TopArtistsWidget(props: Props) {
         modules={[FreeMode]}
         className="mt-4"
       >
-        {topCharts.map((song: SongRootObject, index) => (
+        {topCharts?.map((chart: SongRootObject, index) => (
           <SwiperSlide
-            key={song?.key}
+            key={chart?.key}
             className="w-1/5 h-1/5 shadow-lg rounded-full animate-slideright"
           >
-            <Link to={`artists/${song?.artists![0]?.adamid}`}>
+
+            <Link to={`artists/${chart?.artists![0]?.adamid}}`}>
               <img
-                src={song?.images?.background || NoImage}
+                src={chart?.images?.background || NoImage}
                 alt="artist"
-                className="rounded-full w-full object-cover"
+                className="rounded-full w-full object-cover border-transparent border-2  hover:border-white ease-out duration-300"
               />
             </Link>
           </SwiperSlide>

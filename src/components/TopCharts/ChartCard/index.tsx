@@ -23,7 +23,7 @@ function TopChartCard(props: Props) {
     handlePlayClick,
   } = props;
   return (
-    <div className="w-full flex flex-row items-center hover:bg-[#4c426e] py-2 p-4 rounded-lg cursor-pointer mb-2">
+    <div className="w-full flex flex-row items-center hover:bg-[#4c426e] py-2 ease-in-out duration-75 p-4 rounded-lg cursor-pointer mb-2">
       <p className="font-bold text-base text-white mr-3">{index + 1}.</p>
       <div className="flex flex-1 flex-wrap flex-row justify-between items-center">
         <img

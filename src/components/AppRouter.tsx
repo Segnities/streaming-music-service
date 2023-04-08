@@ -1,32 +1,32 @@
 import { useLocation } from "react-router";
 
-import AppTemplate from "../templates/AppTemplate";
-import AuthenticationTemplate from "../templates/AuthenticationTemplate";
+import AppLayout from "../layouts/AppLayout";
+import AuthenticationLayout from "../layouts/AuthenticationLayout";
 import { authenticationRoutes } from "../routes"
-import { AuthContext } from "../context";
-import { useContext, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { UserAuthSelector } from "../store/reducers/auth";
 
 function AppRouter() {
     const location = useLocation();
     const pathname = location.pathname;
-    const authContext = useContext(AuthContext);
+    const { isAuth } = useSelector((state: UserAuthSelector) => state.userAuth);
 
     const isAuthPath = authenticationRoutes.filter(route => route.path === pathname).length > 0;
 
-    useEffect(() => {
-        authContext?.setIsAuth(authContext?.user ? true : false);
-    });
+    if (isAuth == false && isAuthPath) {
+        return (
+            <div className="relative flex min-h-screen" data-testid='templateId'>
+                <AuthenticationLayout />
+            </div>
+        );
+    } else {
+        return (
+            <div className="relative flex min-h-screen" data-testid='templateId'>
+                <AppLayout />
+            </div>
+        );
+    }
 
-
-    return (
-        <div className="relative flex min-h-screen" data-testid='templateId'>
-            {
-                isAuthPath && !authContext?.isAuth ?
-                    <AuthenticationTemplate /> : <AppTemplate />
-            }
-        </div>
-
-    );
 }
 
 export default AppRouter

@@ -16,15 +16,18 @@ import { signUpValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 import GoogleBtn from "../components/GoogleBtn";
-import {useSelector} from "react-redux";
-import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+import { useSelector } from "react-redux";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+
+
 function SignUp() {
     const auth = getAuth(firebaseApp);
     const collectionRef = collection(firebaseDatabase, "users");
+    const navigate = useNavigate();
 
-    const [createPasswordError, setCreatePasswordError] = useState<{code:string | number, message:string} | null>(null);
+    const [createPasswordError, setCreatePasswordError] = useState<{ code: string | number, message: string } | null>(null);
 
-    const {firebaseUsers:users} = useSelector((state:FirebaseUsersSelectorInterface) => state.firebaseUsers);
+    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
     const [isFieldUnique, setIsFieldUnique] = useState({
         email: true,
@@ -45,6 +48,7 @@ function SignUp() {
                 email, password, username, birthday: `${day} ${month} ${year}`, gender
             });
         }
+        navigate('/');
     }
 
     return (

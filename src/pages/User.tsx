@@ -1,33 +1,33 @@
-import {useContext, useState, lazy, Suspense, useEffect} from "react";
-import {useNavigate} from "react-router";
-import {useSelector} from "react-redux";
+import { useState, lazy, Suspense, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
-import {AuthContext, AuthType} from "../context";
+import { signOut, getAuth, User as FUser } from "firebase/auth"
+import { firebaseApp } from "../firebase/firebaseConfig";
 
-import {signOut, getAuth} from "firebase/auth"
-import {firebaseApp} from "../firebase/firebaseConfig";
-
-import {UserDoc} from "../utils/@types";
+import { UserDoc } from "../utils/types";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
 const UpdateProfileImageModal = lazy(() => import("../components/UpdateProfileImageModal"));
 
-import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+
 
 import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
+import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
 
 function User() {
-    const authContext: AuthType | null = useContext(AuthContext);
     const navigate = useNavigate();
-
-    const {firebaseUsers: users} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
+    const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
+    const user: FUser = JSON.parse(userData as string);
+    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
     const auth = getAuth(firebaseApp);
 
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === authContext?.user?.email));
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
     const [openUpdateProfileImage, setOpenUpdateProfileImage] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ function User() {
 
     const userSignOut = () => {
         signOut(auth);
-        authContext?.setUser(null);
+        setUserSignOut();
         navigate("/");
     }
 
@@ -48,7 +48,7 @@ function User() {
         <div className="flex flex-col w-full">
             {
                 openEditProfile && (
-                    <Suspense fallback={<Loader title={'Profile is loading...'}/>}>
+                    <Suspense fallback={<Loader title={'Profile is loading...'} />}>
                         <EditProfileModal
                             photoURL={photoURL}
                             firebaseUser={firebaseUser}
@@ -62,7 +62,7 @@ function User() {
             }
             {
                 openUpdateProfileImage && (
-                    <Suspense fallback={<Loader title={'Profile image modal is loading...'}/>}>
+                    <Suspense fallback={<Loader title={'Profile image modal is loading...'} />}>
                         <UpdateProfileImageModal
                             open={openUpdateProfileImage}
                             setOpen={setOpenUpdateProfileImage}
@@ -74,7 +74,7 @@ function User() {
             }
 
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
-            <article className="relative w-full flex flex-col">
+            <section className="relative w-full flex flex-col">
                 <h2 className="text-xl sm:text-2xl text-white font-medium my-4">Profile</h2>
                 <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
                 <section className="absolute inset-0 flex flex-row items-center">
@@ -88,40 +88,40 @@ function User() {
                     />
 
                     <h3 className="text-3xl sm:text-xl md:text-2xl text-white mb-5 ml-5">
-                        {authContext?.user?.displayName ?? firebaseUser?.data?.username}
+                        {user?.displayName ?? firebaseUser?.data?.username}
                     </h3>
                 </section>
-                <BlockSpace/>
-            </article>
+                <BlockSpace />
+            </section>
             <div className="flex flex-col">
                 <table className="w-full">
                     <colgroup>
-                        <col className="w-1/2"/>
-                        <col className="w-1/2"/>
+                        <col className="w-1/2" />
+                        <col className="w-1/2" />
                     </colgroup>
                     <tbody>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Username</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? authContext?.user?.displayName}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Email</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? authContext?.user?.email}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Date of birth</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.birthday || "Unknown"}</td>
-                    </tr>
-                    <tr className="border-b-2 border-[#dedede]">
-                        <td className="py-5 text-gray-500 text-lg">Gender</td>
-                        <td className="py-5 text-white text-lg">{firebaseUser?.data?.gender || "Unknown"}</td>
-                    </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Username</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.username ?? user?.displayName}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Email</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.email ?? user?.email}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Date of birth</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.birthday || "Unknown"}</td>
+                        </tr>
+                        <tr className="border-b-2 border-[#dedede]">
+                            <td className="py-5 text-gray-500 text-lg">Gender</td>
+                            <td className="py-5 text-white text-lg">{firebaseUser?.data?.gender || "Unknown"}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div className="flex justify-between mt-12">
                 <button onClick={() => setOpenEditProfile(true)}
-                        className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10">Edit
+                    className="flex items-center bg-white text-black cursor-pointer rounded-md text-lg border-2 px-6 py-3 z-10 hover:bg-transparent hover:text-white ease-in duration-200">Edit
                     profile
                 </button>
                 <button

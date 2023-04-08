@@ -1,12 +1,10 @@
-import { useContext } from "react";
-
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { Formik, Form, Field } from "formik";
 
 import * as Yup from "yup";
 
-import { AuthContext } from "../context";
+import { setUserSignUp, changeIsAuth, setUserSignOut } from "../store/reducers/auth";
 
 import {
     getAuth,
@@ -18,6 +16,7 @@ import {
 } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
 import GoogleBtn from "../components/GoogleBtn";
+import { useDispatch } from "react-redux";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().min(1).required('Email is required'),
@@ -28,20 +27,21 @@ const validationSchema = Yup.object().shape({
 
 function Login() {
     const auth = getAuth(firebaseApp);
-    const authContext = useContext(AuthContext);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSignInWithEmailAndPasswordProvider = async (email: string, password: string, rememberMe: boolean) => {
         await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         signInWithEmailAndPassword(auth, email, password).then(
             (res) => {
-                authContext?.setIsAuth(true);
+                dispatch(changeIsAuth(true));
                 navigate('/');
             }).catch(err => alert(err.code + ":" + err.message));
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                authContext?.setUser(user);
+                dispatch(setUserSignUp({ user: JSON.stringify(user) }));
             } else {
+                dispatch(setUserSignOut());
                 console.log('User was sign out :(');
             }
         })

@@ -10,11 +10,16 @@ module.exports = {
         slideright: "slideright 1s ease-in-out",
         wave: "wave 1.2s linear infinite",
         slowfade: "slowfade 2.2s ease-in-out",
+        fastfade: "fastfade 0.5s ease-in-out"
       },
       keyframes: {
         slowfade: {
           from: { opacity: 0 },
           to: { opacity: 1 },
+        },
+        fastfade: {
+          from: { transform: "scale(0)" },
+          to: { transform: "scale(1)" },
         },
         slideup: {
           from: { opacity: 0, transform: "translateY(25%)" },
@@ -32,11 +37,14 @@ module.exports = {
           from: { opacity: 0, transform: "translateX(20px)" },
           to: { opacity: 1, transform: "translateX(0)" },
         },
+
         wave: {
           "0%": { transform: "scale(0)" },
           "50%": { transform: "scale(1)" },
           "100%": { transform: "scale(0)" },
         },
+
+
       },
     },
   },
