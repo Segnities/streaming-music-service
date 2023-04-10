@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Link } from "react-router-dom";
 
 import PlayPause from "./PlayPause";
@@ -77,4 +79,4 @@ function SongCard(props: Props) {
   );
 }
 
-export default SongCard;
+export default React.memo(SongCard);
