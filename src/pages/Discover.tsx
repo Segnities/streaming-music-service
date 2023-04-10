@@ -22,13 +22,6 @@ function Discover() {
   );
   const dispatch = useDispatch();
   const { data, isFetching, error } = useGetSongsByGenreQuery(genreListId || "POP");
-  const [filledData, setFilledData] = useState<[] | SongRootObject[]>([]);
-
-  useEffect(() => {
-    if (!isFetching) {
-      setFilledData(data.filter((chart: SongRootObject) => chart?.artists));
-    }
-  }, [])
 
   if (isFetching) {
     return <Loader title="Loading songs..." />;
@@ -60,7 +53,7 @@ function Discover() {
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
-            data={filledData}
+            data={data?.filter(chart => chart?.artists)}
           />
         ))}
       </div>
