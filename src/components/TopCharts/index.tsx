@@ -12,7 +12,7 @@ import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
 
 function TopChartsWidget() {
-  const { data, isFetching, error, isLoading } = useGetTopChartsQuery(null);
+  const { data, isFetching, error } = useGetTopChartsQuery(null);
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );

@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { SongArtist, SongRootObject } from "../API/types";
@@ -11,11 +12,8 @@ interface Props {
 function ArtistCard(props: Props) {
   const { track } = props;
   const navigate = useNavigate();
-
   const level: number = 0;
-
   const artists: SongArtist[] | undefined = track?.artists;
-
   const artist: SongArtist | undefined = artists!.length > 0 ? artists![level] : undefined;
   const adamid: string | undefined = artist?.adamid;
 
@@ -34,4 +32,4 @@ function ArtistCard(props: Props) {
   );
 }
 
-export default ArtistCard;
+export default React.memo(ArtistCard);
