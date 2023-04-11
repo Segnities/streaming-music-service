@@ -15,7 +15,7 @@ import {
     onAuthStateChanged
 } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
-import GoogleBtn from "../components/GoogleBtn";
+import GoogleBtn from "../components/UI/Buttons/GoogleBtn";
 import { useDispatch } from "react-redux";
 
 const validationSchema = Yup.object().shape({

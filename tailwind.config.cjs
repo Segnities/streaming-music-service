@@ -10,7 +10,7 @@ module.exports = {
         slideright: "slideright 1s ease-in-out",
         wave: "wave 1.2s linear infinite",
         slowfade: "slowfade 2.2s ease-in-out",
-        fastfade: "fastfade 0.5s ease-in-out",
+        fastfade: "fastfade 0.3s ease-in-out",
       },
       keyframes: {
         slowfade: {

@@ -1,8 +1,8 @@
 import { MutableRefObject, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import TopSongsWidget from "./SongsWidget";
-import TopArtistsWidget from "./ArtistsWidget";
+import TopSongsWidget from "./SongWidget";
+import TopArtistsWidget from "./ArtistWidget";
 import Loader from "../UI/Loader";
 import Error from "../UI/Error";
 
@@ -16,16 +16,6 @@ function TopChartsWidget() {
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
-
-  if (!isFetching) {
-    console.log('1');
-    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[1]);
-    console.log('2');
-
-    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[0]);
-
-
-  }
 
   const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 

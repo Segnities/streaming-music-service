@@ -15,7 +15,7 @@ import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 import { signUpValidationSchema } from "../validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
-import GoogleBtn from "../components/GoogleBtn";
+import GoogleBtn from "../components/UI/Buttons/GoogleBtn";
 import { useSelector } from "react-redux";
 import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
@@ -38,7 +38,7 @@ function SignUp() {
         const isEmailUnique: boolean = users.filter(usr => usr.data.email === email).length > 1 ? false : true;
         const isUsernameUnique: boolean = users.filter(usr => usr.data.username === username).length > 1 ? false : true;
 
-        setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique })
+        setIsFieldUnique({ ...isFieldUnique, email: isEmailUnique, username: isUsernameUnique });
 
         if (isEmailUnique && isUsernameUnique) {
             createUserWithEmailAndPassword(auth, email, password)
@@ -49,7 +49,7 @@ function SignUp() {
             });
         }
         navigate('/');
-    }
+    };
 
     return (
         <div className="flex flex-1 flex-col items-center max-w-screen">
@@ -89,7 +89,7 @@ function SignUp() {
                         }}
                         validationSchema={signUpValidationSchema}
                         onSubmit={(values) => {
-                            handleSignUpWithEmailAndPassword(values)
+                            handleSignUpWithEmailAndPassword(values);
                         }}
                     >
                         {

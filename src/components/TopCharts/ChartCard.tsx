@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-import PlayPause from "../../PlayPause";
+import PlayPause from "../PlayPause";
 
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../../API/types";
 
 interface Props {
   song: SongRootObject;
