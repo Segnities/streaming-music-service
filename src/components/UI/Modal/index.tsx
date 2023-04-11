@@ -11,7 +11,7 @@ interface Props {
 
 function Modal(props: Props) {
     const { open, setOpen, children } = props;
-    const containerModalClass: string = `${!open && "hidden"} fixed inset-0 bg-[rgba(0,0,0,0.5)] ${open && "flex justify-center items-center"} z-[1000]`;
+    const containerModalClass = `${!open && "hidden"} fixed inset-0 bg-[rgba(0,0,0,0.5)] ${open && "flex justify-center items-center"} z-[1000]`;
     const escapePress = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "escape") {
             setOpen(false);
