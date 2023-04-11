@@ -61,7 +61,7 @@ function SignUp() {
                     </div>
                 )
             }
-            <p className="font-bold text-2xl">To get started, sign up. It's free?!</p>
+            <p className="font-bold text-2xl">To get started, sign up. It&apos;s free?!</p>
             <div className="flex flex-col flex-1 mt-2">
                 <div className="flex flex-col flex-1 items-center">
                     <GoogleBtn />
@@ -331,7 +331,7 @@ function SignUp() {
                                                 />
                                             </div>
                                             <div className="flex flex-row-reverse mx-0 sm:mx-2 items-center">
-                                                <label htmlFor="not-specified-gender" className="ml-1">I don't want to specify</label>
+                                                <label htmlFor="not-specified-gender" className="ml-1">I don&apos;t want to specify</label>
                                                 <Field
                                                     type="radio"
                                                     name="gender"

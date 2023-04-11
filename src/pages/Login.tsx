@@ -113,7 +113,7 @@ function Login() {
                     </Formik>
                     <hr />
                     <div className="flex flex-col mt-4">
-                        <p className="text-center font-bold text-lg">Don't have an account?</p>
+                        <p className="text-center font-bold text-lg">Don&apos;t have an account?</p>
                         <NavLink to={'/sign-up'} className="flex justify-center my-3 rounded-3xl p-4 border-[1px] text-gray-500 hover:border-gray-800 border-gray-500"> SIGN UP FOR VITE </NavLink>
                     </div>
                 </div>

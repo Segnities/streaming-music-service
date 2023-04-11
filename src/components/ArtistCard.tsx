@@ -12,7 +12,7 @@ interface Props {
 function ArtistCard(props: Props) {
   const { track } = props;
   const navigate = useNavigate();
-  const level: number = 0;
+  const level = 0;
   const artists: SongArtist[] | undefined = track?.artists;
   const artist: SongArtist | undefined = artists!.length > 0 ? artists![level] : undefined;
   const adamid: string | undefined = artist?.adamid;

@@ -5,7 +5,7 @@ enum Accounts {
   first = "e60eb95ad5msh3b2acc1834b3709p1474b2jsnf25468328f98",
 }
 
-const RAPID_HOST: string = "shazam-core.p.rapidapi.com";
+const RAPID_HOST = "shazam-core.p.rapidapi.com";
 
 /*1-st source - Shazam Core
   headers: 
