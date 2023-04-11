@@ -23,11 +23,7 @@ function SongCard(props: Props) {
   const { song, index, activeSong, isPlaying, data } = props;
   const dispatch = useDispatch();
 
-  console.log(data);
-
-
   const handlePlayClick = () => {
-
     dispatch(setActiveSong({ song, data, index }));
     dispatch(playPause(true));
   };

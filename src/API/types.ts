@@ -43,7 +43,7 @@ export interface SelectorPlayerState {
   };
 }
 
-export interface SongHighlightsurls {}
+export interface SongHighlightsurls { }
 
 export interface SongArtist {
   alias: string;
@@ -139,7 +139,7 @@ export interface TrackRootObject {
   releasedate: string;
 }
 
-export interface TrackHighlightsurls {}
+export interface TrackHighlightsurls { }
 
 export interface TrackUrlparams {
   "{tracktitle}": string;
@@ -526,9 +526,9 @@ export interface GeoIpifyCountry {
 
 
 export interface YoutubeTrackData {
-    caption: string;
-    image: YoutubeImagesData,
-    actions: YoutubeActionsData[];
+  caption: string;
+  image: YoutubeImagesData,
+  actions: YoutubeActionsData[];
 }
 
 export interface YoutubeImagesData {

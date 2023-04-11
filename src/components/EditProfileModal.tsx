@@ -1,4 +1,3 @@
-import React from "react";
 
 import { useSelector } from "react-redux";
 
@@ -19,7 +18,7 @@ import firebase from "firebase/compat";
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 interface Props {
-    firebaseUser: UserDoc | undefined | null;
+    firebaseUser: UserDoc;
     openEditModal: boolean;
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
     photoURL: string;
@@ -57,7 +56,7 @@ const EditProfileModal = (props: Props) => {
 
 
     const auth = getAuth(firebaseApp);
-    const user: User = auth.currentUser as User
+    const user: User = auth.currentUser as User;
     const providerId: string = user.providerData[0].providerId;
 
     const { firebaseUsers } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
@@ -79,7 +78,8 @@ const EditProfileModal = (props: Props) => {
                 password: values.password
             }
         });
-    }
+    };
+
     const handleSubmit = (values: Fields): void => {
 
         const isEmailUnique: boolean = firebaseUsers.find((usr) => {
@@ -134,7 +134,7 @@ const EditProfileModal = (props: Props) => {
         }
 
         setOpenEditModal(false);
-    }
+    };
 
     return (
         <Modal open={openEditModal} setOpen={setOpenEditModal}>
@@ -146,7 +146,7 @@ const EditProfileModal = (props: Props) => {
                     className='rounded-full cursor-pointer w-20 h-20 border-2 border-black'
                     title='Change avatar'
                     onClick={() => {
-                        setOpenEditModal(false)
+                        setOpenEditModal(false);
                         setUpdateImageModal(true);
                     }}
                 />
@@ -255,7 +255,7 @@ const EditProfileModal = (props: Props) => {
                                         <option value="Female">Female</option>
                                         <option value="Non-binary">Non-binary</option>
                                         <option value="Another">Another</option>
-                                        <option value="I don't want to specify">I don't want to specify</option>
+                                        <option value="I don't want to specify">I don&apos;t want to specify</option>
                                     </Field>
                                 </div>
                                 <LineDivider />

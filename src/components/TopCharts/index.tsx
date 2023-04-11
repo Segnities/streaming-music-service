@@ -17,6 +17,16 @@ function TopChartsWidget() {
     (state: SelectorPlayerState) => state.player
   );
 
+  if (!isFetching) {
+    console.log('1');
+    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[1]);
+    console.log('2');
+
+    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[0]);
+
+
+  }
+
   const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const dispatch = useDispatch();
@@ -31,11 +41,11 @@ function TopChartsWidget() {
   };
 
   if (isFetching) {
-    return <Loader title="Top charts is loading..." />
+    return <Loader title="Top charts is loading..." />;
   }
 
   if (error) {
-    return <Error />
+    return <Error />;
   }
 
 
@@ -46,7 +56,11 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={[...data].filter(chart => chart?.artists).slice(0, 10)}
+        topCharts={[...data].filter((chart: SongRootObject) => {
+          if (chart?.artists && chart?.hub?.actions) {
+            return chart;
+          }
+        }).slice(0, 10)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}

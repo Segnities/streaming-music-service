@@ -18,7 +18,7 @@ export interface UserAuthSelector {
 const initialState = {
     isAuth: false,
     user: null
-}
+};
 
 
 const userAuthSlice = createSlice({
