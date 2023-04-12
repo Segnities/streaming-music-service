@@ -28,7 +28,7 @@ interface Props {
     photoURL: string;
     setUpdateImageModal: React.Dispatch<React.SetStateAction<boolean>>
 
-    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
+    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc>>;
 }
 
 enum ProviderID {
@@ -245,6 +245,14 @@ const EditProfileModal = (props: Props) => {
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
                                     <Field type="text" name="username" id='username'
                                         className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                    {
+                                        errors.username && touched.username ? (
+                                            <div className="flex items-center mt-1">
+                                                <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                <span className="text-sm font-semibold text-red-700">{errors.username}</span>
+                                            </div>
+                                        ) : null
+                                    }
 
                                 </div>
                                 <div className="flex flex-col my-2">

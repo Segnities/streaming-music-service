@@ -10,6 +10,7 @@ import { playPause, setActiveSong } from "../../store/reducers/player";
 
 import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
+import { filterEmptySongs } from "../../helpers/filterEmptySongs";
 
 function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
@@ -46,11 +47,7 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={[...data].filter((chart: SongRootObject) => {
-          if (chart?.artists && chart?.hub?.actions) {
-            return chart;
-          }
-        }).slice(0, 10)}
+        topCharts={filterEmptySongs(data).slice(0, 5)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
