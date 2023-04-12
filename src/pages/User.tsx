@@ -39,6 +39,7 @@ function User() {
         navigate("/");
     };
 
+
     useEffect(() => {
         const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
         setPhotoURL(userProfileImage !== null && !userProfileImage?.includes('undefined') ? userProfileImage : NoImage);

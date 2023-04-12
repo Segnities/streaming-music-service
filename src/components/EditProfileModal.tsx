@@ -65,7 +65,7 @@ const EditProfileModal = (props: Props) => {
 
     const { firebaseUsers } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
-    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
+    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser.id);
 
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
@@ -168,7 +168,9 @@ const EditProfileModal = (props: Props) => {
                     gender: firebaseUser?.data?.gender ?? "I don't want to specify"
                 }}
                 validationSchema={editProfileValidationSchema}
-                onSubmit={(values, formikHelpers) => console.log('Submitted!')}
+                onSubmit={(values) => {
+                    handleSubmit(values);
+                }}
             >
                 {
                     ({ errors, touched, values }) => (
@@ -344,8 +346,9 @@ const EditProfileModal = (props: Props) => {
                                     </button>
                                     <button
                                         type="submit"
+                                        disabled={(errors.email || errors.username || errors.password || errors.currentPassword || errors.confirmPassword) ? true : false}
                                         onClick={() => handleSubmit(values)}
-                                        className="z-40 bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
+                                        className="z-40 bg-[#1ED760] disabled:bg-[#7c7272] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
                                     </button>
                                 </div>
                             </div>
