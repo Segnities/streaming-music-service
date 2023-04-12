@@ -11,10 +11,14 @@ import { editProfileValidationSchema } from "../validation";
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
 
-import { UserDoc } from "../utils/types";
+import { UserDoc } from "../utils/getUsers";
 import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 import { firebaseApp, firebaseDatabase } from '../firebase/firebaseConfig';
 import firebase from "firebase/compat";
+
+import { RiErrorWarningFill } from "react-icons/ri";
+
+
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 interface Props {
@@ -24,7 +28,7 @@ interface Props {
     photoURL: string;
     setUpdateImageModal: React.Dispatch<React.SetStateAction<boolean>>
 
-    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
+    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc>>;
 }
 
 enum ProviderID {
@@ -61,7 +65,7 @@ const EditProfileModal = (props: Props) => {
 
     const { firebaseUsers } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
-    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
+    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser.id);
 
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
@@ -164,7 +168,9 @@ const EditProfileModal = (props: Props) => {
                     gender: firebaseUser?.data?.gender ?? "I don't want to specify"
                 }}
                 validationSchema={editProfileValidationSchema}
-                onSubmit={(values, formikHelpers) => console.log('Submitted!')}
+                onSubmit={(values) => {
+                    handleSubmit(values);
+                }}
             >
                 {
                     ({ errors, touched, values }) => (
@@ -175,6 +181,14 @@ const EditProfileModal = (props: Props) => {
                                 <div className="flex flex-col">
                                     <Field type="email" name="email" id='email'
                                         className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                    {
+                                        errors.email && touched.email ? (
+                                            <div className="flex items-center mt-1">
+                                                <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                <span className="text-sm font-semibold text-red-700">{errors.email}</span>
+                                            </div>
+                                        ) : null
+                                    }
                                 </div>
                                 {
                                     providerId === ProviderID.email && (
@@ -184,6 +198,14 @@ const EditProfileModal = (props: Props) => {
                                                     password</label>
                                                 <Field type="password" name="currentPassword" id='currentPassword'
                                                     className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                                {
+                                                    errors.currentPassword && touched.currentPassword ? (
+                                                        <div className="flex items-center mt-1">
+                                                            <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                            <span className="text-sm font-semibold text-red-700">{errors.currentPassword}</span>
+                                                        </div>
+                                                    ) : null
+                                                }
                                             </div>
 
                                             <div className="flex flex-col my-2">
@@ -191,6 +213,14 @@ const EditProfileModal = (props: Props) => {
                                                     Password</label>
                                                 <Field type="password" name="password" id='password'
                                                     className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                                {
+                                                    errors.password && touched.password ? (
+                                                        <div className="flex items-center mt-1">
+                                                            <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                            <span className="text-sm font-semibold text-red-700">{errors.password}</span>
+                                                        </div>
+                                                    ) : null
+                                                }
                                             </div>
 
                                             <div className="flex flex-col">
@@ -199,6 +229,14 @@ const EditProfileModal = (props: Props) => {
                                                     password</label>
                                                 <Field type="password" name="confirmPassword" id='confirmPassword'
                                                     className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                                {
+                                                    errors.confirmPassword && touched.confirmPassword ? (
+                                                        <div className="flex items-center mt-1">
+                                                            <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                            <span className="text-sm font-semibold text-red-700">{errors.confirmPassword}</span>
+                                                        </div>
+                                                    ) : null
+                                                }
                                             </div>
 
                                         </>
@@ -209,6 +247,15 @@ const EditProfileModal = (props: Props) => {
                                     <label htmlFor="username" className='text-base font-medium mb-2'>Username</label>
                                     <Field type="text" name="username" id='username'
                                         className="w-full text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]" />
+                                    {
+                                        errors.username && touched.username ? (
+                                            <div className="flex items-center mt-1">
+                                                <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                <span className="text-sm font-semibold text-red-700">{errors.username}</span>
+                                            </div>
+                                        ) : null
+                                    }
+
                                 </div>
                                 <div className="flex flex-col my-2">
                                     <label htmlFor="birthday" className='text-base font-medium'>Date of birth</label>
@@ -218,6 +265,14 @@ const EditProfileModal = (props: Props) => {
                                                 minLength={2}
                                                 placeholder="DD"
                                                 className='p-2 outline-none border-[1px] hover:border-2' />
+                                            {
+                                                errors.day && touched.day ? (
+                                                    <div className="flex items-center mt-1">
+                                                        <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                        <span className="text-sm font-semibold text-red-700">{errors.day}</span>
+                                                    </div>
+                                                ) : null
+                                            }
                                         </div>
                                         <div className="flex flex-col w-2/3 px-3">
                                             <Field
@@ -238,6 +293,14 @@ const EditProfileModal = (props: Props) => {
                                                 <option value="November">November</option>
                                                 <option value="December">December</option>
                                             </Field>
+                                            {
+                                                errors.month && touched.month ? (
+                                                    <div className="flex items-center mt-1">
+                                                        <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                        <span className="text-sm font-semibold text-red-700">{errors.month}</span>
+                                                    </div>
+                                                ) : null
+                                            }
                                         </div>
                                         <div className="flex flex-col w-1/5">
                                             <Field
@@ -245,6 +308,14 @@ const EditProfileModal = (props: Props) => {
                                                 name="year"
                                                 className="text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"
                                             />
+                                            {
+                                                errors.year && touched.year ? (
+                                                    <div className="flex items-center mt-1">
+                                                        <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                        <span className="text-sm font-semibold text-red-700">{errors.year}</span>
+                                                    </div>
+                                                ) : null
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -256,7 +327,16 @@ const EditProfileModal = (props: Props) => {
                                         <option value="Non-binary">Non-binary</option>
                                         <option value="Another">Another</option>
                                         <option value="I don't want to specify">I don&apos;t want to specify</option>
+
                                     </Field>
+                                    {
+                                        errors.gender && touched.gender ? (
+                                            <div className="flex items-center mt-1">
+                                                <RiErrorWarningFill color="red" size={16} className="mr-1" />
+                                                <span className="text-sm font-semibold text-red-700">{errors.gender}</span>
+                                            </div>
+                                        ) : null
+                                    }
                                 </div>
                                 <LineDivider />
                                 <div className="flex justify-end items-center my-4">
@@ -266,8 +346,9 @@ const EditProfileModal = (props: Props) => {
                                     </button>
                                     <button
                                         type="submit"
+                                        disabled={(errors.email || errors.username || errors.password || errors.currentPassword || errors.confirmPassword) ? true : false}
                                         onClick={() => handleSubmit(values)}
-                                        className="z-40 bg-[#1ED760] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
+                                        className="z-40 bg-[#1ED760] disabled:bg-[#7c7272] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
                                     </button>
                                 </div>
                             </div>

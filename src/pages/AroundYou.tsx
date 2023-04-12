@@ -6,7 +6,7 @@ import Error from "../components/UI/Error";
 
 import { useGetSongsByCountryQuery } from "../API/shazamCore";
 
-import { GeoIpifyCountry, SelectorPlayerState } from "../API/types";
+import { GeoIpifyCountry, SelectorPlayerState, SongRootObject } from "../API/types";
 import { GeoIpify } from "../API/geoIpify";
 import SongCard from "../components/SongCard";
 
@@ -47,7 +47,11 @@ function AroundYou() {
         <span className="font-black ml-3">{country}</span>
       </h2>
       <div className="flex flex-wrap justify-center sm:justify-start gap-8">
-        {countrySongs?.map((song, index) => (
+        {countrySongs?.filter((song: SongRootObject) => {
+          if (song?.artists && song?.hub?.actions) {
+            return song;
+          }
+        }).map((song, index) => (
           <SongCard
             key={song?.key}
             song={song}

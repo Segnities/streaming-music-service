@@ -1,8 +1,8 @@
 import { MutableRefObject, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import TopSongsWidget from "./SongsWidget";
-import TopArtistsWidget from "./ArtistsWidget";
+import TopSongsWidget from "./SongWidget";
+import TopArtistsWidget from "./ArtistWidget";
 import Loader from "../UI/Loader";
 import Error from "../UI/Error";
 
@@ -10,22 +10,13 @@ import { playPause, setActiveSong } from "../../store/reducers/player";
 
 import { useGetTopChartsQuery } from "../../API/shazamCore";
 import { SongRootObject, SelectorPlayerState } from "../../API/types";
+import { filterEmptySongs } from "../../helpers/filterEmptySongs";
 
 function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
-
-  if (!isFetching) {
-    console.log('1');
-    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[1]);
-    console.log('2');
-
-    console.log([...data].filter(chart => chart?.artists).slice(0, 10)[0]);
-
-
-  }
 
   const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -56,11 +47,7 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={[...data].filter((chart: SongRootObject) => {
-          if (chart?.artists && chart?.hub?.actions) {
-            return chart;
-          }
-        }).slice(0, 10)}
+        topCharts={filterEmptySongs(data).slice(0, 5)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}

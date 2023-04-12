@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-import TopChartCard from "../ChartCard";
+import TopChartCard from "./ChartCard";
 
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../../API/types";
 
 interface Props {
   topCharts: SongRootObject[];

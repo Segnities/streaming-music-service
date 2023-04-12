@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 
-import { SongRootObject } from "../../../API/types";
+import { SongRootObject } from "../../API/types";
 
 import "swiper/css";
 import "swiper/css/free-mode";
 
-import NoImage from "../../../assets/no_artist.jpg";
+import NoImage from "../../assets/no_artist.jpg";
 
 interface Props {
   topCharts: SongRootObject[];

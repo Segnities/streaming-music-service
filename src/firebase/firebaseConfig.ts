@@ -12,7 +12,7 @@ const firebaseConfig = {
   storageBucket: "streaming-music-service.appspot.com",
   messagingSenderId: "877396276722",
   appId: "1:877396276722:web:34eda99b55abfd8beb676b",
-  measurementId: "G-9F1GDDPVD5",
+  measurementId: "G-9F1GDDPVD5"
 };
 
 // Initialize Firebase

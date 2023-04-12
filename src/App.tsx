@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import AppRouter from "./components/AppRouter";
 
-import { onAuthStateChanged, getAuth, User } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { firebaseApp } from "./firebase/firebaseConfig";
 import Loader from "./components/UI/Loader";
 import { getUsers } from "./utils/getUsers";
@@ -23,20 +23,23 @@ function App() {
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                dispatch(setUserSignUp({ user: await JSON.stringify(user) }))
-                dispatch(setFirebaseUsers(await getUsers()))
+                dispatch(setUserSignUp({ user: await JSON.stringify(user) }));
+
+                dispatch(setFirebaseUsers(await getUsers()));
                 setIsLoading(false);
             } else {
                 dispatch(changeIsAuth(false));
                 setIsLoading(false);
             }
-        })
+        });
     }, []);
 
     if (isLoading) {
-        return <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]" data-testid='app-loader'>
-            <Loader />
-        </div>
+        return (
+            <div className="w-full h-screen flex flex-1 flex-col bg-gradient-to-br from-black to-[#121286]" data-testid='app-loader'>
+                <Loader />
+            </div>
+        );
     }
 
     return (

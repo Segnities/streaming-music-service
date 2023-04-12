@@ -2,10 +2,10 @@ import { useState, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
-import { signOut, getAuth, User as FUser } from "firebase/auth"
+import { signOut, getAuth, User as FUser } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
 
-import { UserDoc } from "../utils/types";
+import { UserDoc } from "../utils/getUsers";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
@@ -24,10 +24,10 @@ function User() {
     const navigate = useNavigate();
     const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: FUser = JSON.parse(userData as string);
-    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers)
+    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
     const auth = getAuth(firebaseApp);
 
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === user?.email));
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
     const [openUpdateProfileImage, setOpenUpdateProfileImage] = useState<boolean>(false);
 
@@ -37,12 +37,13 @@ function User() {
         signOut(auth);
         setUserSignOut();
         navigate("/");
-    }
+    };
+
 
     useEffect(() => {
         const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
         setPhotoURL(userProfileImage !== null && !userProfileImage?.includes('undefined') ? userProfileImage : NoImage);
-    }, []);
+    }, [auth.currentUser?.photoURL]);
 
     return (
         <div className="flex flex-col w-full">
@@ -130,7 +131,7 @@ function User() {
                 </button>
             </div>
         </div>
-    )
+    );
 }
 
 export default User;
