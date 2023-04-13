@@ -1,7 +1,9 @@
 
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { getAuth, updateProfile, updateEmail, updatePassword, User, reauthenticateWithCredential } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { Field, Form, Formik } from "formik";
@@ -26,8 +28,7 @@ interface Props {
     openEditModal: boolean;
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
     photoURL: string;
-    setUpdateImageModal: React.Dispatch<React.SetStateAction<boolean>>
-
+    setPhotoURL: React.Dispatch<React.SetStateAction<string>>;
     setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc>>;
 }
 
@@ -54,8 +55,8 @@ const EditProfileModal = (props: Props) => {
         firebaseUser,
         openEditModal,
         setOpenEditModal,
-        setUpdateImageModal,
         setFirebaseUser,
+        setPhotoURL
     } = props;
 
 
@@ -69,6 +70,25 @@ const EditProfileModal = (props: Props) => {
 
     const email: string = firebaseUser?.data.email as string;
     const username: string = firebaseUser?.data.username as string;
+
+    const storage = getStorage(firebaseApp);
+
+    const [profileImage, setProfileImage] = useState<File | null | undefined>(undefined);
+
+    const updateProfileImage = async () => {
+
+        const uploadPathRef = ref(storage, `profileImages/${profileImage?.name}`);
+        if (profileImage !== undefined && (uploadPathRef !== undefined || uploadPathRef !== null)) {
+            uploadBytes(uploadPathRef, profileImage!).then(res => console.log('Uploaded!')).catch(err => console.log('Upload error!')
+            );
+            const profileImageUrl = await getDownloadURL(ref(storage, `profileImages/${profileImage?.name}`));
+            setPhotoURL(profileImageUrl);
+            updateProfile(auth.currentUser!, {
+                photoURL: profileImageUrl
+            }).then(res => console.log('Profile image updated!')).catch(err => console.log('Profile image update error'));
+        }
+    };
+
 
     const updateFirebaseUser = (values: Fields) => {
         setFirebaseUser({
@@ -85,7 +105,6 @@ const EditProfileModal = (props: Props) => {
     };
 
     const handleSubmit = (values: Fields): void => {
-
         const isEmailUnique: boolean = firebaseUsers.find((usr) => {
             if (usr.data.email !== firebaseUser?.data.email && usr.data.email === values.email) {
                 return usr.data.email;
@@ -133,27 +152,34 @@ const EditProfileModal = (props: Props) => {
                 updateDoc(userDocRef, {
                     password: values.password
                 });
-
             }).catch(err => console.log('Update password error'));
         }
-
         setOpenEditModal(false);
     };
 
     return (
         <Modal open={openEditModal} setOpen={setOpenEditModal}>
-            <div className='flex flex-row justify-between'>
+            <div className='flex flex-col justify-between'>
                 <h3 className='text-3xl text-black font-bold my-5'>Edit user profile</h3>
-                <img
-                    src={photoURL}
-                    alt="avatar"
-                    className='rounded-full cursor-pointer w-20 h-20 border-2 border-black'
-                    title='Change avatar'
-                    onClick={() => {
-                        setOpenEditModal(false);
-                        setUpdateImageModal(true);
+                <div className="flex flex-col items-center">
+                    <img src={photoURL} className='w-36 h-36 rounded-full border-2 border-black' alt="" />
+                    <label htmlFor="avatar" className='text-lg font-medium my-3'>Change profile
+                        avatar</label>
+                    <input
+                        type="file"
+                        id="avatar"
+                        onChange={(e) => {
+                            setProfileImage(e?.target?.files![0]);
+                        }}
+                        className="text-base normal-case my-1 outline-none line tracking-normal p-3 border-[1px] focus-visible:border-[3px]"
+                    />
+                    <button onClick={() => {
+                        updateProfileImage();
+                        console.log('Clicked!');
+
                     }}
-                />
+                        className='my-5  self-center bg-[#1ED760] rounded-xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium'>Update</button>
+                </div>
             </div>
             <Formik
                 initialValues={{
@@ -176,7 +202,6 @@ const EditProfileModal = (props: Props) => {
                     ({ errors, touched, values }) => (
                         <Form autoComplete="off">
                             <div className="w-full flex flex-col my-3">
-
                                 <label htmlFor="email" className='text-base font-medium mb-2'>Email</label>
                                 <div className="flex flex-col">
                                     <Field type="email" name="email" id='email'
