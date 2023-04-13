@@ -10,10 +10,8 @@ import { UserDoc } from "../utils/getUsers";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
-const UpdateProfileImageModal = lazy(() => import("../components/UpdateProfileImageModal"));
 
 import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
-
 
 import Loader from "../components/UI/Loader";
 
@@ -29,7 +27,6 @@ function User() {
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
-    const [openUpdateProfileImage, setOpenUpdateProfileImage] = useState<boolean>(false);
 
     const [photoURL, setPhotoURL] = useState('');
 
@@ -55,25 +52,12 @@ function User() {
                             firebaseUser={firebaseUser}
                             openEditModal={openEditProfile}
                             setOpenEditModal={setOpenEditProfile}
-                            setUpdateImageModal={setOpenUpdateProfileImage}
                             setFirebaseUser={setFirebaseUser}
-                        />
-                    </Suspense>
-                )
-            }
-            {
-                openUpdateProfileImage && (
-                    <Suspense fallback={<Loader title={'Profile image modal is loading...'} />}>
-                        <UpdateProfileImageModal
-                            open={openUpdateProfileImage}
-                            setOpen={setOpenUpdateProfileImage}
-                            photoURL={photoURL}
                             setPhotoURL={setPhotoURL}
                         />
                     </Suspense>
                 )
             }
-
             <h1 className="text-2xl sm:text-3xl text-white font-semibold my-5">Account overview</h1>
             <section className="relative w-full flex flex-col">
                 <h2 className="text-xl sm:text-2xl text-white font-medium my-4">Profile</h2>
@@ -84,7 +68,6 @@ function User() {
                         alt="art"
                         className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black cursor-pointer"
                         onDragStart={(e) => e.preventDefault()}
-                        onClick={() => setOpenUpdateProfileImage(true)}
                         title="Click to edit profile"
                     />
 
