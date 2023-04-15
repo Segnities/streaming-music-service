@@ -14,7 +14,7 @@ import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
 
-import { addArtists } from "../utils/addArtists";
+import { addArtistsToFirestore } from "../utils/addArtistsToFirestore";
 
 
 import NoImage from "../assets/no_artist.jpg";
@@ -32,8 +32,6 @@ function Artist() {
     error,
   } = useGetArtistsDetailsQuery(artistid);
 
-  console.log([artistData]);
-
 
 
   const device: {
@@ -49,6 +47,9 @@ function Artist() {
   const attributes: PurpleAttributes = artist?.attributes;
   const playlist: FeaturedAlbumsDatum[] = artist?.views?.playlists?.data;
 
+  console.log(artist);
+
+
   const artistImage =
     artist?.avatar ||
     attributes?.editorialArtwork?.originalFlowcaseBrick?.url ||
@@ -57,9 +58,11 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
+
+
   useEffect(() => {
     if (!isFetchingArtistData) {
-      addArtists([artistData]).then(res => console.log('Added to firestore!')).catch(err => console.log(err));
+      /* addArtistsToFirestore(artistData).then(res => console.log('Added to firestore!')).catch(err => console.log(err)); */
     }
   }, [isFetchingArtistData]);
 
