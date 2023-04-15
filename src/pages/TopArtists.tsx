@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import ArtistCard from "../components/ArtistCard";
 import Loader from "../components/UI/Loader";
@@ -6,6 +6,7 @@ import Error from "../components/UI/Error";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
 import { SongRootObject } from "../API/types";
+import { addArtists } from "../utils/addArtists";
 
 function TopArtists() {
   const {
@@ -16,12 +17,12 @@ function TopArtists() {
 
   const [filledTopArtists, setFilledTopArtists] = useState<[] | SongRootObject[]>([]);
 
-
-    useEffect(()=> {
-        if(!isTopArtistsFetching) {
-            setFilledTopArtists(topArtists.filter((tArtist: SongRootObject) => tArtist?.artists));
-        }
-    }, [])
+  useEffect(() => {
+    if (!isTopArtistsFetching) {
+      setFilledTopArtists(topArtists.filter((tArtist: SongRootObject) => tArtist?.artists));
+      addArtists(topArtists).then(res => console.log('Added to firestore!')).catch(err => console.log(err));
+    }
+  }, [isTopArtistsFetching]);
 
   if (isTopArtistsFetching) {
     return <Loader title="Artists is loading..." />;

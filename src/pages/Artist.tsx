@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router";
 
 import Loader from "../components/UI/Loader";
@@ -12,6 +13,9 @@ import { useGetArtistsDetailsQuery } from "../API/shazamCore";
 import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
+
+import { addArtists } from "../utils/addArtists";
+
 
 import NoImage from "../assets/no_artist.jpg";
 
@@ -28,6 +32,10 @@ function Artist() {
     error,
   } = useGetArtistsDetailsQuery(artistid);
 
+  console.log([artistData]);
+
+
+
   const device: {
     xs: boolean;
     sm: boolean;
@@ -37,15 +45,9 @@ function Artist() {
     "2xl": boolean;
   } = useResizeObserver();
 
-
-  if (isFetchingArtistData) {
-    return <Loader title="Searching artist..." />;
-  }
-
   const artist: MainDatum = artistData?.data[0];
   const attributes: PurpleAttributes = artist?.attributes;
   const playlist: FeaturedAlbumsDatum[] = artist?.views?.playlists?.data;
-
 
   const artistImage =
     artist?.avatar ||
@@ -54,6 +56,17 @@ function Artist() {
     attributes?.editorialArtwork?.subscriptionHero?.url ||
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
+
+  useEffect(() => {
+    if (!isFetchingArtistData) {
+      addArtists([artistData]).then(res => console.log('Added to firestore!')).catch(err => console.log(err));
+    }
+  }, [isFetchingArtistData]);
+
+  if (isFetchingArtistData) {
+    return <Loader title="Searching artist..." />;
+  }
+
 
   if (error) {
     return <Error />;
@@ -86,7 +99,7 @@ function Artist() {
         <div className="w-full h-24 sm:h-24"></div>
       </div>
 
-      <div className="w-full flex flex-col mt-8 max-w-[780px] overflow-hidden">
+      <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[380px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
           <h3 className="text-white font-bold text-2xl">Artist Playlists</h3>
         </div>
