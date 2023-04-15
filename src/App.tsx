@@ -24,7 +24,6 @@ function App() {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 dispatch(setUserSignUp({ user: await JSON.stringify(user) }));
-
                 dispatch(setFirebaseUsers(await getUsers()));
                 setIsLoading(false);
             } else {

@@ -5,7 +5,7 @@ import Error from "../components/UI/Error";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
 
-import { SelectorPlayerState } from "../API/types";
+import { SelectorPlayerState, SongRootObject } from "../API/types";
 
 import SongCard from "../components/SongCard";
 
@@ -34,7 +34,11 @@ function TopCharts() {
         Top Charts
       </h2>
       <div className="flex flex-wrap justify-center sm:justify-start gap-8">
-        {topCharts?.map((song, index) => (
+        {topCharts?.filter((chart: SongRootObject) => {
+          if (chart?.artists && chart?.hub?.actions) {
+            return chart;
+          }
+        }).map((song, index) => (
           <SongCard
             key={song?.key}
             song={song}
