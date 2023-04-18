@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
+
+import { BsThreeDots } from "react-icons/bs";
 
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,25 +16,27 @@ import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
 
-import { addArtistsToFirestore } from "../utils/addArtistsToFirestore";
-
+import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 import NoImage from "../assets/no_artist.jpg";
 
+import { MdAddToPhotos } from "react-icons/md";
+
 import "swiper/css";
 import "swiper/css/free-mode";
+import MoreOptions from "../components/UI/MoreOptions";
 
 
 function Artist() {
   const { id: artistid } = useParams();
+
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   const {
     data: artistData,
     isFetching: isFetchingArtistData,
     error,
   } = useGetArtistsDetailsQuery(artistid);
-
-
 
   const device: {
     xs: boolean;
@@ -47,9 +51,6 @@ function Artist() {
   const attributes: PurpleAttributes = artist?.attributes;
   const playlist: FeaturedAlbumsDatum[] = artist?.views?.playlists?.data;
 
-  console.log(artist);
-
-
   const artistImage =
     artist?.avatar ||
     attributes?.editorialArtwork?.originalFlowcaseBrick?.url ||
@@ -58,18 +59,9 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
-
-
-  useEffect(() => {
-    if (!isFetchingArtistData) {
-      /* addArtistsToFirestore(artistData).then(res => console.log('Added to firestore!')).catch(err => console.log(err)); */
-    }
-  }, [isFetchingArtistData]);
-
   if (isFetchingArtistData) {
     return <Loader title="Searching artist..." />;
   }
-
 
   if (error) {
     return <Error />;
@@ -79,11 +71,20 @@ function Artist() {
     <div className="flex flex-col" data-testid='artist-page'>
       <div className="relative w-full flex flex-col">
         <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
+        <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
+          <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+        </div>
+        <MoreOptions
+          options={[{ key: "opt1", title: "Add to favourite", icon: (<><MdAddToPhotos color="white" size={18} /></>) }]}
+          visible={showMore}
+          top={"3rem"}
+          right={"5rem"}
+        />
         <div className="absolute inset-0 flex flex-row items-center">
           <img
             src={artistImage}
             alt="art"
-            className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black"
+            className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black hover:cursor-pointer hover:border-4 hover:transition-all hover:grayscale-[35%] delay-75 ease-in"
             onDragStart={(e) => e.preventDefault()}
           />
           <div className="ml-5 mb-3">
@@ -99,10 +100,10 @@ function Artist() {
             </ul>
           </div>
         </div>
-        <div className="w-full h-24 sm:h-24"></div>
+        <BlockSpace />
       </div>
 
-      <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[380px] md:max-w-[780px] overflow-hidden">
+      <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
           <h3 className="text-white font-bold text-2xl">Artist Playlists</h3>
         </div>
