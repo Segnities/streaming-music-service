@@ -6,7 +6,6 @@ import Error from "../components/UI/Error";
 
 import { useGetTopChartsQuery } from "../API/shazamCore";
 import { SongRootObject } from "../API/types";
-import { addArtistsToFirestore } from "../utils/addArtistsToFirestore";
 
 function TopArtists() {
   const {
@@ -20,7 +19,6 @@ function TopArtists() {
   useEffect(() => {
     if (!isTopArtistsFetching) {
       setFilledTopArtists(topArtists.filter((tArtist: SongRootObject) => tArtist?.artists));
-      addArtistsToFirestore(topArtists).then(res => console.log('Added to firestore!')).catch(err => console.log(err));
     }
   }, [isTopArtistsFetching]);
 

@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
+import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { firebaseDatabase } from "../firebase/firebaseConfig";
+
+import { UserAuthSelector } from "../store/reducers/auth";
+
+import MoreOptions from "../components/UI/MoreOptions";
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
 
@@ -15,17 +22,17 @@ import { useGetArtistsDetailsQuery } from "../API/shazamCore";
 import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
+import { User } from "firebase/auth";
+
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+import { UserDoc } from "../utils/getUsers";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
-
 import NoImage from "../assets/no_artist.jpg";
 
-import { MdAddToPhotos } from "react-icons/md";
 
 import "swiper/css";
 import "swiper/css/free-mode";
-import MoreOptions from "../components/UI/MoreOptions";
-
 
 function Artist() {
   const { id: artistid } = useParams();
@@ -37,6 +44,15 @@ function Artist() {
     isFetching: isFetchingArtistData,
     error,
   } = useGetArtistsDetailsQuery(artistid);
+
+  const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+
+  const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
+  const user: User = JSON.parse(userData as string);
+
+  const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
+
+  const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
   const device: {
     xs: boolean;
@@ -59,6 +75,64 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
+  const addUserFavouriteArtist = async () => {
+    try {
+      const uid: string = firebaseUser.id;
+      await addDoc(favouriteArtistsCollection, {
+        uid,
+        artists: [{ artistData }]
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const updateUserFavouriteArtists = async () => {
+    try {
+      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        console.log("Starting update...");
+
+        await updateDoc(doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id), {
+          artists: arrayUnion({ artistData })
+        });
+      }
+    }
+    catch (error) {
+      console.log(error);
+    } finally {
+      console.log('Succesufully updated!');
+
+    }
+  };
+
+
+  const manageFavouriteArtists = async () => {
+    const querySnapshot = await getDocs(favouriteArtistsCollection);
+
+    let isUserHaveFavouriteArtist = false;
+
+    console.log("Manage favourite artists...");
+
+    querySnapshot.forEach((doc) => {
+      if (doc.data().uid === firebaseUser.id) {
+        isUserHaveFavouriteArtist = true;
+      }
+    });
+
+
+    if (isUserHaveFavouriteArtist) {
+      console.log('Update favourite artists');
+      updateUserFavouriteArtists();
+    } else {
+      console.log('Add favourite artists');
+      addUserFavouriteArtist();
+    }
+  };
+
   if (isFetchingArtistData) {
     return <Loader title="Searching artist..." />;
   }
@@ -75,10 +149,14 @@ function Artist() {
           <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
         </div>
         <MoreOptions
-          options={[{ key: "opt1", title: "Add to favourite", icon: (<><MdAddToPhotos color="white" size={18} /></>) }]}
+          options={[
+            {
+              key: "add-to-favourite",
+              title: "Add to favourite",
+              onClickCallback: () => manageFavouriteArtists()
+              ,
+            }]}
           visible={showMore}
-          top={"3rem"}
-          right={"5rem"}
         />
         <div className="absolute inset-0 flex flex-row items-center">
           <img
