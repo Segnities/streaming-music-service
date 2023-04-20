@@ -240,8 +240,9 @@ export interface TrackImages {
 }
 
 /*Artist Details*/
-export interface Main {
+export interface MainArtistDetails {
   data: MainDatum[];
+
 }
 
 export interface MainDatum {

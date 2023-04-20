@@ -13,7 +13,6 @@ import Error from "../components/UI/Error";
 
 import { BsThreeDots } from "react-icons/bs";
 
-
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { FreeMode } from "swiper";
