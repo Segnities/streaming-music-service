@@ -74,7 +74,7 @@ function User() {
             //console.log(favouriteArtists[0]?.artists[0]?.artistData?.data[0]);
         });
 
-    }, []);
+    }, [firebaseUser?.id]);
 
     return (
         <div className="flex flex-col w-full">
@@ -111,7 +111,7 @@ function User() {
                 </section>
                 <BlockSpace />
             </section>
-
+            
             <section className="w-full">
                 <h3 className="text-2xl text-white my-8">Favourite artists</h3>
                 <Swiper effect={"cards"} grabCursor={true} slidesPerView={"auto"} modules={[EffectCards]} className="max-w-[230px] h-[280px] flex flex-col items-center justify-between my-2 ">

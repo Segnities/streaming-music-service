@@ -68,12 +68,18 @@ function Login() {
                         }}
                         validationSchema={validationSchema}
                         onSubmit={(values) => {
-                            handleSignInWithEmailAndPasswordProvider(values.email, values.password, values.rememberMe)
+                            handleSignInWithEmailAndPasswordProvider(values.email, values.password, values.rememberMe);
                         }}
                     >
                         {
-                            ({ errors, touched, values }) => (
+                            ({ errors }) => (
                                 <Form autoComplete="off">
+                                    {(errors.email || errors.password) && (
+
+                                        <div className="flex w-full justify-center my-5">
+                                            <h3 className="text-lg transition-opacity duration-100 ease-in text-red-600 font-semibold">Wrong email or password</h3>
+                                        </div>
+                                    )}
                                     <div className="flex flex-col">
                                         <label htmlFor="email" className="text-sm font-bold my-1">Email address</label>
                                         <Field

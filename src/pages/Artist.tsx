@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-import { addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { DocumentData, QueryDocumentSnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import { UserAuthSelector } from "../store/reducers/auth";
@@ -33,6 +33,14 @@ import NoImage from "../assets/no_artist.jpg";
 import "swiper/css";
 import "swiper/css/free-mode";
 
+
+
+type FavoriteArtistsDoc = {
+  artists: {
+    artistData: MainDatum
+  }
+}
+
 function Artist() {
   const { id: artistid } = useParams();
 
@@ -52,6 +60,7 @@ function Artist() {
   const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
 
   const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
+
 
   const device: {
     xs: boolean;
@@ -108,6 +117,25 @@ function Artist() {
     }
   };
 
+  const isArtistInList = async (id: string | undefined = artistid) => {
+    try {
+      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+          const fArtists: DocumentData = doc.data();
+          console.log(fArtists);
+
+        });
+      }
+      return false;
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const manageFavouriteArtists = async () => {
     const querySnapshot = await getDocs(favouriteArtistsCollection);
@@ -132,6 +160,12 @@ function Artist() {
     }
   };
 
+
+  useEffect(() => {
+    isArtistInList();
+  }, []);
+
+
   if (isFetchingArtistData) {
     return <Loader title="Searching artist..." />;
   }
@@ -145,18 +179,26 @@ function Artist() {
       <div className="relative w-full flex flex-col">
         <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
         <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
-          <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+          {
+            user?.uid && (
+              <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+            )
+          }
+
         </div>
-        <MoreOptions
-          options={[
-            {
-              key: "add-to-favourite",
-              title: "Add to favourite",
-              onClickCallback: () => manageFavouriteArtists()
-              ,
-            }]}
-          visible={showMore}
-        />
+        {
+          user?.uid && (
+            <MoreOptions
+              options={[
+                {
+                  key: "add-to-favourite",
+                  title: "Add to favourite",
+                  onClickCallback: () => manageFavouriteArtists()
+                }]}
+              visible={showMore}
+            />)
+        }
+
         <div className="absolute inset-0 flex flex-row items-center">
           <img
             src={artistImage}
