@@ -45,6 +45,7 @@ function Artist() {
   const { id: artistid } = useParams();
 
   const [showMore, setShowMore] = useState<boolean>(false);
+  const [isFavouriteArtistInList, setIsFavouriteArtistInList] = useState<boolean>(false);
 
   const {
     data: artistData,
@@ -117,23 +118,35 @@ function Artist() {
     }
   };
 
-  const isArtistInList = async (id: string | undefined = artistid) => {
+  const isArtistInList = async (id: string | undefined = artistid): Promise<boolean> => {
+    //artists[0].artistData.data[0].id
     try {
       const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
       const querySnapshot = await getDocs(q);
 
+      let isInList: boolean = false;
+
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
           const fArtists: DocumentData = doc.data();
-          console.log(fArtists);
+
+          for (const fArtist of fArtists.artists) {
+            if (fArtist?.artistData?.data[0]?.id === id) {
+              console.log("Artist is in list");
+              isInList = true;
+            }
+
+          }
 
         });
       }
-      return false;
+      return isInList;
 
     } catch (error) {
       console.log(error);
+      return true;
     }
+
   };
 
 
@@ -162,7 +175,9 @@ function Artist() {
 
 
   useEffect(() => {
-    isArtistInList();
+    isArtistInList().then(res => {
+      setIsFavouriteArtistInList(res);
+    });
   }, []);
 
 
@@ -193,7 +208,8 @@ function Artist() {
                 {
                   key: "add-to-favourite",
                   title: "Add to favourite",
-                  onClickCallback: () => manageFavouriteArtists()
+                  onClickCallback: () => manageFavouriteArtists(),
+                  isCallbackBlocked: isFavouriteArtistInList,
                 }]}
               visible={showMore}
             />)
