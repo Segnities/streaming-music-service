@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
@@ -19,12 +19,17 @@ import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers"
 import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
 import { UserDoc } from "../utils/getUsers";
 
+import { FavoriteArtistsDoc } from "../pages/Artist";
+
 import 'swiper/css';
 import "swiper/css/effect-cards";
 
 
+interface Props {
+    setOpenRemoveModal: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-export default function FavouriteArtistCards() {
+export default function FavouriteArtistCards(props: Props) {
     const [favouriteArtists, setFavouriteArtists] = useState<DocumentData[]>([]);
 
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
@@ -35,8 +40,7 @@ export default function FavouriteArtistCards() {
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
 
-
-    const [favouriteArtistsError, setFavouriteArtistsErrors] = useState(null);
+    const [favouriteArtistsError, setFavouriteArtistsErrors] = useState<FavoriteArtistsDoc | null>(null);
 
     const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
@@ -71,6 +75,7 @@ export default function FavouriteArtistCards() {
                                     <AiFillCloseCircle
                                         size={24} color="black"
                                         className="cursor-pointer"
+                                        onClick={() => props.setOpenRemoveModal(true)}
                                     />
                                 </div>
                                 <section className="flex flex-col flex-1 items-center gap-4">

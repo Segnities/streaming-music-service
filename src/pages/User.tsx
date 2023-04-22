@@ -20,6 +20,7 @@ import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
+import { ConfirmModal } from "../components/UI/Confirm/Confirm";
 
 function User() {
     const auth = getAuth(firebaseApp);
@@ -33,6 +34,9 @@ function User() {
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
 
     const [photoURL, setPhotoURL] = useState<string>('');
+
+    const [removeFavouriteArtistModal, setRemoveFavouriteArtistModal] = useState<boolean>(false);
+    const [favouriteUserInfo, setFavouriteUserInfo] = useState<>(null);
 
     //[]->artists->[]->artistData->data[0]->
     const userSignOut = () => {
@@ -55,6 +59,16 @@ function User() {
 
     return (
         <div className="flex flex-col w-full">
+            <ConfirmModal
+                isOpen={removeFavouriteArtistModal}
+                setIsOpen={setRemoveFavouriteArtistModal}
+                confirmCallback={() => alert("Removed from list")
+                }
+                confirmTitle="Remove favourite artist"
+                cancelCallback={() => {
+                    setRemoveFavouriteArtistModal(false);
+                }}
+            />
             {
                 openEditProfile && (
                     <Suspense fallback={<Loader title={'Profile is loading...'} />}>
@@ -89,7 +103,7 @@ function User() {
                 <BlockSpace />
             </section>
 
-            <FavouriteArtistCards />
+            <FavouriteArtistCards setOpenRemoveModal={setRemoveFavouriteArtistModal}/>
 
             <div className="flex flex-col">
                 <table className="w-full">

@@ -35,7 +35,7 @@ import "swiper/css/free-mode";
 
 
 
-type FavoriteArtistsDoc = {
+export type FavoriteArtistsDoc = {
   artists: {
     artistData: MainDatum
   }
