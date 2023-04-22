@@ -1,9 +1,17 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
+import { DocumentData, QueryDocumentSnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { firebaseDatabase } from "../firebase/firebaseConfig";
+
+import { UserAuthSelector } from "../store/reducers/auth";
+
+import MoreOptions from "../components/UI/MoreOptions";
 import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
 
+import { BsThreeDots } from "react-icons/bs";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -13,18 +21,31 @@ import { useGetArtistsDetailsQuery } from "../API/shazamCore";
 import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
+import { User } from "firebase/auth";
 
-import { addArtists } from "../utils/addArtists";
+import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
+import { UserDoc } from "../utils/getUsers";
 
-
+import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 import NoImage from "../assets/no_artist.jpg";
+
 
 import "swiper/css";
 import "swiper/css/free-mode";
 
 
+
+type FavoriteArtistsDoc = {
+  artists: {
+    artistData: MainDatum
+  }
+}
+
 function Artist() {
   const { id: artistid } = useParams();
+
+  const [showMore, setShowMore] = useState<boolean>(false);
+  const [isFavouriteArtistInList, setIsFavouriteArtistInList] = useState<boolean>(false);
 
   const {
     data: artistData,
@@ -32,8 +53,14 @@ function Artist() {
     error,
   } = useGetArtistsDetailsQuery(artistid);
 
-  console.log([artistData]);
+  const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
+  const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
+  const user: User = JSON.parse(userData as string);
+
+  const [firebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
+
+  const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
 
   const device: {
@@ -57,16 +84,109 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
-  useEffect(() => {
-    if (!isFetchingArtistData) {
-      addArtists([artistData]).then(res => console.log('Added to firestore!')).catch(err => console.log(err));
+  const isArtistInList = async (id: string | undefined = artistid): Promise<boolean> => {
+    //artists[0].artistData.data[0].id
+    try {
+      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
+      const querySnapshot = await getDocs(q);
+
+      let isInList = false;
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+          const fArtists: DocumentData = doc.data();
+
+          for (const fArtist of fArtists.artists) {
+            if (fArtist?.artistData?.data[0]?.id === id) {
+              console.log("Artist is in list");
+              isInList = true;
+            }
+
+          }
+
+        });
+      }
+      return isInList;
+
+    } catch (error) {
+      console.log(error);
+      return true;
     }
-  }, [isFetchingArtistData]);
+  };
+
+
+  const addUserFavouriteArtist = async () => {
+    try {
+      const uid: string = firebaseUser.id;
+      await addDoc(favouriteArtistsCollection, {
+        uid,
+        artists: [{ artistData }]
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const updateUserFavouriteArtists = async () => {
+    try {
+      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
+      const querySnapshot = await getDocs(q);
+
+      const isInList: boolean = await isArtistInList();
+
+      if (!querySnapshot.empty && isInList) {
+        console.log("Starting update...");
+
+        await updateDoc(doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id), {
+          artists: arrayUnion({ artistData })
+        });
+      }
+    }
+    catch (error) {
+      console.log(error);
+    } finally {
+      console.log('Succesufully updated!');
+
+    }
+  };
+
+
+
+  const manageFavouriteArtists = async () => {
+    const querySnapshot = await getDocs(favouriteArtistsCollection);
+
+    let isUserHaveFavouriteArtist = false;
+
+    console.log("Manage favourite artists...");
+
+    querySnapshot.forEach((doc) => {
+      if (doc.data().uid === firebaseUser.id) {
+        isUserHaveFavouriteArtist = true;
+      }
+    });
+
+
+    if (isUserHaveFavouriteArtist) {
+      console.log('Update favourite artists');
+      updateUserFavouriteArtists();
+    } else {
+      console.log('Add favourite artists');
+      addUserFavouriteArtist();
+    }
+  };
+
+
+  useEffect(() => {
+    isArtistInList().then(res => {
+      setIsFavouriteArtistInList(res);
+    });
+  }, [isFavouriteArtistInList]);
+
 
   if (isFetchingArtistData) {
     return <Loader title="Searching artist..." />;
   }
-
 
   if (error) {
     return <Error />;
@@ -76,11 +196,33 @@ function Artist() {
     <div className="flex flex-col" data-testid='artist-page'>
       <div className="relative w-full flex flex-col">
         <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
+        <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
+          {
+            user?.uid && (
+              <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+            )
+          }
+
+        </div>
+        {
+          user?.uid && (
+            <MoreOptions
+              options={[
+                {
+                  key: "add-to-favourite",
+                  title: "Add to favourite",
+                  onClickCallback: () => manageFavouriteArtists(),
+                  isCallbackBlocked: isFavouriteArtistInList,
+                }]}
+              visible={showMore}
+            />)
+        }
+
         <div className="absolute inset-0 flex flex-row items-center">
           <img
             src={artistImage}
             alt="art"
-            className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black"
+            className="w-28 sm:w-48 h-28 sm:h-48 rounded-full object-cover border-2 shadow-xl shadow-black hover:cursor-pointer hover:border-4 hover:transition-all hover:grayscale-[35%] delay-75 ease-in"
             onDragStart={(e) => e.preventDefault()}
           />
           <div className="ml-5 mb-3">
@@ -96,10 +238,10 @@ function Artist() {
             </ul>
           </div>
         </div>
-        <div className="w-full h-24 sm:h-24"></div>
+        <BlockSpace />
       </div>
 
-      <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[380px] md:max-w-[780px] overflow-hidden">
+      <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
           <h3 className="text-white font-bold text-2xl">Artist Playlists</h3>
         </div>

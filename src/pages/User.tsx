@@ -7,7 +7,10 @@ import { firebaseApp } from "../firebase/firebaseConfig";
 
 import { UserDoc } from "../utils/getUsers";
 
+import FavouriteArtistCards from "../components/FavouriteArtistCards";
+
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
+
 
 const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
 
@@ -19,17 +22,19 @@ import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
 
 function User() {
+    const auth = getAuth(firebaseApp);
     const navigate = useNavigate();
     const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: FUser = JSON.parse(userData as string);
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
-    const auth = getAuth(firebaseApp);
+
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
 
-    const [photoURL, setPhotoURL] = useState('');
+    const [photoURL, setPhotoURL] = useState<string>('');
 
+    //[]->artists->[]->artistData->data[0]->
     const userSignOut = () => {
         signOut(auth);
         setUserSignOut();
@@ -38,9 +43,15 @@ function User() {
 
 
     useEffect(() => {
-        const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
-        setPhotoURL(userProfileImage !== null && !userProfileImage?.includes('undefined') ? userProfileImage : NoImage);
+        try {
+            const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
+            setPhotoURL(userProfileImage !== null && !userProfileImage?.includes('undefined') ? userProfileImage : NoImage);
+        } catch (error) {
+            console.log(error);
+        }
     }, [auth.currentUser?.photoURL]);
+
+
 
     return (
         <div className="flex flex-col w-full">
@@ -77,6 +88,9 @@ function User() {
                 </section>
                 <BlockSpace />
             </section>
+
+            <FavouriteArtistCards />
+
             <div className="flex flex-col">
                 <table className="w-full">
                     <colgroup>
