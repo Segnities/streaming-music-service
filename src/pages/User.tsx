@@ -3,12 +3,11 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
 import { signOut, getAuth, User as FUser } from "firebase/auth";
-import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
+import { firebaseApp } from "../firebase/firebaseConfig";
 
 import { UserDoc } from "../utils/getUsers";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCards } from "swiper";
+import FavouriteArtistCards from "../components/FavouriteArtistCards";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
@@ -21,13 +20,6 @@ import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
-import { DocumentData, Query, collection, getDocs, query, where } from "firebase/firestore";
-
-import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
-
-
-import 'swiper/css';
-import "swiper/css/effect-cards";
 
 function User() {
     const auth = getAuth(firebaseApp);
@@ -36,7 +28,6 @@ function User() {
     const user: FUser = JSON.parse(userData as string);
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
-    const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
@@ -44,10 +35,6 @@ function User() {
     const [photoURL, setPhotoURL] = useState<string>('');
 
     //[]->artists->[]->artistData->data[0]->
-    const [favouriteArtists, setFavouriteArtists] = useState<DocumentData[]>([]);
-    const [isFavouriteArtistsLoading, setIsFavouriteArtistsLoading] = useState<boolean>(true);
-    const [favouriteArtistsError, setFavouriteArtistsErrors] = useState(null);
-
     const userSignOut = () => {
         signOut(auth);
         setUserSignOut();
@@ -64,17 +51,7 @@ function User() {
         }
     }, [auth.currentUser?.photoURL]);
 
-    useEffect(() => {
-        const favouriteArtistsQuery: Query<DocumentData> = query(favouriteArtistsCollection, where('uid', '==', firebaseUser?.id));
-        const favouriteUsersSnapshot = getDocs(favouriteArtistsQuery).then(snapshot => {
-            setFavouriteArtists(snapshot.docs.map(doc => doc.data()));
-        }).catch(err => {
-            console.log(err);
-        }).finally(() => {
-            //console.log(favouriteArtists[0]?.artists[0]?.artistData?.data[0]);
-        });
 
-    }, [firebaseUser?.id]);
 
     return (
         <div className="flex flex-col w-full">
@@ -111,31 +88,8 @@ function User() {
                 </section>
                 <BlockSpace />
             </section>
-            
-            <section className="w-full">
-                <h3 className="text-2xl text-white my-8">Favourite artists</h3>
-                <Swiper effect={"cards"} grabCursor={true} slidesPerView={"auto"} modules={[EffectCards]} className="max-w-[230px] h-[280px] flex flex-col items-center justify-between my-2 ">
-                    {
 
-                        favouriteArtists[0]?.artists?.map((artist: { artistData: MainArtistDetails }, index) => {
-
-                            const artst: MainDatum = artist.artistData?.data[0];
-                            const artst_attributes: PurpleAttributes = artist?.artistData?.data[0]?.attributes;
-
-                            return (
-                                <SwiperSlide key={artist?.artistData?.data[0]?.id + index} className="flex items-center justify-center rounded-2xl text-xl font-bold text-white bg-red-400 
-                            even:bg-gradient-to-r even:from-blue-500 even:to-purple-500 odd:bg-gradient-to-r odd:from-gray-400 even:to-blue-gray-500">
-                                    <h4 className="text-lg text-white font-medium">
-                                        {
-                                            artst_attributes?.name ?? "Unknown"
-                                        }
-                                    </h4>
-                                </SwiperSlide>
-                            );
-                        })
-                    }
-                </Swiper>
-            </section>
+            <FavouriteArtistCards />
 
             <div className="flex flex-col">
                 <table className="w-full">
