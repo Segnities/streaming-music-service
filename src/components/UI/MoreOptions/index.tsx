@@ -1,9 +1,11 @@
+type OptionIcon = {
+    title: string;
+    icon: JSX.Element;
+}
 
 interface Props {
-    options: { key: string, title: string, href?: string, icon?: JSX.Element | undefined, onClickCallback: () => void, isCallbackBlocked: boolean }[]
+    options: { key: string, title: string, href?: string, icons?: OptionIcon[] | undefined, onClickCallback: () => void, isCallbackBlocked: boolean }[]
     visible: boolean;
-
-
 }
 
 export default function MoreOptions(props: Props) {
@@ -12,7 +14,7 @@ export default function MoreOptions(props: Props) {
         <>
             {
                 props.visible && (
-                    <div className="absolute duration-200 ease-linear transition-all md:flex justify-center rounded-lg p-1 min-h-[150px] min-w-[160px] bg-[#21106e] top-10 right-16  z-50">
+                    <div className="absolute duration-200 ease-linear transition-all md:flex justify-center rounded-lg p-3 min-h-[150px] max-w-[200px]  bg-[#21106e] top-10 right-16  z-50">
                         {
                             props.options.map((option) => (
                                 <p

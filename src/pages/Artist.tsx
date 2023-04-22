@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -58,7 +58,7 @@ function Artist() {
   const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
   const user: User = JSON.parse(userData as string);
 
-  const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
+  const [firebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
 
   const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
@@ -84,47 +84,13 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
-  const addUserFavouriteArtist = async () => {
-    try {
-      const uid: string = firebaseUser.id;
-      await addDoc(favouriteArtistsCollection, {
-        uid,
-        artists: [{ artistData }]
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
-  const updateUserFavouriteArtists = async () => {
-    try {
-      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        console.log("Starting update...");
-
-        await updateDoc(doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id), {
-          artists: arrayUnion({ artistData })
-        });
-      }
-    }
-    catch (error) {
-      console.log(error);
-    } finally {
-      console.log('Succesufully updated!');
-
-    }
-  };
-
   const isArtistInList = async (id: string | undefined = artistid): Promise<boolean> => {
     //artists[0].artistData.data[0].id
     try {
       const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
       const querySnapshot = await getDocs(q);
 
-      let isInList: boolean = false;
+      let isInList = false;
 
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
@@ -146,8 +112,45 @@ function Artist() {
       console.log(error);
       return true;
     }
-
   };
+
+
+  const addUserFavouriteArtist = async () => {
+    try {
+      const uid: string = firebaseUser.id;
+      await addDoc(favouriteArtistsCollection, {
+        uid,
+        artists: [{ artistData }]
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const updateUserFavouriteArtists = async () => {
+    try {
+      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
+      const querySnapshot = await getDocs(q);
+
+      const isInList: boolean = await isArtistInList();
+
+      if (!querySnapshot.empty && isInList) {
+        console.log("Starting update...");
+
+        await updateDoc(doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id), {
+          artists: arrayUnion({ artistData })
+        });
+      }
+    }
+    catch (error) {
+      console.log(error);
+    } finally {
+      console.log('Succesufully updated!');
+
+    }
+  };
+
 
 
   const manageFavouriteArtists = async () => {
@@ -178,7 +181,7 @@ function Artist() {
     isArtistInList().then(res => {
       setIsFavouriteArtistInList(res);
     });
-  }, []);
+  }, [isFavouriteArtistInList]);
 
 
   if (isFetchingArtistData) {
