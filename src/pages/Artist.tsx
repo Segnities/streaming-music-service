@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -36,9 +36,7 @@ import "swiper/css/free-mode";
 
 
 export type FavoriteArtistsDoc = {
-  artists: {
-    artistData: MainDatum
-  }
+  artistData: MainDatum
 }
 
 function Artist() {

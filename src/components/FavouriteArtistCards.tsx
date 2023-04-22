@@ -26,6 +26,8 @@ import "swiper/css/effect-cards";
 
 
 interface Props {
+    selectedFavouriteArtistInfo: MainDatum | null;
+    setSelectedFavouriteArtistInfo: React.Dispatch<React.SetStateAction<MainDatum | null>>
     setOpenRemoveModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -71,13 +73,7 @@ export default function FavouriteArtistCards(props: Props) {
                         return (
                             <SwiperSlide key={artist?.artistData?.data[0]?.id + index} className="relative flex items-center justify-center rounded-2xl text-xl font-bold text-white bg-red-400 
                             even:bg-gradient-to-r even:from-blue-500 even:to-purple-500 odd:bg-gradient-to-r odd:from-gray-400 even:to-blue-gray-500">
-                                <div className="absolute top-2 right-3">
-                                    <AiFillCloseCircle
-                                        size={24} color="black"
-                                        className="cursor-pointer"
-                                        onClick={() => props.setOpenRemoveModal(true)}
-                                    />
-                                </div>
+
                                 <section className="flex flex-col flex-1 items-center gap-4">
                                     <img src={artst_data?.avatar} alt="" className="w-24 h-24 rounded-full cursor-pointer border-2 border-transparent hover:border-white" />
                                     <h4 className="text-xl text-white font-medium cursor-pointer">
@@ -85,7 +81,14 @@ export default function FavouriteArtistCards(props: Props) {
                                             artst_attributes?.name ?? "Unknown"
                                         }
                                     </h4>
+                                    <button className="border-2 text-white border-white px-2 py-1 ease-linear transition-colors hover:duration-75 rounded-lg text-base hover:border-gray-300 hover:text-gray-300" onClick={() => {
+                                        props.setOpenRemoveModal(true);
+                                        props.setSelectedFavouriteArtistInfo(artst_data ?? null);
+                                    }}>
+                                        Remove
+                                    </button>
                                 </section>
+
                             </SwiperSlide>
                         );
                     })

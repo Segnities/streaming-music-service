@@ -21,6 +21,8 @@ import Loader from "../components/UI/Loader";
 import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
 import { ConfirmModal } from "../components/UI/Confirm/Confirm";
+import { FavoriteArtistsDoc } from "./Artist";
+import { MainDatum } from "../API/types";
 
 function User() {
     const auth = getAuth(firebaseApp);
@@ -36,7 +38,8 @@ function User() {
     const [photoURL, setPhotoURL] = useState<string>('');
 
     const [removeFavouriteArtistModal, setRemoveFavouriteArtistModal] = useState<boolean>(false);
-    const [favouriteUserInfo, setFavouriteUserInfo] = useState<>(null);
+
+    const [selectedFavouriteArtistInfo, setSelectedFavouriteArtistInfo] = useState<MainDatum | null>(null);
 
     //[]->artists->[]->artistData->data[0]->
     const userSignOut = () => {
@@ -44,7 +47,6 @@ function User() {
         setUserSignOut();
         navigate("/");
     };
-
 
     useEffect(() => {
         try {
@@ -54,7 +56,6 @@ function User() {
             console.log(error);
         }
     }, [auth.currentUser?.photoURL]);
-
 
 
     return (
@@ -103,7 +104,11 @@ function User() {
                 <BlockSpace />
             </section>
 
-            <FavouriteArtistCards setOpenRemoveModal={setRemoveFavouriteArtistModal}/>
+            <FavouriteArtistCards
+                selectedFavouriteArtistInfo={selectedFavouriteArtistInfo} 
+                setSelectedFavouriteArtistInfo={setSelectedFavouriteArtistInfo}
+                setOpenRemoveModal={setRemoveFavouriteArtistModal} 
+            />
 
             <div className="flex flex-col">
                 <table className="w-full">
