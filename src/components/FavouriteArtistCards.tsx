@@ -19,6 +19,8 @@ import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers"
 import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
 import { UserDoc } from "../utils/getUsers";
 
+import NoImage from "../assets/no_artist.jpg";
+
 import 'swiper/css';
 import "swiper/css/effect-cards";
 interface Props {
@@ -55,7 +57,7 @@ export default function FavouriteArtistCards(props: Props) {
 
 
     return (
-        <section className="w-full">
+        <section className="w-full mt-4 mb-6">
             <h3 className="text-2xl text-white my-8">Favourite artists</h3>
             <Swiper effect={"cards"} grabCursor={true} slidesPerView={"auto"} modules={[EffectCards]} className="max-w-[230px] h-[280px] flex flex-col items-center justify-between my-2 ">
                 {
@@ -68,10 +70,10 @@ export default function FavouriteArtistCards(props: Props) {
                             even:bg-gradient-to-r even:from-blue-500 even:to-purple-500 odd:bg-gradient-to-r odd:from-gray-400 even:to-blue-gray-500">
 
                                 <section className="flex flex-col flex-1 items-center gap-4">
-                                    <img src={artst_data?.avatar} alt="" className="w-24 h-24 rounded-full cursor-pointer border-2 border-transparent hover:border-white" />
+                                    <img src={artst_data?.avatar ?? NoImage} alt="artist_img" className="w-24 h-24 rounded-full  border-2 border-transparent hover:border-white" />
                                     <h4 className="text-xl text-white font-medium cursor-pointer">
                                         {
-                                            <NavLink to={`/artists/${artst_data?.id}`} className="text-white">{artst_attributes?.name}</NavLink> ?? "Unknown"
+                                            <NavLink to={`/artists/${artst_data?.id}`} className="text-white underline underline-offset-8 hover:text-gray-300">{artst_attributes?.name}</NavLink> ?? "Unknown"
                                         }
                                     </h4>
                                     <button className="border-2 mt-5 text-white border-white px-2 py-1 ease-linear transition-colors hover:duration-75 rounded-lg text-base hover:border-gray-300 hover:text-gray-300" onClick={() => {

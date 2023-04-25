@@ -4,7 +4,7 @@ type OptionIcon = {
 }
 
 interface Props {
-    options: { key: string, title: string, href?: string, icons?: OptionIcon[] | undefined, onClickCallback: () => void, isCallbackBlocked: boolean }[]
+    options: { key: string, title: string, href?: string, icons?: OptionIcon[] | undefined, onClickCallback: () => void }[]
     visible: boolean;
 }
 
@@ -19,14 +19,7 @@ export default function MoreOptions(props: Props) {
                             props.options.map((option) => (
                                 <p
                                     key={option.key}
-                                    onClick={() => {
-                                        if (option.isCallbackBlocked === false) {
-                                            option.onClickCallback();
-                                        } else {
-                                            console.log("This artist exists in your list");
-
-                                        }
-                                    }}
+                                    onClick={() => option.onClickCallback()}
                                     className="flex items-end font-semibold  uppercase pb-2 cursor-pointer text-xs  max-h-12 justify-center border-dashed border-white border-b-2  hover:border-[#7b64e2] hover:text-[#7b64e2]  my-2 text-white">
                                     {option.title}
                                 </p>

@@ -204,8 +204,7 @@ function Artist() {
                 {
                   key: "add-to-favourite",
                   title: "Add to favourite",
-                  onClickCallback: () => manageFavouriteArtists(),
-                  isCallbackBlocked: isFavouriteArtistInList,
+                  onClickCallback: () => manageFavouriteArtists()
                 }]}
               visible={showMore}
             />)
@@ -233,6 +232,17 @@ function Artist() {
         </div>
         <BlockSpace />
       </div>
+
+      <section className="block md:hidden">
+        <h5 className="text-white font-bold my-3 text-2xl">Actions:</h5>
+        <ul className="flex flex-col items-start justify-center">
+          <li className="w-full h-12 flex items-center justify-center my-2 bg-[#4c426e] rounded-md focus-within:bg-transparent border-2 border-transparent focus-within:border-white focus-within:transition-colors focus-within:ease-out focus-within:duration-100 ">
+            <button className="text-white w-full h-full uppercase font-bold text-sm rounded-xl"
+            onClick={() => manageFavouriteArtists()}
+            >Add to favourite</button>
+          </li>
+        </ul>
+      </section>
 
       <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
