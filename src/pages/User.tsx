@@ -20,6 +20,9 @@ import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
+import { ConfirmModal } from "../components/UI/Confirm/Confirm";
+import { MainDatum } from "../API/types";
+import { removeFromFavouriteArtists } from "../utils/removeFromFavouriteArtists";
 
 function User() {
     const auth = getAuth(firebaseApp);
@@ -28,11 +31,14 @@ function User() {
     const user: FUser = JSON.parse(userData as string);
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
-
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
 
     const [photoURL, setPhotoURL] = useState<string>('');
+
+    const [removeFavouriteArtistModal, setRemoveFavouriteArtistModal] = useState<boolean>(false);
+
+    const [selectedFavouriteArtistInfo, setSelectedFavouriteArtistInfo] = useState<MainDatum | null>(null);
 
     //[]->artists->[]->artistData->data[0]->
     const userSignOut = () => {
@@ -40,8 +46,7 @@ function User() {
         setUserSignOut();
         navigate("/");
     };
-
-
+ 
     useEffect(() => {
         try {
             const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
@@ -52,9 +57,20 @@ function User() {
     }, [auth.currentUser?.photoURL]);
 
 
-
     return (
         <div className="flex flex-col w-full">
+            <ConfirmModal
+                isOpen={removeFavouriteArtistModal}
+                setIsOpen={setRemoveFavouriteArtistModal}
+                confirmCallback={() => {
+                    removeFromFavouriteArtists(firebaseUser?.id, selectedFavouriteArtistInfo?.id as string);
+                    setRemoveFavouriteArtistModal(false);
+                }}
+                confirmTitle="Remove favourite artist"
+                cancelCallback={() => {
+                    setRemoveFavouriteArtistModal(false);
+                }}
+            />
             {
                 openEditProfile && (
                     <Suspense fallback={<Loader title={'Profile is loading...'} />}>
@@ -89,7 +105,11 @@ function User() {
                 <BlockSpace />
             </section>
 
-            <FavouriteArtistCards />
+            <FavouriteArtistCards
+                selectedFavouriteArtistInfo={selectedFavouriteArtistInfo}
+                setSelectedFavouriteArtistInfo={setSelectedFavouriteArtistInfo}
+                setOpenRemoveModal={setRemoveFavouriteArtistModal}
+            />
 
             <div className="flex flex-col">
                 <table className="w-full">
