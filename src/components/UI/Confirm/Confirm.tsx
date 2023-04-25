@@ -27,8 +27,14 @@ export function ConfirmModal(props: Props) {
                     )
                 }
                 <div className="flex items-center justify-end">
-                    <button className="bg-green-600 hover:bg-green-500 text-white font-semibold hover:duration-75 ease-out transition-colors py-2 px-10 rounded-md outline-2 outline-white outline outline-offset-[3px] hover:outline-indigo-700 mr-4">Confirm</button>
-                    <button className="bg-red-600 hover:bg-red-500 text-white font-semibold hover:duration-75 ease-out transition-colors py-2 px-10 rounded-md outline-2 outline-white outline hover:outline-indigo-700 outline-offset-[3px] ml-4">Cancel</button>
+                    <button className="bg-green-600 hover:bg-green-500 text-white font-semibold hover:duration-75 ease-out transition-colors py-2 px-10 rounded-md outline-2 outline-white outline outline-offset-[3px] hover:outline-indigo-700 mr-4"
+                        onClick={() => {
+                            props.confirmCallback();
+                        }}>Confirm</button>
+                    <button className="bg-red-600 hover:bg-red-500 text-white font-semibold hover:duration-75 ease-out transition-colors py-2 px-10 rounded-md outline-2 outline-white outline hover:outline-indigo-700 outline-offset-[3px] ml-4"
+                        onClick={() => {
+                            props.cancelCallback();
+                        }}>Cancel</button>
                 </div>
             </div>
         </ModalSm>

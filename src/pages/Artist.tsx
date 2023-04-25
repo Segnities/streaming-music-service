@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -60,7 +60,6 @@ function Artist() {
 
   const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
-
   const device: {
     xs: boolean;
     sm: boolean;
@@ -99,9 +98,7 @@ function Artist() {
               console.log("Artist is in list");
               isInList = true;
             }
-
           }
-
         });
       }
       return isInList;
@@ -125,18 +122,18 @@ function Artist() {
     }
   };
 
-
   const updateUserFavouriteArtists = async () => {
     try {
       const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
       const querySnapshot = await getDocs(q);
+      const fvListRef = doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id);
 
       const isInList: boolean = await isArtistInList();
 
-      if (!querySnapshot.empty && isInList) {
+      if (!querySnapshot.empty && isInList === false) {
         console.log("Starting update...");
 
-        await updateDoc(doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id), {
+        await updateDoc(fvListRef, {
           artists: arrayUnion({ artistData })
         });
       }
@@ -148,8 +145,6 @@ function Artist() {
 
     }
   };
-
-
 
   const manageFavouriteArtists = async () => {
     const querySnapshot = await getDocs(favouriteArtistsCollection);

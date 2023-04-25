@@ -21,8 +21,8 @@ import Loader from "../components/UI/Loader";
 import NoImage from "../assets/no_artist.jpg";
 import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
 import { ConfirmModal } from "../components/UI/Confirm/Confirm";
-import { FavoriteArtistsDoc } from "./Artist";
 import { MainDatum } from "../API/types";
+import { removeFromFavouriteArtists } from "../utils/removeFromFavouriteArtists";
 
 function User() {
     const auth = getAuth(firebaseApp);
@@ -30,7 +30,6 @@ function User() {
     const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: FUser = JSON.parse(userData as string);
     const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
-
 
     const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
@@ -47,7 +46,7 @@ function User() {
         setUserSignOut();
         navigate("/");
     };
-
+ 
     useEffect(() => {
         try {
             const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;
@@ -63,8 +62,10 @@ function User() {
             <ConfirmModal
                 isOpen={removeFavouriteArtistModal}
                 setIsOpen={setRemoveFavouriteArtistModal}
-                confirmCallback={() => alert("Removed from list")
-                }
+                confirmCallback={() => {
+                    removeFromFavouriteArtists(firebaseUser?.id, selectedFavouriteArtistInfo?.id as string);
+                    setRemoveFavouriteArtistModal(false);
+                }}
                 confirmTitle="Remove favourite artist"
                 cancelCallback={() => {
                     setRemoveFavouriteArtistModal(false);
@@ -105,9 +106,9 @@ function User() {
             </section>
 
             <FavouriteArtistCards
-                selectedFavouriteArtistInfo={selectedFavouriteArtistInfo} 
+                selectedFavouriteArtistInfo={selectedFavouriteArtistInfo}
                 setSelectedFavouriteArtistInfo={setSelectedFavouriteArtistInfo}
-                setOpenRemoveModal={setRemoveFavouriteArtistModal} 
+                setOpenRemoveModal={setRemoveFavouriteArtistModal}
             />
 
             <div className="flex flex-col">
