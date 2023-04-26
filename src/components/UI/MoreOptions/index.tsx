@@ -1,15 +1,42 @@
+import React from "react";
+
+import { User } from "firebase/auth";
+
+import { BsThreeDots } from "react-icons/bs";
+
 type OptionIcon = {
     title: string;
     icon: JSX.Element;
 }
 
-interface Props {
+interface MoreOptionProps {
     options: { key: string, title: string, href?: string, icons?: OptionIcon[] | undefined, onClickCallback: () => void }[]
     visible: boolean;
 }
 
-export default function MoreOptions(props: Props) {
+interface MoreOptionsIconProps {
+    user: User | null;
 
+    setShowMore: React.Dispatch<React.SetStateAction<boolean>>;
+    showMore: boolean;
+
+}
+
+export function MoreOptionsIcon({user, setShowMore, showMore}:MoreOptionsIconProps) {
+    return (
+        <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
+            {
+                user?.uid && (
+                    <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+                )
+            }
+
+        </div>
+    );
+}
+
+
+export default function MoreOptions(props: MoreOptionProps) {
     return (
         <>
             {

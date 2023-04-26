@@ -15,6 +15,7 @@ import {
 import { SelectorPlayerState } from "../API/types";
 import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
+import BgDivider from "../components/UI/BgDivider/BgDivider";
 
 function Song() {
   const dispatch = useDispatch();
@@ -23,7 +24,6 @@ function Song() {
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
   );
-
 
   const {
     data: songData,
@@ -56,14 +56,15 @@ function Song() {
     return <Loader title="Searching songs..." />;
   }
 
-  if (relatedSongsError) {
+  if (relatedSongsError || songsError) {
     return <Error />;
   }
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
       <div className="relative w-full flex flex-col">
-        <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
+        <BgDivider />
+
         <div className="absolute inset-0 flex items-center">
           <img
             src={songImagePath}
@@ -115,7 +116,6 @@ function Song() {
           />
         )
       }
-
     </div>
   );
 }
