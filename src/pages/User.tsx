@@ -1,38 +1,29 @@
 import { useState, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
 
-import { signOut, getAuth, User as FUser } from "firebase/auth";
+import { signOut, getAuth } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseConfig";
-
-import { UserDoc } from "../utils/getUsers";
 
 import FavouriteArtistCards from "../components/FavouriteArtistCards";
 
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
-
 const EditProfileModal = lazy(() => import("../components/EditProfileModal"));
-
-import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
 import Loader from "../components/UI/Loader";
 
 import NoImage from "../assets/no_artist.jpg";
-import { UserAuthSelector, setUserSignOut } from "../store/reducers/auth";
+import { setUserSignOut } from "../store/reducers/auth";
 import { ConfirmModal } from "../components/UI/Confirm/Confirm";
 import { MainDatum } from "../API/types";
 import { removeFromFavouriteArtists } from "../utils/removeFromFavouriteArtists";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 function User() {
     const auth = getAuth(firebaseApp);
     const navigate = useNavigate();
-    const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
-    const user: FUser = JSON.parse(userData as string);
-    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
-
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
+    const [user, firebaseUser, setFirebaseUser] = useGetCurrentUser();
 
     const [photoURL, setPhotoURL] = useState<string>('');
 
@@ -46,7 +37,7 @@ function User() {
         setUserSignOut();
         navigate("/");
     };
- 
+
     useEffect(() => {
         try {
             const userProfileImage: string | undefined | null = auth?.currentUser?.photoURL as string;

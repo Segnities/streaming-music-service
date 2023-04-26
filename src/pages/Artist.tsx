@@ -1,39 +1,35 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
 
 import { DocumentData, QueryDocumentSnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
-import { UserAuthSelector } from "../store/reducers/auth";
-
-import MoreOptions from "../components/UI/MoreOptions";
-import Loader from "../components/UI/Loader";
 import Error from "../components/UI/Error";
+import Loader from "../components/UI/Loader";
+import MoreOptions, { MoreOptionsIcon } from "../components/UI/MoreOptions";
 
-import { BsThreeDots } from "react-icons/bs";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { FreeMode } from "swiper";
 
 import { useGetArtistsDetailsQuery } from "../API/shazamCore";
-import { MainDatum, PurpleAttributes, FeaturedAlbumsDatum } from "../API/types";
+import { FeaturedAlbumsDatum, MainDatum, PurpleAttributes } from "../API/types";
+
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+
 
 import { useResizeObserver } from "../hooks/useResizeObserver";
-import { User } from "firebase/auth";
 
-import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
-import { UserDoc } from "../utils/getUsers";
 
-import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 import NoImage from "../assets/no_artist.jpg";
+import BgDivider from "../components/UI/BgDivider/BgDivider";
+import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
+
 
 
 import "swiper/css";
 import "swiper/css/free-mode";
-
-
 
 export type FavoriteArtistsDoc = {
   artistData: MainDatum
@@ -51,12 +47,7 @@ function Artist() {
     error,
   } = useGetArtistsDetailsQuery(artistid);
 
-  const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
-
-  const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
-  const user: User = JSON.parse(userData as string);
-
-  const [firebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
+  const [user, firebaseUser] = useGetCurrentUser();
 
   const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
@@ -169,13 +160,11 @@ function Artist() {
     }
   };
 
-
   useEffect(() => {
     isArtistInList().then(res => {
       setIsFavouriteArtistInList(res);
     });
   }, [isFavouriteArtistInList]);
-
 
   if (isFetchingArtistData) {
     return <Loader title="Searching artist..." />;
@@ -188,15 +177,12 @@ function Artist() {
   return (
     <div className="flex flex-col" data-testid='artist-page'>
       <div className="relative w-full flex flex-col">
-        <div className="w-full h-28 bg-gradient-to-l from-transparent to-black sm:h-52"></div>
-        <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
-          {
-            user?.uid && (
-              <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
-            )
-          }
-
-        </div>
+        <BgDivider />
+        <MoreOptionsIcon
+          user={user}
+          showMore={showMore}
+          setShowMore={setShowMore}
+        />
         {
           user?.uid && (
             <MoreOptions
@@ -238,7 +224,7 @@ function Artist() {
         <ul className="flex flex-col items-start justify-center">
           <li className="w-full h-12 flex items-center justify-center my-2 bg-[#4c426e] rounded-md focus-within:bg-transparent border-2 border-transparent focus-within:border-white focus-within:transition-colors focus-within:ease-out focus-within:duration-100 ">
             <button className="text-white w-full h-full uppercase font-bold text-sm rounded-xl"
-            onClick={() => manageFavouriteArtists()}
+              onClick={() => manageFavouriteArtists()}
             >Add to favourite</button>
           </li>
         </ul>
