@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NavLink } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-
-import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { User } from "firebase/auth";
-
-import { DocumentData, Query, where, getDocs, query, collection } from "firebase/firestore";
+import { DocumentData, Query, collection, getDocs, query, where } from "firebase/firestore";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
-import { UserAuthSelector } from "../store/reducers/auth";
-
-import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
 import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
-import { UserDoc } from "../utils/getUsers";
 
 import NoImage from "../assets/no_artist.jpg";
 
