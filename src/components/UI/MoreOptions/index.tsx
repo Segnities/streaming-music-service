@@ -9,20 +9,52 @@ type OptionIcon = {
     icon: JSX.Element;
 }
 
+type Option = {
+    key: string, 
+    title: string, 
+    href?: string, 
+    icons?: OptionIcon[] | undefined, 
+    onClickCallback: () => void
+}
+
 interface MoreOptionProps {
-    options: { key: string, title: string, href?: string, icons?: OptionIcon[] | undefined, onClickCallback: () => void }[]
+    options: Option[];
     visible: boolean;
 }
 
 interface MoreOptionsIconProps {
     user: User | null;
-
     setShowMore: React.Dispatch<React.SetStateAction<boolean>>;
     showMore: boolean;
-
 }
 
-export function MoreOptionsIcon({user, setShowMore, showMore}:MoreOptionsIconProps) {
+interface MoreActionsListProps {
+    options: Option[];
+}
+
+
+export function MoreActionsList(props:MoreActionsListProps) {
+    return (
+        <section className="block md:hidden">
+            <h5 className="text-white font-bold my-3 text-2xl">Actions:</h5>
+            <ul className="flex flex-col items-start justify-center">
+                {
+                    props.options.map((option) => (
+                        <li 
+                            key={option.key} 
+                            className="w-full h-12 flex items-center justify-center my-2 bg-[#4c426e] rounded-md focus-within:bg-transparent border-2 border-transparent focus-within:border-white focus-within:transition-colors focus-within:ease-out focus-within:duration-100">
+                            <button className="text-white w-full h-full uppercase font-bold text-sm rounded-xl"
+                                onClick={() => option.onClickCallback()}
+                            >{option.title}</button>
+                        </li>
+                    ))
+                }
+            </ul>
+        </section>
+    );
+}
+
+export function MoreOptionsIcon({ user, setShowMore, showMore }: MoreOptionsIconProps) {
     return (
         <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
             {
@@ -41,7 +73,7 @@ export default function MoreOptions(props: MoreOptionProps) {
         <>
             {
                 props.visible && (
-                    <div className="absolute duration-200 ease-linear transition-all md:flex justify-center rounded-lg p-3 min-h-[150px] max-w-[200px]  bg-[#21106e] top-10 right-16  z-50">
+                    <div className="absolute duration-200 ease-linear transition-all md:flex justify-center rounded-lg p-3 min-h-[150px] min-w-[175px]  bg-[#21106e] top-10 right-16  z-50">
                         {
                             props.options.map((option) => (
                                 <p

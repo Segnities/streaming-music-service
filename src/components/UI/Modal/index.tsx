@@ -23,6 +23,10 @@ function Modal(props: Props) {
         <div
             className={containerModalClass}
             onKeyUp={escapePress}
+            onClick={(e) => {
+                setOpen(false);
+                e.stopPropagation();
+            }}
         >
             <div className="w-full xs:w-5/6 md:w-4/5 h-4/5 p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-2xl animate-fastfade"
                 onClick={(e) => e.stopPropagation()}>
@@ -57,6 +61,10 @@ export function ModalSm(props: Props) {
         <div
             className={containerModalClass}
             onKeyUp={escapePress}
+            onClick={(e) => {
+                e.stopPropagation();
+                setOpen(false);
+            }}
         >
             <div className="w-full xs:w-5/6 md:w-4/5 max-h-[250px] p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-lg animate-fastfade"
                 onClick={(e) => e.stopPropagation()}>

@@ -6,7 +6,7 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import Error from "../components/UI/Error";
 import Loader from "../components/UI/Loader";
-import MoreOptions, { MoreOptionsIcon } from "../components/UI/MoreOptions";
+import MoreOptions, { MoreActionsList, MoreOptionsIcon } from "../components/UI/MoreOptions";
 
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -34,6 +34,7 @@ import "swiper/css/free-mode";
 export type FavoriteArtistsDoc = {
   artistData: MainDatum
 }
+
 
 function Artist() {
   const { id: artistid } = useParams();
@@ -150,6 +151,14 @@ function Artist() {
       }
     });
 
+    const options = [
+      {
+        key: "add-to-favourite",
+        title: "Add to favourite",
+        onClickCallback: () => manageFavouriteArtists()
+      }
+    ];
+
 
     if (isUserHaveFavouriteArtist) {
       console.log('Update favourite artists');
@@ -191,7 +200,8 @@ function Artist() {
                   key: "add-to-favourite",
                   title: "Add to favourite",
                   onClickCallback: () => manageFavouriteArtists()
-                }]}
+                }
+              ]}
               visible={showMore}
             />)
         }
@@ -219,16 +229,14 @@ function Artist() {
         <BlockSpace />
       </div>
 
-      <section className="block md:hidden">
-        <h5 className="text-white font-bold my-3 text-2xl">Actions:</h5>
-        <ul className="flex flex-col items-start justify-center">
-          <li className="w-full h-12 flex items-center justify-center my-2 bg-[#4c426e] rounded-md focus-within:bg-transparent border-2 border-transparent focus-within:border-white focus-within:transition-colors focus-within:ease-out focus-within:duration-100 ">
-            <button className="text-white w-full h-full uppercase font-bold text-sm rounded-xl"
-              onClick={() => manageFavouriteArtists()}
-            >Add to favourite</button>
-          </li>
-        </ul>
-      </section>
+      <MoreActionsList options={[
+        {
+          key: "add-to-favourite",
+          title: "Add to favourite",
+          onClickCallback: () => manageFavouriteArtists()
+        }
+      ]}
+      />
 
       <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
