@@ -158,7 +158,7 @@ const EditProfileModal = (props: Props) => {
     };
 
     return (
-        <Modal open={openEditModal} setOpen={setOpenEditModal}>
+        <Modal open={openEditModal} overscroll={true} setOpen={setOpenEditModal}>
             <div className='flex flex-col justify-between'>
                 <h3 className='text-3xl text-black font-bold my-5'>Edit user profile</h3>
                 <div className="flex flex-col items-center">
