@@ -16,20 +16,30 @@ import {
 
 import { SelectorPlayerState } from "../API/types";
 
-import MoreOptions from "../components/UI/MoreOptions";
-import { MoreOptionsIcon, MoreActionsList } from "../components/UI/MoreOptions";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+
+import PlaylistsModal from "../components/PlaylistsModal";
+
+import { MoreActionsList } from "../components/UI/MoreOptions";
 
 import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
-import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
+import { IoMdAdd } from "react-icons/io";
+
+import { DocumentData, DocumentReference, Query, QuerySnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { firebaseDatabase } from "../firebase/firebaseConfig";
+
+import { nanoid } from "nanoid";
 
 function Song() {
   const dispatch = useDispatch();
   const { songid } = useParams();
 
   const [showMore, setShowMore] = useState(false);
+
+  const [openPlaylistModal, setOpenPlaylistModal] = useState<boolean>(false);
 
   const { activeSong, isPlaying } = useSelector(
     (state: SelectorPlayerState) => state.player
@@ -43,7 +53,7 @@ function Song() {
 
   const songImagePath = songData?.images?.coverart;
 
-  const [user] = useGetCurrentUser();
+  const [user, firebaseUser] = useGetCurrentUser();
 
   const {
     data: relatedSongs,
@@ -55,17 +65,59 @@ function Song() {
 
   const { data: youtubeTrackData, isFetching: isYoutubeTrackDataFetching, error: youtubeTrackDataError } = useGetTrackYoutubeVideoQuery(song);
 
+  const users_playlists_collection = collection(firebaseDatabase, "users_playlists");
+
   const handlePlayClick = (song, index) => {
     dispatch(setActiveSong({ song, relatedSongs, index }));
     dispatch(playPause(true));
   };
 
+
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
 
-  const openPlaylistModal = () => {
+  const openShowMore = () => {
     setShowMore(true);
+    setOpenPlaylistModal(true);
+  };
+
+  const managePlayslistsSongs = async (playlist_title: string, playlist_id: string) => {
+    const q: Query<DocumentData> = query(users_playlists_collection, where("uid", "==", firebaseUser.id));
+    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+    const snapshotId: string = querySnapshot?.docs[0]?.id;
+
+    const docRef: DocumentReference<DocumentData> = doc(firebaseDatabase, "users_playlists", snapshotId);
+
+    const uid = firebaseUser.id;
+
+    if (querySnapshot.empty) {
+      console.log("Create new document!");
+      try {
+        await addDoc(users_playlists_collection, {
+          uid,
+          playlists: [
+            {
+              title: playlist_title,
+              playlist_id: nanoid(),
+              songs: [song],
+            }
+          ],
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        console.log("Update document!");
+        const _playlistDocRef = doc(firebaseDatabase, "users_playlists", snapshotId, "playlists", playlist_id);
+        updateDoc(_playlistDocRef, {
+          songs: arrayUnion(song),
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   if (isFetchingSongs || isFetchingRelatedSongs || isYoutubeTrackDataFetching) {
@@ -78,27 +130,24 @@ function Song() {
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
+      <PlaylistsModal
+        openPlaylistModal={openPlaylistModal}
+        setOpenPlaylistModal={setOpenPlaylistModal}
+        managePlayslistsSongs={managePlayslistsSongs}
+      />
       <div className="relative w-full flex flex-col">
         <BgDivider />
-        <MoreOptionsIcon
-          user={user}
-          showMore={showMore}
-          setShowMore={setShowMore}
-        />
-        {
-          user?.uid && (
-            <MoreOptions
-              options={[
-                {
-                  key: "add-to-playlist",
-                  title: "Add to playlist",
-                  onClickCallback: () => openPlaylistModal(),
-
-                }]}
-              visible={showMore}
-            />)
-        }
-
+        {user?.uid && (
+          <div className="absolute hidden md:block top-10 right-20 cursor-pointer z-30">
+            <button
+              className="flex flex-1 flex-row items-center justify-around text-white text-sm border-2 py-2 px-3 border-white rounded-full"
+              onClick={() => openShowMore()}
+            >
+              Add to playlist
+              <IoMdAdd size={21} className="ml-2" />
+            </button>
+          </div>
+        )}
         <div className="absolute inset-0 flex items-center">
           <img
             src={songImagePath}
@@ -117,15 +166,18 @@ function Song() {
         </div>
         <BlockSpace />
       </div>
+      {
+        user?.uid(
+          <MoreActionsList options={[
+            {
+              key: "add-to-playlist",
+              title: "Add to playlist",
+              onClickCallback: () => openShowMore(),
+            }
+          ]}
+          />)
+      }
 
-      <MoreActionsList options={[
-        {
-          key: "add-to-playlist",
-          title: "Add to playlist",
-          onClickCallback: () => console.log("Add to playlist"),
-        }
-      ]}
-      />
 
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>

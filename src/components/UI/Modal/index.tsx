@@ -6,6 +6,7 @@ import LineDivider from "../LineDivider";
 interface Props {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    overscroll?: boolean;
     children: React.ReactNode;
 }
 
@@ -18,7 +19,6 @@ function Modal(props: Props) {
         }
     };
 
-
     return (
         <div
             className={containerModalClass}
@@ -28,7 +28,7 @@ function Modal(props: Props) {
                 e.stopPropagation();
             }}
         >
-            <div className="w-full xs:w-5/6 md:w-4/5 h-4/5 p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-2xl animate-fastfade"
+            <div className="w-5/6 md:w-4/5 h-4/5 p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-2xl animate-fastfade"
                 onClick={(e) => e.stopPropagation()}>
                 <div className="flex scroll-smooth w-full justify-end items-center">
                     <AiOutlineClose
@@ -39,7 +39,7 @@ function Modal(props: Props) {
                     />
                 </div>
                 <LineDivider />
-                <div className='w-full h-5/6  snap-mandatory overflow-y-scroll p-3'>
+                <div className={`w-full h-5/6 ${props.overscroll && "snap-mandatory overflow-y-scroll"}   p-3`}>
                     {children}
                 </div>
             </div>
@@ -66,7 +66,7 @@ export function ModalSm(props: Props) {
                 setOpen(false);
             }}
         >
-            <div className="w-full xs:w-5/6 md:w-4/5 max-h-[250px] p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-lg animate-fastfade"
+            <div className="w-2/5 h-auto p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-lg animate-fastfade"
                 onClick={(e) => e.stopPropagation()}>
                 <div className="flex w-full justify-end items-center">
                     <AiOutlineClose
@@ -77,7 +77,7 @@ export function ModalSm(props: Props) {
                     />
                 </div>
                 <LineDivider />
-                <div className='w-full h-5/6  p-3'>
+                <div className={`w-full h-5/6  p-3 ${props.overscroll && "snap-mandatory overflow-y-scroll"}`}>
                     {children}
                 </div>
             </div>

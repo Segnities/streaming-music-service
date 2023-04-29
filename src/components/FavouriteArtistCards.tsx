@@ -11,11 +11,13 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
 
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+
+
 import NoImage from "../assets/no_artist.jpg";
 
 import 'swiper/css';
 import "swiper/css/effect-cards";
-import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 interface Props {
     selectedFavouriteArtistInfo: MainDatum | null;
     setSelectedFavouriteArtistInfo: React.Dispatch<React.SetStateAction<MainDatum | null>>

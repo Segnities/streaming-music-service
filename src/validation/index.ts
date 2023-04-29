@@ -84,4 +84,9 @@ const signUpValidationSchema = Yup.object().shape({
     gender: Yup.string().required('Gender is required'),
 });
 
-export { signUpValidationSchema, editProfileValidationSchema };
+
+const createPlaylistValidationSchema = Yup.object().shape({
+    playlistTitle:Yup.string().required('Playlist title is required'),
+});
+
+export { signUpValidationSchema, editProfileValidationSchema, createPlaylistValidationSchema };
