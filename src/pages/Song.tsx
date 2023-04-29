@@ -116,15 +116,18 @@ function Song() {
         </div>
         <BlockSpace />
       </div>
+      {
+        user.uid && (
+          <MoreActionsList options={[
+            {
+              key: "add-to-playlist",
+              title: "Add to playlist",
+              onClickCallback: () => openShowMore(),
+            }
+          ]}
+          />)
+      }
 
-      <MoreActionsList options={[
-        {
-          key: "add-to-playlist",
-          title: "Add to playlist",
-          onClickCallback: () => openShowMore(),
-        }
-      ]}
-      />
 
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Song:</h2>

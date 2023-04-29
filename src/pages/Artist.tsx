@@ -228,15 +228,19 @@ function Artist() {
         </div>
         <BlockSpace />
       </div>
-
-      <MoreActionsList options={[
-        {
-          key: "add-to-favourite",
-          title: "Add to favourite",
-          onClickCallback: () => manageFavouriteArtists()
-        }
-      ]}
-      />
+      {
+        user.uid && (
+          <MoreActionsList options={[
+            {
+              key: "add-to-favourite",
+              title: "Add to favourite",
+              onClickCallback: () => manageFavouriteArtists()
+            }
+          ]}
+          />
+        )
+      }
+      
 
       <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
