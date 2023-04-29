@@ -20,8 +20,7 @@ import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 import PlaylistsModal from "../components/PlaylistsModal";
 
-import MoreOptions from "../components/UI/MoreOptions";
-import { MoreOptionsIcon, MoreActionsList } from "../components/UI/MoreOptions";
+import { MoreActionsList } from "../components/UI/MoreOptions";
 
 import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
@@ -88,15 +87,17 @@ function Song() {
       <PlaylistsModal openPlaylistModal={openPlaylistModal} setOpenPlaylistModal={setOpenPlaylistModal} />
       <div className="relative w-full flex flex-col">
         <BgDivider />
-        <div className="absolute hidden md:block top-10 right-20 cursor-pointer z-30">
-          <button
-            className="flex flex-1 flex-row items-center justify-around text-white text-sm border-2 py-2 px-3 border-white rounded-full"
-            onClick={() => openShowMore()}
-          >
-            Add to playlist
-            <IoMdAdd size={21} className="ml-2" />
-          </button>
-        </div>
+        {user.uid && (
+          <div className="absolute hidden md:block top-10 right-20 cursor-pointer z-30">
+            <button
+              className="flex flex-1 flex-row items-center justify-around text-white text-sm border-2 py-2 px-3 border-white rounded-full"
+              onClick={() => openShowMore()}
+            >
+              Add to playlist
+              <IoMdAdd size={21} className="ml-2" />
+            </button>
+          </div>
+        )}
         <div className="absolute inset-0 flex items-center">
           <img
             src={songImagePath}
