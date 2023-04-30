@@ -10,6 +10,7 @@ import User from "../pages/User";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import ForgotPassword from "../pages/ForgotPassword";
+import CreatePlaylist from "../pages/CreatePlaylist";
 
 import {
   HiOutlineHome,
@@ -19,6 +20,9 @@ import {
   HiUser,
   HiUserAdd,
 } from "react-icons/hi";
+
+
+import { BiAddToQueue } from "react-icons/bi";
 
 type Routing = {
   id: string | number;
@@ -46,6 +50,7 @@ export const privateRoutes: Routing = [
   { id: "/artists/:id", path: "/artists/:id", element: Artist },
   { id: "/songs/:songid", path: "/songs/:songid", element: Song },
   { id: "/search/:query", path: "/search/:query", element: Search },
+  { id: "/create-playlist", path: "/create-playlist", element: CreatePlaylist },
   { id: "*", path: "*", element: NotFound },
 ];
 
@@ -73,4 +78,5 @@ export const privateLinks = [
   { name: "Top Artists", to: "/top-artists", icon: HiOutlineUserGroup },
   { name: "Top Charts", to: "/top-charts", icon: HiOutlineHashtag },
   { name: "User", to: "/user", icon: HiUser },
+  { name: "Create Playlist", to: "/create-playlist", icon: BiAddToQueue }
 ];

@@ -30,6 +30,7 @@ import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 import "swiper/css";
 import "swiper/css/free-mode";
+import LineDivider from "../components/UI/LineDivider";
 
 export type FavoriteArtistsDoc = {
   artistData: MainDatum
@@ -187,25 +188,6 @@ function Artist() {
     <div className="flex flex-col" data-testid='artist-page'>
       <div className="relative w-full flex flex-col">
         <BgDivider />
-        <MoreOptionsIcon
-          user={user}
-          showMore={showMore}
-          setShowMore={setShowMore}
-        />
-        {
-          user?.uid && (
-            <MoreOptions
-              options={[
-                {
-                  key: "add-to-favourite",
-                  title: "Add to favourite",
-                  onClickCallback: () => manageFavouriteArtists()
-                }
-              ]}
-              visible={showMore}
-            />)
-        }
-
         <div className="absolute inset-0 flex flex-row items-center">
           <img
             src={artistImage}
@@ -228,16 +210,41 @@ function Artist() {
         </div>
         <BlockSpace />
       </div>
+
+      <div className="relative flex flex-col">
+        <MoreOptionsIcon
+          user={user}
+          showMore={showMore}
+          setShowMore={setShowMore}
+        />
+        {
+          user?.uid && (
+            <MoreOptions
+              options={[
+                {
+                  key: "add-to-favourite",
+                  title: "Add to favourite",
+                  onClickCallback: () => manageFavouriteArtists()
+                }
+              ]}
+              visible={showMore}
+            />)
+        }
+        <LineDivider />
+      </div>
+
       {
         user?.uid && (
-          <MoreActionsList options={[
-            {
-              key: "add-to-favourite",
-              title: "Add to favourite",
-              onClickCallback: () => manageFavouriteArtists()
-            }
-          ]}
-          />
+          <>
+            <MoreActionsList options={[
+              {
+                key: "add-to-favourite",
+                title: "Add to favourite",
+                onClickCallback: () => manageFavouriteArtists()
+              }
+            ]}
+            />
+          </>
         )
       }
 
