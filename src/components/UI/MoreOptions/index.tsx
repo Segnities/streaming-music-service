@@ -72,13 +72,13 @@ export default function MoreOptions(props: MoreOptionProps) {
         <>
             {
                 props.visible && (
-                    <div className="hidden absolute top-10 duration-200 ease-linear transition-all md:flex justify-center rounded-sm p-1 min-h-[150px] w-48 bg-[#21106e] z-50">
+                    <div className="hidden absolute top-10 duration-200 ease-linear transition-all md:flex flex-col items-start justify-start rounded-sm p-1 min-h-[150px] w-72 bg-[#21106e] z-50">
                         {
                             props.options.map((option) => (
                                 <p
                                     key={option.key}
                                     onClick={() => option.onClickCallback()}
-                                    className="w-full text-start flex items-center font-semibold first-letter:uppercase  cursor-pointer text-base  max-h-12 justify-start px-4 hover:rounded-md  hover:border-[#7b64e2] hover:text-[#7b64e2] hover:bg-[#110642]  my-2 text-white">
+                                    className="w-full text-start flex items-center font-semibold first-letter:uppercase cursor-default text-sm max-h-12 justify-start px-4 py-2 hover:rounded-md  hover:border-[#7b64e2] hover:text-[#7b64e2] hover:bg-[#110642]  my-1 text-white">
                                     {option.title}
                                 </p>
                             ))
