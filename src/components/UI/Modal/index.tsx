@@ -39,7 +39,7 @@ function Modal(props: Props) {
                     />
                 </div>
                 <LineDivider />
-                <div className={`w-full h-5/6 ${props.overscroll && "snap-mandatory overflow-y-scroll"}   p-3`}>
+                <div className={`w-full h-5/6 ${props.overscroll ? "snap-mandatory overflow-y-scroll" : ""}  p-3`}>
                     {children}
                 </div>
             </div>
@@ -66,7 +66,7 @@ export function ModalSm(props: Props) {
                 setOpen(false);
             }}
         >
-            <div className="w-2/5 h-auto p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-lg animate-fastfade"
+            <div className="w-3/5 sm:2/5 h-auto p-3 xs:p-2 md:p-3 lg:p-6 bg-white rounded-lg animate-fastfade"
                 onClick={(e) => e.stopPropagation()}>
                 <div className="flex w-full justify-end items-center">
                     <AiOutlineClose
@@ -77,7 +77,7 @@ export function ModalSm(props: Props) {
                     />
                 </div>
                 <LineDivider />
-                <div className={`w-full h-5/6  p-3 ${props.overscroll && "snap-mandatory overflow-y-scroll"}`}>
+                <div className={`w-full h-5/6  p-3 ${props.overscroll ? "snap-mandatory overflow-y-scroll" : ""}`}>
                     {children}
                 </div>
             </div>
