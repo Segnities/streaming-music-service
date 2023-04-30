@@ -26,7 +26,8 @@ import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
-import { IoMdAdd } from "react-icons/io";
+
+import { CgPlayListAdd } from "react-icons/cg";
 
 import { DocumentData, DocumentReference, Query, QuerySnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
@@ -87,8 +88,6 @@ function Song() {
     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
     const snapshotId: string = querySnapshot?.docs[0]?.id;
 
-    const docRef: DocumentReference<DocumentData> = doc(firebaseDatabase, "users_playlists", snapshotId);
-
     const uid = firebaseUser.id;
 
     if (querySnapshot.empty) {
@@ -100,7 +99,7 @@ function Song() {
             {
               title: playlist_title,
               playlist_id: nanoid(),
-              songs: [song],
+              songs: [songData],
             }
           ],
         });
@@ -112,7 +111,7 @@ function Song() {
         console.log("Update document!");
         const _playlistDocRef = doc(firebaseDatabase, "users_playlists", snapshotId, "playlists", playlist_id);
         updateDoc(_playlistDocRef, {
-          songs: arrayUnion(song),
+          songs: arrayUnion(songData),
         });
       } catch (err) {
         console.log(err);
@@ -144,7 +143,7 @@ function Song() {
               onClick={() => openShowMore()}
             >
               Add to playlist
-              <IoMdAdd size={21} className="ml-2" />
+              <CgPlayListAdd size={21} className="ml-2" />
             </button>
           </div>
         )}
@@ -167,7 +166,7 @@ function Song() {
         <BlockSpace />
       </div>
       {
-        user?.uid(
+        user?.uid && (
           <MoreActionsList options={[
             {
               key: "add-to-playlist",
@@ -196,7 +195,7 @@ function Song() {
         </div>
       </div>
       {
-        youtubeTrackDataError ? <p>Something went wrong with track...</p> : (
+        youtubeTrackDataError ? <p className="text-white text-xl my-5 text-center">Sorry, youtube track is not found...</p> : (
           <YoutubeTrackVideo youtubeData={youtubeTrackData} />
         )
       }
