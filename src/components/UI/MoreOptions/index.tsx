@@ -55,10 +55,10 @@ export function MoreActionsList(props: MoreActionsListProps) {
 
 export function MoreOptionsIcon({ user, setShowMore, showMore }: MoreOptionsIconProps) {
     return (
-        <div className="absolute hidden md:block top-3 right-20 cursor-pointer z-30">
+        <div className="hidden md:block z-30">
             {
                 user?.uid && (
-                    <BsThreeDots size={32} color="white" onClick={() => setShowMore(!showMore)} />
+                    <BsThreeDots size={32} className="cursor-pointer" color="white" onClick={() => setShowMore(!showMore)} />
                 )
             }
 
@@ -72,13 +72,13 @@ export default function MoreOptions(props: MoreOptionProps) {
         <>
             {
                 props.visible && (
-                    <div className="hidden absolute duration-200 ease-linear transition-all md:flex justify-center rounded-lg p-3 min-h-[150px] min-w-[175px]  bg-[#21106e] top-10 right-16  z-50">
+                    <div className="hidden absolute top-10 duration-200 ease-linear transition-all md:flex justify-center rounded-sm p-1 min-h-[150px] w-48 bg-[#21106e] z-50">
                         {
                             props.options.map((option) => (
                                 <p
                                     key={option.key}
                                     onClick={() => option.onClickCallback()}
-                                    className="flex items-end font-semibold  uppercase pb-2 cursor-pointer text-xs  max-h-12 justify-center border-dashed border-white border-b-2  hover:border-[#7b64e2] hover:text-[#7b64e2]  my-2 text-white">
+                                    className="w-full text-start flex items-center font-semibold first-letter:uppercase  cursor-pointer text-base  max-h-12 justify-start px-4 hover:rounded-md  hover:border-[#7b64e2] hover:text-[#7b64e2] hover:bg-[#110642]  my-2 text-white">
                                     {option.title}
                                 </p>
                             ))
