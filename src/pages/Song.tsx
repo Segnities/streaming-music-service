@@ -73,7 +73,6 @@ function Song() {
     dispatch(playPause(true));
   };
 
-
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
