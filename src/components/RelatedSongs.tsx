@@ -1,6 +1,5 @@
-import SongBar from "./SongBar";
-
 import { SongRootObject } from "../API/types";
+import SongsList from "./SongsList";
 
 interface Props {
   relatedSongs: SongRootObject[];
@@ -24,18 +23,13 @@ function RelatedSongs(props: Props) {
     <div className="flex flex-col">
       <h1 className="font-bold text-3xl text-white">Related Songs:</h1>
       <div className="mt-6 w-full flex flex-col">
-        {relatedSongs?.map((song, index) => (
-          <SongBar
-            key={`${song.key}-${artistid}`}
-            index={index}
-            song={song}
-            artistid={artistid}
-            activeSong={activeSong}
-            isPlaying={isPlaying}
-            handlePlayClick={() => handlePlayClick(song, index)}
-            handlePauseClick={handlePauseClick}
-          />
-        ))}
+        <SongsList
+          activeSong={activeSong}
+          artistid={artistid}
+          songs={relatedSongs}
+          handlePauseClick={handlePauseClick}
+          handlePlayClick={handlePlayClick}
+          isPlaying={isPlaying} />
       </div>
     </div>
   );
