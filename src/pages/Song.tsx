@@ -29,7 +29,7 @@ import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 import { CgPlayListAdd } from "react-icons/cg";
 
-import { DocumentData, DocumentReference, Query, QuerySnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { DocumentData, Query, QuerySnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import { nanoid } from "nanoid";

@@ -2,6 +2,8 @@ import React from "react";
 
 import { User } from "firebase/auth";
 
+import LineDivider from "../LineDivider";
+
 import { BsThreeDots } from "react-icons/bs";
 
 type OptionIcon = {
@@ -30,6 +32,46 @@ interface MoreOptionsIconProps {
 
 interface MoreActionsListProps {
     options: Option[];
+}
+
+interface MoreActionsGroupProps {
+    user: User | null;
+    showMore: boolean;
+    setShowMore: React.Dispatch<React.SetStateAction<boolean>>;
+    optionsList: Option[];
+
+}
+
+
+export function MoreActionsGroup(props: MoreActionsGroupProps) {
+    const { user, showMore, setShowMore, optionsList } = props;
+    return (
+        <>
+            <div className="relative flex flex-col my-5">
+                <MoreOptionsIcon
+                    user={user}
+                    showMore={showMore}
+                    setShowMore={setShowMore}
+                />
+                {
+                    user?.uid && (
+                        <MoreOptions
+                            options={optionsList}
+                            visible={showMore}
+                        />)
+                }
+                <LineDivider />
+            </div>
+
+            {
+                user?.uid && (
+                    <MoreActionsList options={optionsList} />
+
+                )
+            }
+
+        </>
+    );
 }
 
 export function MoreActionsList(props: MoreActionsListProps) {
@@ -67,7 +109,7 @@ export function MoreOptionsIcon({ user, setShowMore, showMore }: MoreOptionsIcon
 }
 
 
-export default function MoreOptions(props: MoreOptionProps) {
+export function MoreOptions(props: MoreOptionProps) {
     return (
         <>
             {
