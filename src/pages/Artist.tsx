@@ -6,7 +6,7 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import Error from "../components/UI/Error";
 import Loader from "../components/UI/Loader";
-import MoreOptions, { MoreActionsList, MoreOptionsIcon } from "../components/UI/MoreOptions";
+import { MoreActionsGroup } from "../components/UI/MoreOptions";
 
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,19 +18,15 @@ import { FeaturedAlbumsDatum, MainDatum, PurpleAttributes } from "../API/types";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
-
 import { useResizeObserver } from "../hooks/useResizeObserver";
-
 
 import NoImage from "../assets/no_artist.jpg";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 
-
 import "swiper/css";
 import "swiper/css/free-mode";
-import LineDivider from "../components/UI/LineDivider";
 
 export type FavoriteArtistsDoc = {
   artistData: MainDatum
@@ -152,14 +148,6 @@ function Artist() {
       }
     });
 
-    const options = [
-      {
-        key: "add-to-favourite",
-        title: "Add to favourite",
-        onClickCallback: () => manageFavouriteArtists()
-      }
-    ];
-
 
     if (isUserHaveFavouriteArtist) {
       console.log('Update favourite artists');
@@ -211,42 +199,17 @@ function Artist() {
         <BlockSpace />
       </div>
 
-      <div className="relative flex flex-col">
-        <MoreOptionsIcon
-          user={user}
-          showMore={showMore}
-          setShowMore={setShowMore}
-        />
-        {
-          user?.uid && (
-            <MoreOptions
-              options={[
-                {
-                  key: "add-to-favourite",
-                  title: "Add to favourite",
-                  onClickCallback: () => manageFavouriteArtists()
-                }
-              ]}
-              visible={showMore}
-            />)
-        }
-        <LineDivider />
-      </div>
-
-      {
-        user?.uid && (
-          <>
-            <MoreActionsList options={[
-              {
-                key: "add-to-favourite",
-                title: "Add to favourite",
-                onClickCallback: () => manageFavouriteArtists()
-              }
-            ]}
-            />
-          </>
-        )
-      }
+      <MoreActionsGroup
+        showMore={showMore}
+        setShowMore={setShowMore}
+        user={user}
+        optionsList={[
+          {
+            key: "add-to-favourite",
+            title: "Add to favourite",
+            onClickCallback: () => manageFavouriteArtists()
+          }
+        ]} />
 
       <div className="w-full flex flex-col mt-8 max-w-[320px] sm:max-w-[500px] md:max-w-[780px] overflow-hidden">
         <div className="flex flex-row justify-between items-center">
