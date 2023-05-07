@@ -20,7 +20,6 @@ import firebase from "firebase/compat";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 
-
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 interface Props {
@@ -58,7 +57,6 @@ const EditProfileModal = (props: Props) => {
         setFirebaseUser,
         setPhotoURL
     } = props;
-
 
     const auth = getAuth(firebaseApp);
     const user: User = auth.currentUser as User;
@@ -99,7 +97,6 @@ const EditProfileModal = (props: Props) => {
                 gender: values.gender,
                 birthday: `${values.day} ${values.month} ${values.year}`,
                 username: values.username,
-                password: values.password
             }
         });
     };
@@ -116,7 +113,7 @@ const EditProfileModal = (props: Props) => {
                 return usr.data.username;
             }
         }) === undefined;
-        const isCurrentPasswordCorrect: boolean = firebaseUser?.data?.password ? true : firebaseUser?.data.password === values.currentPassword;
+
 
         if (isEmailUnique) {
             updateFirebaseUser(values);
@@ -138,22 +135,17 @@ const EditProfileModal = (props: Props) => {
                 gender: values.gender,
                 birthday: `${values.day} ${values.month} ${values.year}`,
             });
-
         }
 
-        if (isCurrentPasswordCorrect) {
-            const credential = EmailAuthProvider.credential(user.email as string, values.currentPassword);
-            reauthenticateWithCredential(user, credential).then((res) => {
-                console.log('Reauthenticate...');
-                updateFirebaseUser(values);
-                updatePassword(res.user as User, values.password)
-                    .then(res => console.log('Password updated!'))
-                    .catch(err => console.log(err));
-                updateDoc(userDocRef, {
-                    password: values.password
-                });
-            }).catch(err => console.log('Update password error'));
-        }
+        const credential = EmailAuthProvider.credential(user.email as string, values.currentPassword);
+        reauthenticateWithCredential(user, credential).then((res) => {
+            console.log('Reauthenticate...');
+            updateFirebaseUser(values);
+            updatePassword(res.user as User, values.password)
+                .then(res => console.log('Password updated!'))
+                .catch(err => console.log(err));
+
+        }).catch(err => console.log('Update password error'));
         setOpenEditModal(false);
     };
 
