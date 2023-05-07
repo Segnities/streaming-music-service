@@ -1,7 +1,13 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { collection } from "firebase/firestore";
+import { isUndefined } from "lodash";
+
+import { DocumentData, QuerySnapshot, collection, getDocs, query, where, addDoc, updateDoc, arrayUnion, doc } from "firebase/firestore";
+
+import { firebaseDatabase } from "../firebase/firebaseConfig";
+
+import { nanoid } from "nanoid";
 
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import { MoreActionsGroup } from "../components/UI/MoreOptions";
@@ -13,11 +19,12 @@ import { IoMdMusicalNotes } from "react-icons/io";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import { useHover } from "../hooks/useHover";
 
-import { createPlaylistValidationSchema } from "../validation";
+import { createPlaylistValidationSchema } from "../utils/validation";
 
 import FindMoreSongs from "../components/FindMoreSongs";
-import { firebaseDatabase } from "../firebase/firebaseConfig";
 import RecommendedSongs from "../components/RecommendedSongs";
+import { getPlaylists } from "../helpers/getPlaylists";
+import { createPlaylist } from "../helpers/createPlaylist";
 
 
 export default function CreatePlaylist() {
@@ -25,19 +32,34 @@ export default function CreatePlaylist() {
     const [showMore, setShowMore] = useState<boolean>(false);
     const [showRecommended, setShowRecommended] = useState<boolean>(false);
 
+    const [playlistTitle, setPlaylistTitle] = useState<string>("");
+
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
     const formik = useFormik({
         initialValues: {
-            playlistTitle: ""
+            playlistTitle: playlistTitle
         },
         onSubmit: values => {
             console.log("Submit!");
         },
         validationSchema: createPlaylistValidationSchema
     });
+
+    useEffect(() => {
+        getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
+            .then(data => {
+                createPlaylist({
+                    playlists_collection,
+                    playlistTitle,
+                    uid: firebaseUser.id,
+                    snapshotId: data?.snapshotId,
+                    isEmpty: data?.isEmpty
+                });
+            });
+    }, []);
 
     return (
         <div className="flex flex-col">
@@ -65,7 +87,7 @@ export default function CreatePlaylist() {
                             value={formik.values.playlistTitle}
                             onChange={formik.handleChange}
                             className="w-full font-bold  text-3xl sm:text-[3rem] md:text-[3.5rem] outline-none px-4 rounded-xl bg-transparent text-white"
-                            placeholder="My Playlist"
+                            placeholder={playlistTitle}
                             required={true}
                             autoComplete="off"
                         />

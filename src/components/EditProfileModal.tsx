@@ -8,7 +8,7 @@ import { doc, updateDoc } from "firebase/firestore";
 
 import { Field, Form, Formik } from "formik";
 
-import { editProfileValidationSchema } from "../validation";
+import { editProfileValidationSchema } from "../utils/validation";
 
 import LineDivider from "./UI/LineDivider";
 import Modal from "./UI/Modal";
@@ -371,7 +371,7 @@ const EditProfileModal = (props: Props) => {
                                     </button>
                                     <button
                                         type="submit"
-                                        disabled={(errors.email || errors.username || errors.password || errors.currentPassword || errors.confirmPassword) ? true : false}
+
                                         onClick={() => handleSubmit(values)}
                                         className="z-40 bg-[#1ED760] disabled:bg-[#7c7272] rounded-3xl w-3/6 md:w-1/6 text-2xl p-2 text-black font-medium">Edit
                                     </button>

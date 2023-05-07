@@ -12,7 +12,7 @@ import { addDoc, collection } from "firebase/firestore";
 
 import { firebaseApp, firebaseDatabase } from "../firebase/firebaseConfig";
 
-import { signUpValidationSchema } from "../validation";
+import { signUpValidationSchema } from "../utils/validation";
 
 import { RiErrorWarningFill } from "react-icons/ri";
 import GoogleBtn from "../components/UI/Buttons/GoogleBtn";

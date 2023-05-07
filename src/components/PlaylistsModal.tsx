@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { useFormik } from "formik";
 
-import { createPlaylistValidationSchema } from "../validation";
+import { createPlaylistValidationSchema } from "../utils/validation";
 
 import { ModalSm } from "./UI/Modal";
 
