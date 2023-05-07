@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { DocumentData, QueryDocumentSnapshot, addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import Error from "../components/UI/Error";
@@ -23,8 +23,8 @@ import NoImage from "../assets/no_artist.jpg";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
-import { isArtistInList } from "../utils/isArtistInList";
 import { manageFavouriteArtists } from "../helpers/manageFavouriteArtists";
+import { isArtistInList } from "../utils/isArtistInList";
 
 
 import "swiper/css";
