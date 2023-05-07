@@ -1,23 +1,14 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 
-import { isUndefined } from "lodash";
-
-import { DocumentData, QuerySnapshot, collection, getDocs, query, where, addDoc, updateDoc, arrayUnion, doc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
-
-import { nanoid } from "nanoid";
 
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import { MoreActionsGroup } from "../components/UI/MoreOptions";
 
-import { BsFillPencilFill } from "react-icons/bs";
-import { IoMdMusicalNotes } from "react-icons/io";
-
-
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
-import { useHover } from "../hooks/useHover";
 
 import { createPlaylistValidationSchema } from "../utils/validation";
 
@@ -25,6 +16,7 @@ import FindMoreSongs from "../components/FindMoreSongs";
 import RecommendedSongs from "../components/RecommendedSongs";
 import { getPlaylists } from "../helpers/getPlaylists";
 import { createPlaylist } from "../helpers/createPlaylist";
+import PlaylistImage from "../components/UI/Img/PlaylistImage";
 
 
 export default function CreatePlaylist() {
@@ -33,8 +25,6 @@ export default function CreatePlaylist() {
     const [showRecommended, setShowRecommended] = useState<boolean>(false);
 
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
-
-    const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
@@ -49,7 +39,7 @@ export default function CreatePlaylist() {
     });
 
     useEffect(() => {
-        getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
+        /* getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
             .then(data => {
                 createPlaylist({
                     playlists_collection,
@@ -58,7 +48,7 @@ export default function CreatePlaylist() {
                     snapshotId: data?.snapshotId,
                     isEmpty: data?.isEmpty
                 });
-            });
+            }); */
     }, []);
 
     return (
@@ -66,15 +56,7 @@ export default function CreatePlaylist() {
             <div className="flex flex-col relative">
                 <BgDivider />
                 <div className="absolute flex inset-0 sm:inset-5 p-12 items-center gap-4">
-                    <div
-                        className="flex flex-col w-24 h-16 sm:48  sm:h-36 md:w-52 drop-shadow-xl shadow-slate-700 justify-center rounded-xl items-center bg-gray-800"
-                        ref={hoverRef}>
-                        {
-                            isHovered ?
-                                <BsFillPencilFill size={48} color="gray" className="animate-fastfade cursor-pointer" /> :
-                                <IoMdMusicalNotes size={48} color="gray" className="animate-fastfade cursor-pointer" />
-                        }
-                    </div>
+                    <PlaylistImage />
                     <form
                         onSubmit={formik.handleSubmit}
                         className="w-full grid grid-flow-row gap-3"

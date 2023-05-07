@@ -8,7 +8,6 @@ import Error from "../components/UI/Error";
 import Loader from "../components/UI/Loader";
 import { MoreActionsGroup } from "../components/UI/MoreOptions";
 
-
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { FreeMode } from "swiper";
@@ -23,6 +22,9 @@ import { useResizeObserver } from "../hooks/useResizeObserver";
 import NoImage from "../assets/no_artist.jpg";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
+
+import { isArtistInList } from "../utils/isArtistInList";
+import { manageFavouriteArtists } from "../helpers/manageFavouriteArtists";
 
 
 import "swiper/css";
@@ -70,96 +72,10 @@ function Artist() {
     attributes?.editorialArtwork?.storeFlowcase?.url ||
     NoImage;
 
-  const isArtistInList = async (id: string | undefined = artistid): Promise<boolean> => {
-    //artists[0].artistData.data[0].id
-    try {
-      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
-      const querySnapshot = await getDocs(q);
-
-      let isInList = false;
-
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-          const fArtists: DocumentData = doc.data();
-
-          for (const fArtist of fArtists.artists) {
-            if (fArtist?.artistData?.data[0]?.id === id) {
-              console.log("Artist is in list");
-              isInList = true;
-            }
-          }
-        });
-      }
-      return isInList;
-
-    } catch (error) {
-      console.log(error);
-      return true;
-    }
-  };
-
-
-  const addUserFavouriteArtist = async () => {
-    try {
-      const uid: string = firebaseUser.id;
-      await addDoc(favouriteArtistsCollection, {
-        uid,
-        artists: [{ artistData }]
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateUserFavouriteArtists = async () => {
-    try {
-      const q = query(favouriteArtistsCollection, where("uid", "==", firebaseUser.id));
-      const querySnapshot = await getDocs(q);
-      const fvListRef = doc(firebaseDatabase, "users_favourite_artist", querySnapshot.docs[0].id);
-
-      const isInList: boolean = await isArtistInList();
-
-      if (!querySnapshot.empty && isInList === false) {
-        console.log("Starting update...");
-
-        await updateDoc(fvListRef, {
-          artists: arrayUnion({ artistData })
-        });
-      }
-    }
-    catch (error) {
-      console.log(error);
-    } finally {
-      console.log('Succesufully updated!');
-
-    }
-  };
-
-  const manageFavouriteArtists = async () => {
-    const querySnapshot = await getDocs(favouriteArtistsCollection);
-
-    let isUserHaveFavouriteArtist = false;
-
-    console.log("Manage favourite artists...");
-
-    querySnapshot.forEach((doc) => {
-      if (doc.data().uid === firebaseUser.id) {
-        isUserHaveFavouriteArtist = true;
-      }
-    });
-
-
-    if (isUserHaveFavouriteArtist) {
-      console.log('Update favourite artists');
-      updateUserFavouriteArtists();
-    } else {
-      console.log('Add favourite artists');
-      addUserFavouriteArtist();
-    }
-  };
-
   useEffect(() => {
-    isArtistInList().then(res => {
+    isArtistInList({
+      artistid, favouriteArtistsCollection, uid:firebaseUser.id
+    }).then(res => {
       setIsFavouriteArtistInList(res);
     });
   }, [isFavouriteArtistInList]);
@@ -207,7 +123,7 @@ function Artist() {
           {
             key: "add-to-favourite",
             title: "Add to favourite",
-            onClickCallback: () => manageFavouriteArtists()
+            onClickCallback: () => manageFavouriteArtists(favouriteArtistsCollection, artistData, firebaseUser.id, artistid)
           }
         ]} />
 
