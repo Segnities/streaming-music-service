@@ -13,7 +13,11 @@ interface SongsListProps {
 export default function SongsList(props: SongsListProps) {
     return (
         <div className="mt-6 w-full flex flex-col">
-            {props.songs?.map((song, index) => (
+            {props.songs.filter((song) => {
+                if (song?.artists && song?.hub?.actions) {
+                    return song;
+                }
+            })?.map((song, index) => (
                 <SongBar
                     key={`${song.key}-${props?.artistid}`}
                     index={index}

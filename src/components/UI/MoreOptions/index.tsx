@@ -42,7 +42,6 @@ interface MoreActionsGroupProps {
 
 }
 
-
 export function MoreActionsGroup(props: MoreActionsGroupProps) {
     const { user, showMore, setShowMore, optionsList } = props;
     return (

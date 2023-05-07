@@ -16,7 +16,7 @@ import NoImage from "../assets/no_artist.jpg";
 import { setUserSignOut } from "../store/reducers/auth";
 import { ConfirmModal } from "../components/UI/Confirm/Confirm";
 import { MainDatum } from "../API/types";
-import { removeFromFavouriteArtists } from "../utils/removeFromFavouriteArtists";
+import { removeFromFavouriteArtists } from "../helpers/removeFromFavouriteArtists";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 function User() {

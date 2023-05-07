@@ -73,7 +73,6 @@ function Song() {
     dispatch(playPause(true));
   };
 
-
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
@@ -129,11 +128,11 @@ function Song() {
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
-      <PlaylistsModal
+      {/* <PlaylistsModal
         openPlaylistModal={openPlaylistModal}
         setOpenPlaylistModal={setOpenPlaylistModal}
         managePlayslistsSongs={managePlayslistsSongs}
-      />
+      /> */}
       <div className="relative w-full flex flex-col">
         <BgDivider />
         {user?.uid && (
