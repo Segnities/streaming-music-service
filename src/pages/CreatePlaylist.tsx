@@ -14,8 +14,6 @@ import { createPlaylistValidationSchema } from "../utils/validation";
 
 import FindMoreSongs from "../components/FindMoreSongs";
 import RecommendedSongs from "../components/RecommendedSongs";
-import { getPlaylists } from "../helpers/getPlaylists";
-import { createPlaylist } from "../helpers/createPlaylist";
 import PlaylistImage from "../components/UI/Img/PlaylistImage";
 
 

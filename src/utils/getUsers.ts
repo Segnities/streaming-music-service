@@ -4,7 +4,6 @@ import { firebaseDatabase } from '../firebase/firebaseConfig';
 
 export interface UserFields {
     email: string;
-    password: string;
     username: string;
     birthday: string;
     gender: string;

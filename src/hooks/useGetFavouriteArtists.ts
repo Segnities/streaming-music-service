@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 import { User } from "firebase/auth";
 
-
 import { Query, where, DocumentData, getDocs, query, collection } from "firebase/firestore";
 
 import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
