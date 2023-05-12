@@ -1,4 +1,4 @@
-import { ModalSm } from "../Modal";
+import { FitModal } from "../Modal";
 
 interface Props {
     confirmTitle: string;
@@ -11,7 +11,7 @@ interface Props {
 
 export function ConfirmModal(props: Props) {
     return (
-        <ModalSm open={props.isOpen} setOpen={props.setIsOpen}>
+        <FitModal open={props.isOpen} setOpen={props.setIsOpen}>
             <div className="grid grid-flow-row-dense">
                 <p className="text-xl p-2">
                     {
@@ -37,6 +37,6 @@ export function ConfirmModal(props: Props) {
                         }}>Cancel</button>
                 </div>
             </div>
-        </ModalSm>
+        </FitModal>
     );
 }
