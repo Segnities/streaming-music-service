@@ -1,4 +1,3 @@
-import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 
 import { collection } from "firebase/firestore";
@@ -10,11 +9,12 @@ import { MoreActionsGroup } from "../components/UI/MoreOptions";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
-import { createPlaylistValidationSchema } from "../utils/validation";
-
 import FindMoreSongs from "../components/FindMoreSongs";
 import RecommendedSongs from "../components/RecommendedSongs";
 import PlaylistImage from "../components/UI/Img/PlaylistImage";
+import PlaylistDetailsModal from "../components/PlaylistDetailsModal";
+
+import { getPlaylistTitle } from "../helpers/getPlaylistTitle";
 
 
 export default function CreatePlaylist() {
@@ -22,19 +22,16 @@ export default function CreatePlaylist() {
     const [showMore, setShowMore] = useState<boolean>(false);
     const [showRecommended, setShowRecommended] = useState<boolean>(false);
 
+    const [openEditPlaylist, setOpenEditPlaylist] = useState<boolean>(false);
+
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
 
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
-    const formik = useFormik({
-        initialValues: {
-            playlistTitle: playlistTitle
-        },
-        onSubmit: values => {
-            console.log("Submit!");
-        },
-        validationSchema: createPlaylistValidationSchema
-    });
+
+    useEffect(() => {
+        getPlaylistTitle(firebaseUser.id, playlists_collection, setPlaylistTitle);
+    }, [playlists_collection])
 
     useEffect(() => {
         /* getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
@@ -51,12 +48,17 @@ export default function CreatePlaylist() {
 
     return (
         <div className="flex flex-col">
+            <PlaylistDetailsModal
+                open={openEditPlaylist}
+                setOpen={setOpenEditPlaylist}
+                title={playlistTitle}
+                setPlaylistTitle={setPlaylistTitle}
+            />
             <div className="flex flex-col relative">
                 <BgDivider />
                 <div className="absolute flex inset-0 sm:inset-5 p-12 items-center gap-4">
-                    <PlaylistImage />
-                    <form
-                        onSubmit={formik.handleSubmit}
+                    <PlaylistImage tailwindWidth={"w-24 sm:w-48 md:w-52"} tailwindHeight={"h-16 sm:h-36"} iconSize={46} />
+                    <div
                         className="w-full grid grid-flow-row gap-3"
                     >
                         <p className="text-gray-300 text-xs font-semibold">Playlist</p>
@@ -64,15 +66,16 @@ export default function CreatePlaylist() {
                             type="text"
                             name="playlistTitle"
                             id="playlistTitle"
-                            value={formik.values.playlistTitle}
-                            onChange={formik.handleChange}
-                            className="w-full font-bold  text-3xl sm:text-[3rem] md:text-[3.5rem] outline-none px-4 rounded-xl bg-transparent text-white"
+                            onClick={() => setOpenEditPlaylist(true)}
+                            value={playlistTitle}
+                            onChange={(e) => setPlaylistTitle(e.target.value)}
+                            className="w-full font-bold  text-3xl sm:text-[3rem] md:text-[3.5rem] outline-none px-4 rounded-xl bg-transparent text-white curs"
                             placeholder={playlistTitle}
                             required={true}
                             autoComplete="off"
                         />
                         <p className="text-gray-300 text-sm font-semibold">{firebaseUser?.data.username ?? user?.displayName}</p>
-                    </form>
+                    </div>
                 </div>
             </div>
 

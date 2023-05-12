@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 
 import { createPlaylistValidationSchema } from "../utils/validation";
 
-import { ModalSm } from "./UI/Modal";
+import { FitModal } from "./UI/Modal";
 
 import { IoMdAdd } from "react-icons/io";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
@@ -57,7 +57,7 @@ export default function PlaylistsModal({ openPlaylistModal, setOpenPlaylistModal
             {
 
                 openPlaylistModal && (
-                    <ModalSm
+                    <FitModal
                         open={openPlaylistModal}
                         setOpen={setOpenPlaylistModal}
                         overscroll={false}
@@ -85,7 +85,7 @@ export default function PlaylistsModal({ openPlaylistModal, setOpenPlaylistModal
                                 onClick={() => formik.handleSubmit()}
                             />
                         </form>
-                    </ModalSm>
+                    </FitModal>
                 )
             }
         </>
