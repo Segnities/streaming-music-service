@@ -30,7 +30,7 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
 
 
     const { firebaseUser } = useGetCurrentUser();
-    console.log(firebaseUser.id);
+    console.log(firebaseUser?.id);
 
     const fileInputRef: MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null);
 
@@ -40,7 +40,7 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
     };
 
     const handleSubmit = async (values: { title: string; description: string }) => {
-        await updatePlaylist(props.playlistId, firebaseUser.id, props.setOpen, values);
+        await updatePlaylist(props.playlistId, firebaseUser?.id, props.setOpen, values);
     };
 
     useEffect(() => {

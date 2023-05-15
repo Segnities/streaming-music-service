@@ -7,7 +7,7 @@ import { getPlaylistPosition } from "./getPlaylistPosition";
 
 export async function updatePlaylist(
     playlistId: string,
-    uid: string,
+    uid: string | undefined,
     setOpen: Dispatch<SetStateAction<boolean>>,
     values: {
         title: string,
