@@ -19,8 +19,8 @@ import { handleSubmit } from '../helpers/submitEditProfileForm';
 import { FirebaseUsersSelectorInterface } from '../store/reducers/firebaseUsers';
 
 interface EditProfileFormProps {
-    firebaseUser: UserDoc;
-    setFirebaseUser: Dispatch<SetStateAction<UserDoc>>;
+    firebaseUser: UserDoc | undefined;
+    setFirebaseUser: Dispatch<SetStateAction<UserDoc|undefined>>;
     providerId: string;
     setOpenModal: Dispatch<SetStateAction<boolean>>;
 }

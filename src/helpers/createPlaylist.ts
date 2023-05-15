@@ -6,7 +6,7 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 interface ManagePlaylistOptions {
     playlists_collection: CollectionReference<DocumentData>;
-    uid: string;
+    uid: string | undefined;
     playlistTitle: string;
     snapshotId?: string;
     isEmpty?: boolean;

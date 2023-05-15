@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { query, where, Query, DocumentData, getDocs, QuerySnapshot, CollectionReference } from "firebase/firestore";
 
 export async function getPlaylistTitle(
-    uid: string,
+    uid: string | undefined,
     playlists_collection: CollectionReference<DocumentData>,
     setPlaylistTitle: Dispatch<SetStateAction<string>>
 ): Promise<void> {

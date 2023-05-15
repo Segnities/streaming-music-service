@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface GetPlaylistOptions {
     playlists_collection: CollectionReference<DocumentData>;
-    uid: string;
+    uid: string | undefined;
     setPlaylistTitle: Dispatch<SetStateAction<string>>;
 }
 

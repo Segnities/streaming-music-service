@@ -13,12 +13,12 @@ import { updateProfileImage } from "../helpers/updateProfileImage";
 import EditProfileForm from "./EditProfileForm";
 
 interface Props {
-    firebaseUser: UserDoc;
+    firebaseUser: UserDoc | undefined;
     openEditModal: boolean;
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
     photoURL: string;
     setPhotoURL: React.Dispatch<React.SetStateAction<string>>;
-    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc>>;
+    setFirebaseUser: React.Dispatch<React.SetStateAction<UserDoc | undefined>>;
 }
 
 export enum ProviderID {

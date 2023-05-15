@@ -32,12 +32,12 @@ export default function CreatePlaylist() {
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
     const managePlaylistCreation = async (): Promise<void> => {
-        const userPlaylists = await getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
-        await getPlaylistTitle(firebaseUser.id, playlists_collection, setPlaylistTitle);
+        const userPlaylists = await getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser?.id })
+        await getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
         const createdPlaylist = await createPlaylist({
             playlists_collection,
             playlistTitle,
-            uid: firebaseUser.id,
+            uid: firebaseUser?.id,
             snapshotId: userPlaylists?.snapshotId,
             isEmpty: userPlaylists?.isEmpty
         });
@@ -46,7 +46,7 @@ export default function CreatePlaylist() {
 
 
     useEffect(() => {
-        getPlaylistTitle(firebaseUser.id, playlists_collection, setPlaylistTitle);
+        getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
         console.log(playlistTitle);
 
     }, [playlists_collection]);

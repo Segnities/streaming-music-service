@@ -2,7 +2,7 @@ import { DocumentData, getDocs, where, query, collection, updateDoc, doc } from 
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
-export const removeFromFavouriteArtists = async (uid: string, artist_id: string) => {
+export const removeFromFavouriteArtists = async (uid: string | undefined, artist_id: string) => {
     const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
     const q = query(favouriteArtistsCollection, where("uid", "==", uid));
     const f_artists: DocumentData[] = [];
