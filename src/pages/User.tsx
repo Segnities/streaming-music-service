@@ -23,7 +23,7 @@ function User() {
     const auth = getAuth(firebaseApp);
     const navigate = useNavigate();
     const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
-    const [user, firebaseUser, setFirebaseUser] = useGetCurrentUser();
+    const { firebaseUser, user, setFirebaseUser } = useGetCurrentUser();
 
     const [photoURL, setPhotoURL] = useState<string>('');
 

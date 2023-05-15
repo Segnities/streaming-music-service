@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { query, where, Query, DocumentData, getDocs, QuerySnapshot, CollectionReference } from "firebase/firestore";
 
 export async function getPlaylistTitle(
-    uid: string,
+    uid: string | undefined,
     playlists_collection: CollectionReference<DocumentData>,
     setPlaylistTitle: Dispatch<SetStateAction<string>>
 ): Promise<void> {
@@ -12,6 +12,6 @@ export async function getPlaylistTitle(
     if (querySnapshot.empty) {
         setPlaylistTitle("My playlist #1");
     } else {
-        setPlaylistTitle("My playlist #" + (querySnapshot.size + 1));
+        setPlaylistTitle("My playlist #" + (querySnapshot.docs[0].data().playlists.length));
     }
-};
+}

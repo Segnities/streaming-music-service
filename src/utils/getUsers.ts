@@ -9,7 +9,7 @@ export interface UserFields {
     gender: string;
 }
 export interface UserDoc {
-    id: string;
+    id: string | undefined;
     data: UserFields;
 }
 

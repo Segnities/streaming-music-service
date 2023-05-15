@@ -6,14 +6,15 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 interface ManagePlaylistOptions {
     playlists_collection: CollectionReference<DocumentData>;
-    uid: string;
+    uid: string | undefined;
     playlistTitle: string;
     snapshotId?: string;
     isEmpty?: boolean;
 }
 
-export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefined): Promise<void> => {
-    debugger;
+export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefined): Promise<{ playlist_id: string } | undefined> => {
+    console.log("Playlist title: " + qSnapData?.playlistTitle);
+    const playlist_id = nanoid();
     if (qSnapData?.isEmpty) {
         try {
             await addDoc(qSnapData?.playlists_collection, {
@@ -21,13 +22,16 @@ export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefine
                 playlists: [
                     {
                         title: qSnapData?.playlistTitle,
-                        playlist_id: nanoid(),
+                        playlist_id,
                     }
                 ],
             });
+            return { playlist_id };
         }
         catch (error) {
             console.log("Create error");
+            console.log(error);
+            
         }
     } else {
         try {
@@ -35,9 +39,10 @@ export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefine
             await updateDoc(_playlistDocRef, {
                 playlists: arrayUnion({
                     title: qSnapData?.playlistTitle,
-                    playlist_id: nanoid(),
+                    playlist_id,
                 })
-            })
+            });
+            return { playlist_id };
         } catch (error) {
             console.log("Update error");
             console.log(error);

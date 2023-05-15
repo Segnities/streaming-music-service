@@ -3,7 +3,6 @@ import YouTube from "react-youtube";
 import { YoutubeTrackData } from "../API/types";
 import { getYouTubeVideoId } from "../utils/getYoutubeVideoId";
 
-
 interface Props {
     youtubeData: YoutubeTrackData;
 }

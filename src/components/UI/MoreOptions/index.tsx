@@ -1,5 +1,3 @@
-import React from "react";
-
 import { User } from "firebase/auth";
 
 import LineDivider from "../LineDivider";
@@ -15,7 +13,7 @@ type Option = {
     key: string,
     title: string,
     href?: string,
-    icons?: OptionIcon[] | undefined,
+    icon?: JSX.Element,
     onClickCallback: () => void
 }
 

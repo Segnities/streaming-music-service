@@ -3,7 +3,7 @@ import { DocumentData, CollectionReference, QueryDocumentSnapshot, query, getDoc
 
 interface ArtistInListOptions {
     favouriteArtistsCollection: CollectionReference<DocumentData>;
-    uid:string;
+    uid:string | undefined;
     artistid:string | undefined;
 }
 

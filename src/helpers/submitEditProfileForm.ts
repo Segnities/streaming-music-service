@@ -1,14 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 
-import { useSelector } from "react-redux";
 
-import { updateProfile, reauthenticateWithCredential, updatePassword, User } from "firebase/auth";
-import { updateDoc, doc } from "firebase/firestore";
-import { getAuth, updateEmail } from "firebase/auth";
+import { User, getAuth, reauthenticateWithCredential, updateEmail, updatePassword, updateProfile } from "firebase/auth";
 import firebase from "firebase/compat";
+import { doc, updateDoc } from "firebase/firestore";
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
-
-import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
 
 import { EditProfileFields } from "../components/EditProfileModal";
 
@@ -24,9 +20,9 @@ import { isUndefined } from "lodash";
 
 export const handleSubmit = (
     values: EditProfileFields,
-    firebaseUser: UserDoc,
+    firebaseUser: UserDoc | undefined,
     firebaseUsers: UserDoc[],
-    setFirebaseUser: Dispatch<SetStateAction<UserDoc>>,
+    setFirebaseUser: Dispatch<SetStateAction<UserDoc | undefined>>,
     setOpenEditModal: Dispatch<SetStateAction<boolean>>
 ): void => {
 
@@ -41,11 +37,11 @@ export const handleSubmit = (
 export const checkAndUpdateEmail = (
     values: EditProfileFields,
     firebaseUsers: UserDoc[],
-    firebaseUser: UserDoc,
-    setFirebaseUser: Dispatch<SetStateAction<UserDoc>>,
+    firebaseUser:  UserDoc | undefined,
+    setFirebaseUser: Dispatch<SetStateAction<UserDoc | undefined>>,
 ): void => {
     const auth = getAuth(firebaseApp);
-    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser.id);
+    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
 
     const isEmailUnique: boolean = isUndefined(firebaseUsers.find((usr) => {
         if (usr.data.email !== firebaseUser?.data.email && usr.data.email === values.email) {
@@ -83,12 +79,12 @@ export const changePassword = (values: EditProfileFields): void => {
 export const checkAndUpdateUsername = (
     values: EditProfileFields,
     firebaseUsers: UserDoc[],
-    firebaseUser: UserDoc,
-    setFirebaseUser: Dispatch<SetStateAction<UserDoc>>,
+    firebaseUser: UserDoc | undefined,
+    setFirebaseUser: Dispatch<SetStateAction<UserDoc | undefined>>,
 ): void => {
 
     const auth = getAuth(firebaseApp);
-    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser.id);
+    const userDocRef = doc(firebaseDatabase, 'users', firebaseUser?.id as string);
 
     const isUsernameUnique: boolean = isUndefined(firebaseUsers.find((usr) => {
         if (usr.data.email !== firebaseUser?.data.username && usr.data.username === values.username) {

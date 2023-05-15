@@ -5,7 +5,7 @@ import { UserDoc } from "../utils/getUsers";
 import { EditProfileFields } from "../components/EditProfileModal";
 
 
-export const updateFirebaseUser = (values: EditProfileFields, firebaseUser: UserDoc, setFirebaseUser: Dispatch<SetStateAction<UserDoc>>) => {
+export const updateFirebaseUser = (values: EditProfileFields, firebaseUser: UserDoc | undefined, setFirebaseUser: Dispatch<SetStateAction<UserDoc | undefined>>) => {
     setFirebaseUser({
         id: firebaseUser?.id as string,
         data: {

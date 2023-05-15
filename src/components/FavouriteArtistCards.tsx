@@ -13,7 +13,7 @@ import { MainArtistDetails, MainDatum, PurpleAttributes } from "../API/types";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
-import NoImage from "../assets/no_artist.jpg";  
+import NoImage from "../assets/no_artist.jpg";
 
 import 'swiper/css';
 import "swiper/css/effect-cards";
@@ -27,7 +27,7 @@ export default function FavouriteArtistCards(props: Props) {
     const [favouriteArtists, setFavouriteArtists] = useState<DocumentData[]>([]);
     const [isListEmpty, setIsListEmpty] = useState<boolean>(false);
 
-    const [user, firebaseUser] = useGetCurrentUser();
+    const { firebaseUser } = useGetCurrentUser();
 
     const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 

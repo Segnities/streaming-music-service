@@ -53,7 +53,7 @@ const ResetEmail = (props: Props) => {
                     reset</h2>
                 <p className="w-5/6 text-lg mt-10">Enter your or <strong>email address</strong> provided when you signed
                     up.
-                    We'll send you an email with your username and a link to reset your password.</p>
+                    We&apos;ll send you an email with your username and a link to reset your password.</p>
                 <Formik
                     initialValues={{ email: "" }}
                     validationSchema={validationSchema}
