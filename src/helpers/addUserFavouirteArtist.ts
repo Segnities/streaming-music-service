@@ -2,13 +2,13 @@ import { addDoc, CollectionReference, DocumentData } from 'firebase/firestore';
 
 interface AddFavouriteArtistsOption {
     favouriteArtistsCollection: CollectionReference<DocumentData>;
-    uid: string;
+    uid: string | undefined;
     artistData: any;
 }
 
 export const addUserFavouriteArtist = async (
     favouriteArtistsCollection: CollectionReference<DocumentData>,
-    uid: string,
+    uid: string | undefined,
     artistData: any
 ): Promise<void> => {
     try {

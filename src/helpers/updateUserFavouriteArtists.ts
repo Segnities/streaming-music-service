@@ -7,7 +7,7 @@ import { isArtistInList } from "../utils/isArtistInList";
 
 export const updateUserFavouriteArtists = async (
     favouriteArtistsCollection: CollectionReference<DocumentData>,
-    uid:string,
+    uid:string | undefined,
     artistData: any,
     artistid: string | undefined
 ): Promise<void> => {

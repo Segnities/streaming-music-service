@@ -47,7 +47,7 @@ function Artist() {
     error,
   } = useGetArtistsDetailsQuery(artistid);
 
-  const [user, firebaseUser] = useGetCurrentUser();
+  const { firebaseUser, user } = useGetCurrentUser();
 
   const favouriteArtistsCollection = collection(firebaseDatabase, 'users_favourite_artist');
 
@@ -74,7 +74,7 @@ function Artist() {
 
   useEffect(() => {
     isArtistInList({
-      artistid, favouriteArtistsCollection, uid:firebaseUser.id
+      artistid, favouriteArtistsCollection, uid: firebaseUser?.id
     }).then(res => {
       setIsFavouriteArtistInList(res);
     });
@@ -123,7 +123,7 @@ function Artist() {
           {
             key: "add-to-favourite",
             title: "Add to favourite",
-            onClickCallback: () => manageFavouriteArtists(favouriteArtistsCollection, artistData, firebaseUser.id, artistid)
+            onClickCallback: () => manageFavouriteArtists(favouriteArtistsCollection, artistData, firebaseUser?.id, artistid)
           }
         ]} />
 

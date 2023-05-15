@@ -83,11 +83,11 @@ function Song() {
   };
 
   const managePlayslistsSongs = async (playlist_title: string, playlist_id: string) => {
-    const q: Query<DocumentData> = query(users_playlists_collection, where("uid", "==", firebaseUser.id));
+    const q: Query<DocumentData> = query(users_playlists_collection, where("uid", "==", firebaseUser?.id));
     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
     const snapshotId: string = querySnapshot?.docs[0]?.id;
 
-    const uid = firebaseUser.id;
+    const uid = firebaseUser?.id;
 
     if (querySnapshot.empty) {
       console.log("Create new document!");
