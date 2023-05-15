@@ -15,10 +15,11 @@ import PlaylistImage from "../components/UI/Img/PlaylistImage";
 import PlaylistDetailsModal from "../components/PlaylistDetailsModal";
 
 import { getPlaylistTitle } from "../helpers/getPlaylistTitle";
-
+import { getPlaylists } from "../helpers/getPlaylists";
+import { createPlaylist } from "../helpers/createPlaylist";
 
 export default function CreatePlaylist() {
-    const [user, firebaseUser] = useGetCurrentUser();
+    const { firebaseUser, user } = useGetCurrentUser();
     const [showMore, setShowMore] = useState<boolean>(false);
     const [showRecommended, setShowRecommended] = useState<boolean>(false);
 
@@ -28,22 +29,30 @@ export default function CreatePlaylist() {
 
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
+    const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
+
+    const managePlaylistCreation = async (): Promise<void> => {
+        const userPlaylists = await getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
+        await getPlaylistTitle(firebaseUser.id, playlists_collection, setPlaylistTitle);
+        const createdPlaylist = await createPlaylist({
+            playlists_collection,
+            playlistTitle,
+            uid: firebaseUser.id,
+            snapshotId: userPlaylists?.snapshotId,
+            isEmpty: userPlaylists?.isEmpty
+        });
+        setCreatedPlaylistId(createdPlaylist?.playlist_id as string);
+    }
+
 
     useEffect(() => {
         getPlaylistTitle(firebaseUser.id, playlists_collection, setPlaylistTitle);
-    }, [playlists_collection])
+        console.log(playlistTitle);
+
+    }, [playlists_collection]);
 
     useEffect(() => {
-        /* getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser.id })
-            .then(data => {
-                createPlaylist({
-                    playlists_collection,
-                    playlistTitle,
-                    uid: firebaseUser.id,
-                    snapshotId: data?.snapshotId,
-                    isEmpty: data?.isEmpty
-                });
-            }); */
+        managePlaylistCreation();
     }, []);
 
     return (
@@ -53,6 +62,7 @@ export default function CreatePlaylist() {
                 setOpen={setOpenEditPlaylist}
                 title={playlistTitle}
                 setPlaylistTitle={setPlaylistTitle}
+                playlistId={createdPlaylistId}
             />
             <div className="flex flex-col relative">
                 <BgDivider />
