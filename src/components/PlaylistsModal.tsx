@@ -19,7 +19,7 @@ interface Props {
 
 export default function PlaylistsModal({ openPlaylistModal, setOpenPlaylistModal, managePlayslistsSongs, ...props }: Props) {
     const [playlistsData, setPlaylistsData] = useState<DocumentData[] | null>(null);
-    const [user, firebaseUser] = useGetCurrentUser();
+    const { firebaseUser } = useGetCurrentUser();
 
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>("");
 
