@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserDoc } from "../../utils/types";
+
+import { UserDoc } from "../../utils/getUsers";
 interface InitialStateInterface {
     firebaseUsers: UserDoc[];
 }

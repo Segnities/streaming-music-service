@@ -54,7 +54,7 @@ function Song() {
 
   const songImagePath = songData?.images?.coverart;
 
-  const [user, firebaseUser] = useGetCurrentUser();
+  const { firebaseUser, user } = useGetCurrentUser();
 
   const {
     data: relatedSongs,
