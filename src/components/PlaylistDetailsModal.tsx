@@ -16,6 +16,8 @@ interface PlaylistDetailsModalProps {
     setOpen: Dispatch<SetStateAction<boolean>>;
     title: string;
     setPlaylistTitle: Dispatch<SetStateAction<string>>;
+    description: string;
+    setPlaylistDescription: Dispatch<SetStateAction<string>>;
     playlistId: string;
 }
 
@@ -40,7 +42,12 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
     };
 
     const handleSubmit = async (values: { title: string; description: string }) => {
-        await updatePlaylist(props.playlistId, firebaseUser?.id, props.setOpen, values);
+        await updatePlaylist(props.playlistId, firebaseUser?.id, values);
+
+        props.setPlaylistTitle(values.title);
+        props.setPlaylistDescription(values.description);
+
+        props.setOpen(false);
     };
 
     useEffect(() => {
@@ -60,7 +67,6 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                     }}
                     onSubmit={(values) => {
                         console.log("Submitting!");
-                        props.setPlaylistTitle(values.title);
                     }}
                     validationSchema={validationSchema}
                     enableReinitialize={true}
@@ -90,6 +96,7 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                                         name="title"
                                         className="w-full my-1 p-1 outline outline-1 rounded-sm"
                                         placeholder="Playlist title"
+                                        onChange={(e) => { props.setPlaylistTitle(e.target.value) }}
                                         minLength={1}
                                         maxLength={50}
                                     />

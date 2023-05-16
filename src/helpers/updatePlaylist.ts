@@ -8,12 +8,11 @@ import { getPlaylistPosition } from "./getPlaylistPosition";
 export async function updatePlaylist(
     playlistId: string,
     uid: string | undefined,
-    setOpen: Dispatch<SetStateAction<boolean>>,
     values: {
         title: string,
         description: string,
     }
-):Promise<void> {
+): Promise<void> {
     const playlist_collection = collection(firebaseDatabase, "users_playlists");
 
     try {
@@ -33,7 +32,6 @@ export async function updatePlaylist(
         await updateDoc(_playlistDoc, {
             playlists: _playlists,
         });
-        setOpen(false);
     } catch (error) {
         console.log(error);
     }

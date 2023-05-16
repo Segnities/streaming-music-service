@@ -26,6 +26,7 @@ export default function CreatePlaylist() {
     const [openEditPlaylist, setOpenEditPlaylist] = useState<boolean>(false);
 
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
+    const [playlistDescription, setPlaylistDescription] = useState<string>("");
 
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
@@ -48,8 +49,7 @@ export default function CreatePlaylist() {
     useEffect(() => {
         getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
         console.log(playlistTitle);
-
-    }, [playlists_collection]);
+    }, []);
 
     useEffect(() => {
         managePlaylistCreation();
@@ -61,6 +61,8 @@ export default function CreatePlaylist() {
                 open={openEditPlaylist}
                 setOpen={setOpenEditPlaylist}
                 title={playlistTitle}
+                description={playlistDescription}
+                setPlaylistDescription={setPlaylistDescription}
                 setPlaylistTitle={setPlaylistTitle}
                 playlistId={createdPlaylistId}
             />
