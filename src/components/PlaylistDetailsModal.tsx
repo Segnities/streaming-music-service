@@ -10,6 +10,8 @@ import { FitModal } from "./UI/Modal";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 import { updatePlaylist } from "../helpers/updatePlaylist";
+import { getStorage, ref } from "firebase/storage";
+import { firebaseApp } from "../firebase/firebaseConfig";
 
 interface PlaylistDetailsModalProps {
     open: boolean;
@@ -27,7 +29,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
-    const [file, setFile] = useState<File | string>("");
+    const [playlistImage, setPlaylistImage] = useState<File | undefined>(undefined);
     const [triggerFileInput, setTriggerFileInput] = useState<boolean>(false);
 
 
@@ -37,8 +39,15 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
     const fileInputRef: MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null);
 
     const handleClickFileInput = (e: MouseEvent<HTMLInputElement>): void => {
-        setFile(e.currentTarget.files![0]);
+        setPlaylistImage(e.currentTarget.files![0]);
         setTriggerFileInput(false);
+    };
+
+    const updatePlaylistImage = async ():Promise<void> => {
+        const storage = getStorage(firebaseApp);
+        const playlistPathRef = ref(storage, 'playlists/users-playlists-images/' + playlistImage?.name);
+        
+
     };
 
     const handleSubmit = async (values: { title: string; description: string }) => {
