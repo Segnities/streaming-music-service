@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import { SongRootObject } from "../../API/types";
 
@@ -23,11 +23,11 @@ function TopArtistsWidget(props: Props) {
     <div className="w-full flex flex-col mt-8">
       <div className="flex flex-row justify-between items-center">
         <h2 className="text-white font-bold text-2xl">Top Artists</h2>
-        <Link to={"/top-artists"}>
+        <NavLink to={"/top-artists"}>
           <p className="text-gray-300 text-base cursor-pointer hover:underline">
             See more
           </p>
-        </Link>
+        </NavLink>
       </div>
 
       <Swiper
@@ -45,13 +45,13 @@ function TopArtistsWidget(props: Props) {
             className="w-1/5 h-1/5 shadow-lg rounded-full animate-slideright"
           >
 
-            <Link to={`artists/${chart?.artists![0]?.adamid}}`}>
+            <NavLink to={`artists/${chart?.artists![0]?.adamid}`}>
               <img
                 src={chart?.images?.background || NoImage}
                 alt="artist"
                 className="rounded-full w-full object-cover border-transparent border-2  hover:border-white ease-out duration-300"
               />
-            </Link>
+            </NavLink>
           </SwiperSlide>
         ))}
       </Swiper>

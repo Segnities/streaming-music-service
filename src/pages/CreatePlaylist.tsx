@@ -33,7 +33,7 @@ export default function CreatePlaylist() {
 
     const managePlaylistCreation = async (): Promise<void> => {
         const userPlaylists = await getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser?.id })
-        await getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
+        //await getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
         const createdPlaylist = await createPlaylist({
             playlists_collection,
             playlistTitle,
