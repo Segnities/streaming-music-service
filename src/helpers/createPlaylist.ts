@@ -1,27 +1,30 @@
-import { addDoc, updateDoc, arrayUnion, CollectionReference, DocumentData, doc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 
 import { nanoid } from "nanoid";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
-interface ManagePlaylistOptions {
-    playlists_collection: CollectionReference<DocumentData>;
+import { isUndefined } from "lodash";
+
+interface CreatePlaylist {
     uid: string | undefined;
     playlistTitle: string;
-    snapshotId?: string;
+    snapshotId?: string | undefined;
     isEmpty?: boolean;
 }
 
-export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefined): Promise<{ playlist_id: string } | undefined> => {
-    console.log("Playlist title: " + qSnapData?.playlistTitle);
+export const createPlaylist = async (data: CreatePlaylist | undefined): Promise<{ playlist_id: string } | undefined> => {
+    const playlists_collection = collection(firebaseDatabase, "users_playlists");
+
     const playlist_id = nanoid();
-    if (qSnapData?.isEmpty) {
+
+    if (data?.isEmpty) {
         try {
-            await addDoc(qSnapData?.playlists_collection, {
-                uid: qSnapData?.uid,
+            await addDoc(playlists_collection, {
+                uid: data?.uid,
                 playlists: [
                     {
-                        title: qSnapData?.playlistTitle,
+                        title: data?.playlistTitle,
                         playlist_id,
                     }
                 ],
@@ -31,14 +34,28 @@ export const createPlaylist = async (qSnapData: ManagePlaylistOptions | undefine
         catch (error) {
             console.log("Create error");
             console.log(error);
-            
+
         }
-    } else {
+    } else if (isUndefined(data?.snapshotId)) {
+        await addDoc(playlists_collection, {
+            uid: data?.uid,
+            playlists: [
+                {
+                    title: data?.playlistTitle,
+                    playlist_id,
+                }
+            ],
+        });
+        return { playlist_id };
+
+
+    }
+    else {
         try {
-            const _playlistDocRef = doc(firebaseDatabase, "users_playlists", `${qSnapData?.snapshotId}`);
+            const _playlistDocRef = doc(firebaseDatabase, "users_playlists", `${data?.snapshotId}`);
             await updateDoc(_playlistDocRef, {
                 playlists: arrayUnion({
-                    title: qSnapData?.playlistTitle,
+                    title: data?.playlistTitle,
                     playlist_id,
                 })
             });

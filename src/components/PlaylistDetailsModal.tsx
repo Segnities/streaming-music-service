@@ -10,8 +10,10 @@ import { FitModal } from "./UI/Modal";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 import { updatePlaylist } from "../helpers/updatePlaylist";
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseApp } from "../firebase/firebaseConfig";
+import { isUndefined } from "lodash";
+import { isImageFile } from "../utils/isImageFile";
 
 interface PlaylistDetailsModalProps {
     open: boolean;
@@ -32,6 +34,10 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
     const [playlistImage, setPlaylistImage] = useState<File | undefined>(undefined);
     const [triggerFileInput, setTriggerFileInput] = useState<boolean>(false);
 
+    const [playlistImageUrl, setPlaylistImageUrl] = useState<string>("");
+
+    console.log('Playlist id: ', props.playlistId);
+
 
     const { firebaseUser } = useGetCurrentUser();
     console.log(firebaseUser?.id);
@@ -43,10 +49,24 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
         setTriggerFileInput(false);
     };
 
-    const updatePlaylistImage = async ():Promise<void> => {
+    const updatePlaylistImage = async (): Promise<void> => {
         const storage = getStorage(firebaseApp);
         const playlistPathRef = ref(storage, 'playlists/users-playlists-images/' + playlistImage?.name);
-        
+
+        if (isImageFile(playlistImage?.name as string)) {
+            try {
+                await uploadBytes(playlistPathRef, playlistImage!);
+                console.log('Update playlist image success!');
+
+                const profileImageUrl = await getDownloadURL(playlistPathRef);
+                console.log('Profile image url: ', ' profileImageUrl');
+
+                setPlaylistImageUrl(profileImageUrl);
+
+            } catch (err) {
+                console.log('Update playlist image error!');
+            }
+        }
 
     };
 
@@ -55,6 +75,10 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
 
         props.setPlaylistTitle(values.title);
         props.setPlaylistDescription(values.description);
+
+        if (triggerFileInput && !isUndefined(playlistImage)) {
+            await updatePlaylistImage();
+        }
 
         props.setOpen(false);
     };
@@ -97,6 +121,7 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                                         tailwindHeight="h-36"
                                         iconSize={48}
                                         setTriggerElement={setTriggerFileInput}
+                                        playlistImage={playlistImageUrl}
                                     />
                                 </div>
                                 <div className="flex flex-col flex-1 justify-between">
@@ -105,7 +130,11 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                                         name="title"
                                         className="w-full my-1 p-1 outline outline-1 rounded-sm"
                                         placeholder="Playlist title"
-                                        onChange={(e) => { props.setPlaylistTitle(e.target.value) }}
+                                        onChange={(e) => { 
+                                            console.log(e.target.value); 
+                            
+                                            props.setPlaylistTitle(e.target.value) 
+                                        }}
                                         minLength={1}
                                         maxLength={50}
                                     />

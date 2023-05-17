@@ -1,16 +1,18 @@
 import { Dispatch, SetStateAction } from "react";
 
+import DefaultPlaylistImage from "./DefaultPlaylistImage";
+
 import { useHover } from "../../../hooks/useHover";
 
-import { IoPencilSharp } from "react-icons/io5";
-import { IoMdMusicalNotes } from "react-icons/io";
 
 interface PlaylistImageProps {
     tailwindWidth: string;
     tailwindHeight: string;
     iconSize: number;
-    setTriggerElement?: Dispatch<SetStateAction<boolean>>
+    setTriggerElement?: Dispatch<SetStateAction<boolean>>;
+    playlistImage?: string;
 }
+
 
 export default function PlaylistImage(props: PlaylistImageProps) {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
@@ -22,11 +24,16 @@ export default function PlaylistImage(props: PlaylistImageProps) {
             onClick={() => props.setTriggerElement && props.setTriggerElement(true)}
         >
             {
-                isHovered ?
-                    <IoPencilSharp size={props.iconSize} color="gray" className="animate-fastfade cursor-pointer" /> :
-                    <IoMdMusicalNotes size={props.iconSize} color="gray" className="animate-fastfade cursor-pointer" />
+                props.playlistImage ? <img src={props.playlistImage} alt="Playlist image" /> : (
+                    <DefaultPlaylistImage
+                        isHovered={isHovered}
+                        iconSize={props.iconSize}
+                    />
+                )
             }
-            {isHovered && <p className="text-sm font-semibold text-center text-gray-300">Edit playlist</p>}
+            {isHovered && (
+                <p className="text-sm font-semibold text-center text-gray-300">Edit playlist</p>
+            )}
         </div>
     );
 }

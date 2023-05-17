@@ -25,7 +25,7 @@ export const updateProfileImage = async (args: UpdateImg): Promise<void> => {
 
     if (
         !isUndefined(profileImage) && 
-        (!isUndefined(uploadPathRef) || !isNull(null)) &&
+        !isUndefined(uploadPathRef) &&
         isImageFile(profileImage?.name)
         ) {
         try {
@@ -36,7 +36,7 @@ export const updateProfileImage = async (args: UpdateImg): Promise<void> => {
             console.log('Upload error!')
         }
 
-        const profileImageUrl = await getDownloadURL(ref(storage, `profileImages/${profileImage?.name}`));
+        const profileImageUrl = await getDownloadURL(uploadPathRef);
         setPhotoURL(profileImageUrl);
 
         try {

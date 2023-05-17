@@ -18,8 +18,6 @@ import { SelectorPlayerState } from "../API/types";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
-import PlaylistsModal from "../components/PlaylistsModal";
-
 import { MoreActionsList } from "../components/UI/MoreOptions";
 
 import Error from "../components/UI/Error";
@@ -33,6 +31,7 @@ import { DocumentData, Query, QuerySnapshot, addDoc, arrayUnion, collection, doc
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import { nanoid } from "nanoid";
+import SongToPlaylistModal from "../components/SongToPlaylistModal";
 
 function Song() {
   const dispatch = useDispatch();
@@ -128,11 +127,10 @@ function Song() {
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
-      {/* <PlaylistsModal
-        openPlaylistModal={openPlaylistModal}
-        setOpenPlaylistModal={setOpenPlaylistModal}
-        managePlayslistsSongs={managePlayslistsSongs}
-      /> */}
+      <SongToPlaylistModal
+        open={openPlaylistModal}
+        setOpen={setOpenPlaylistModal}
+      />
       <div className="relative w-full flex flex-col">
         <BgDivider />
         {user?.uid && (
