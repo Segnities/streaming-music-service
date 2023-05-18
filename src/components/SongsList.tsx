@@ -19,7 +19,7 @@ export default function SongsList(props: SongsListProps) {
                 }
             })?.map((song, index) => (
                 <SongBar
-                    key={`${song.key}-${props?.artistid}`}
+                    key={`${song.key}-${index}-${props?.artistid}`}
                     index={index}
                     song={song}
                     artistid={props?.artistid}

@@ -3,7 +3,7 @@ import { DocumentData, QuerySnapshot, getDocs, query, where, collection } from "
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 interface GetPlaylistOptions {
-    uid: string | undefined;
+   uid: string | undefined;
 }
 
 

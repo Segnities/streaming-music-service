@@ -1,11 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { collection } from "firebase/firestore";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import BgDivider from "../components/UI/BgDivider/BgDivider";
-import { MoreActionsGroup } from "../components/UI/MoreOptions";
+import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
@@ -27,8 +27,6 @@ export default function CreatePlaylist() {
 
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
     const [playlistDescription, setPlaylistDescription] = useState<string>("");
-
-    const playlists_collection = collection(firebaseDatabase, "users_playlists");
 
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
