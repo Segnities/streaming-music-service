@@ -47,7 +47,11 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={filterEmptySongs(data).slice(0, 5)}
+        topCharts={[...data].filter(chart => {
+          if (chart?.artists && chart?.hub?.actions) {
+            return chart;
+          }
+        }).slice(0, 10)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
