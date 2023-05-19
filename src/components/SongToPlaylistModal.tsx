@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { FitModal } from "./UI/Modal";
 
 import { Playlist } from "../pages/Song";
 
 import { BiCheckDouble } from "react-icons/bi";
+
 import { SongRootObject } from "../API/types";
+
+import addSongToPlaylist from "../helpers/addSongToPlaylist";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 interface SongToPlaylistModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     playlists: Playlist[];
-    song:SongRootObject;
+    song: SongRootObject;
 }
 
 interface SelectedPlaylist extends Playlist {
@@ -26,12 +30,17 @@ const SongToPlaylistModalHeader = (
 );
 
 
-export default function SongToPlaylistModal({ open, setOpen, playlists }: SongToPlaylistModalProps) {
+export default function SongToPlaylistModal({ open, setOpen, playlists, song }: SongToPlaylistModalProps) {
     const [selectedPlaylists, setSelectedPlaylists] = useState<SelectedPlaylist[]>(playlists.map((playlist: Playlist) => ({ ...playlist, selected: false })));
+
+    const { firebaseUser } = useGetCurrentUser();
+
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>("");
 
     const choosePlaylist = (playlist: SelectedPlaylist): void => {
         setSelectedPlaylists([...selectedPlaylists].map((p: SelectedPlaylist) => {
             if (p.playlist_id === playlist.playlist_id) {
+                setSelectedPlaylistId(playlist.playlist_id);
                 return { ...p, selected: !p.selected };
             } else {
                 return { ...p, selected: false };
@@ -39,9 +48,19 @@ export default function SongToPlaylistModal({ open, setOpen, playlists }: SongTo
         }));
     };
 
+    const handleAddToPlaylist = async (): Promise<void> => {
+        await addSongToPlaylist(firebaseUser?.id, selectedPlaylistId, song);
+        setOpen(false);
+    }
+
 
     return (
-        <FitModal open={open} setOpen={setOpen} overscroll={true} header={SongToPlaylistModalHeader}>
+        <FitModal
+            open={open}
+            setOpen={setOpen}
+            overscroll={true}
+            header={SongToPlaylistModalHeader}
+        >
             <div className="flex flex-col gap-4 my-6">
                 {
                     selectedPlaylists?.map((playlist: SelectedPlaylist) => (
@@ -57,7 +76,12 @@ export default function SongToPlaylistModal({ open, setOpen, playlists }: SongTo
                         </div>
                     ))
                 }
-                <button className="z-40 my-2 bg-[#1ED760] disabled:bg-[#7c7272] rounded-3xl text-lg p-2 text-black font-medium" onClick={() => setOpen(false)}>Add to playlist</button>
+                <button
+                    className="z-40 my-2 bg-[#1ED760] disabled:bg-[#7c7272] rounded-3xl text-lg p-2 text-black font-medium"
+                    onClick={handleAddToPlaylist}
+                >
+                    Add to playlist
+                </button>
             </div>
         </FitModal>
     );
