@@ -63,7 +63,13 @@ export default function CreatePlaylist() {
             <div className="flex flex-col relative">
                 <BgDivider />
                 <div className="absolute flex inset-0 sm:inset-5 p-12 items-center gap-4">
-                    <PlaylistImage tailwindWidth={"w-24 sm:w-48 md:w-52"} tailwindHeight={"h-16 sm:h-36"} iconSize={46} />
+                    <PlaylistImage
+                        tailwindWidth="w-24 sm:w-48 md:w-52"
+                        tailwindHeight="h-16 sm:h-36"
+                        tailwindBg="bg-gray-800"
+                        iconColor="gray"
+                        iconSize={46}
+                    />
                     <div
                         className="w-full grid grid-flow-row gap-3"
                     >

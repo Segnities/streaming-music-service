@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import FitModal from "./UI/Modal/FitModal";
 
-import { Playlist } from "../pages/Song";
-
 import { BiCheckDouble } from "react-icons/bi";
 
 import { SongRootObject } from "../API/types";
@@ -11,15 +9,13 @@ import { SongRootObject } from "../API/types";
 import addSongToPlaylist from "../helpers/addSongToPlaylist";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
+import { Playlist, SelectedPlaylist } from "../types/playlist";
+
 interface SongToPlaylistModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     playlists: Playlist[];
     song: SongRootObject;
-}
-
-interface SelectedPlaylist extends Playlist {
-    selected: boolean;
 }
 
 

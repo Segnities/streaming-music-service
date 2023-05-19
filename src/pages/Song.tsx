@@ -20,27 +20,17 @@ import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
 
+import SongToPlaylistModal from "../components/SongToPlaylistModal";
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
-import SongToPlaylistModal from "../components/SongToPlaylistModal";
 
 import { getPlaylists } from "../helpers/getPlaylists";
 
-import { SongRootObject } from "../API/types";
-import { CgPlayListAdd } from "react-icons/cg"
+import { CgPlayListAdd } from "react-icons/cg";
 
-
-
-export interface Playlist {
-  title: string;
-  playlist_id: string;
-  description: string;
-  songs: SongRootObject[];
-}
-
-
+import { Playlist } from "../types/playlist";
 
 function Song() {
   const dispatch = useDispatch();
