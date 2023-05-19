@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 
-import { FitModal } from "./UI/Modal";
+import FitModal from "./UI/Modal/FitModal";
 
 import { Playlist } from "../pages/Song";
 

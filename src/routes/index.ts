@@ -11,6 +11,7 @@ import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import ForgotPassword from "../pages/ForgotPassword";
 import CreatePlaylist from "../pages/CreatePlaylist";
+import MyLibrary from "../pages/MyLibrary";
 
 import {
   HiOutlineHome,
@@ -22,7 +23,8 @@ import {
 } from "react-icons/hi";
 
 
-import { BiAddToQueue } from "react-icons/bi";
+import { BiAddToQueue, BiLibrary } from "react-icons/bi";
+import MyPlaylist from "../pages/MyPlaylist";
 
 type Routing = {
   id: string | number;
@@ -51,6 +53,8 @@ export const privateRoutes: Routing = [
   { id: "/songs/:songid", path: "/songs/:songid", element: Song },
   { id: "/search/:query", path: "/search/:query", element: Search },
   { id: "/create-playlist", path: "/create-playlist", element: CreatePlaylist },
+  { id: "/my-library", path: "/my-library", element: MyLibrary },
+  { id: "/my-playlist/:playlist_id", path: "/my-playlist/:playlist_id", element: MyPlaylist },
   { id: "*", path: "*", element: NotFound },
 ];
 
@@ -78,5 +82,6 @@ export const privateLinks = [
   { name: "Top Artists", to: "/top-artists", icon: HiOutlineUserGroup },
   { name: "Top Charts", to: "/top-charts", icon: HiOutlineHashtag },
   { name: "User", to: "/user", icon: HiUser },
+  { name: "My Library", to: "/my-library", icon: BiLibrary },
   { name: "Create Playlist", to: "/create-playlist", icon: BiAddToQueue }
 ];

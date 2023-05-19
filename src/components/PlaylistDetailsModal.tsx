@@ -5,7 +5,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import PlaylistImage from "./UI/Img/PlaylistImage";
-import { FitModal } from "./UI/Modal";
+import FitModal from "./UI/Modal/FitModal";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
@@ -130,10 +130,10 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                                         name="title"
                                         className="w-full my-1 p-1 outline outline-1 rounded-sm"
                                         placeholder="Playlist title"
-                                        onChange={(e) => { 
-                                            console.log(e.target.value); 
-                            
-                                            props.setPlaylistTitle(e.target.value) 
+                                        onChange={(e) => {
+                                            console.log(e.target.value);
+
+                                            props.setPlaylistTitle(e.target.value)
                                         }}
                                         minLength={1}
                                         maxLength={50}
