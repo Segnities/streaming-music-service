@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { User, getAuth } from "firebase/auth";
 
-import Modal from "./UI/Modal";
+import Modal from "./UI/Modal/Modal";
 
 import { firebaseApp } from '../firebase/firebaseConfig';
 import { UserDoc } from "../utils/getUsers";

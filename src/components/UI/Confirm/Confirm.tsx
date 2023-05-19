@@ -1,4 +1,4 @@
-import { FitModal } from "../Modal";
+import FitModal from "../Modal/FitModal";
 
 interface Props {
     confirmTitle: string;
