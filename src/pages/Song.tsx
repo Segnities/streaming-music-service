@@ -33,7 +33,7 @@ import { CgPlayListAdd } from "react-icons/cg"
 
 
 
-interface Playlist {
+export interface Playlist {
   title: string;
   playlist_id: string;
   description: string;
@@ -115,6 +115,8 @@ function Song() {
       <SongToPlaylistModal
         open={addToPlaylistModal}
         setOpen={setToPlaylistModal}
+        playlists={playlists}
+        song={songData}
       />
       <div className="relative w-full flex flex-col">
         <BgDivider />
