@@ -52,7 +52,7 @@ const EditProfileModal = (props: Props) => {
     const user: User = auth.currentUser as User;
     const providerId: string = user.providerData[0].providerId;
 
-    const [profileImage, setProfileImage] = useState<File | null | undefined>(undefined);
+    const [profileImage, setProfileImage] = useState<File | undefined>(undefined);
 
     return (
         <Modal open={openEditModal} overscroll={true} setOpen={setOpenEditModal}>

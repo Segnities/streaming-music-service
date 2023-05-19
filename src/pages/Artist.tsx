@@ -6,7 +6,7 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import Error from "../components/UI/Error";
 import Loader from "../components/UI/Loader";
-import { MoreActionsGroup } from "../components/UI/MoreOptions";
+import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 

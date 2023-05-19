@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { collection } from "firebase/firestore";
 
 import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import BgDivider from "../components/UI/BgDivider/BgDivider";
-import { MoreActionsGroup } from "../components/UI/MoreOptions";
+import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
 
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 import FindMoreSongs from "../components/FindMoreSongs";
+import PlaylistDetailsModal from "../components/PlaylistDetailsModal";
 import RecommendedSongs from "../components/RecommendedSongs";
 import PlaylistImage from "../components/UI/Img/PlaylistImage";
-import PlaylistDetailsModal from "../components/PlaylistDetailsModal";
 
+import { createPlaylist } from "../helpers/createPlaylist";
 import { getPlaylistTitle } from "../helpers/getPlaylistTitle";
 import { getPlaylists } from "../helpers/getPlaylists";
-import { createPlaylist } from "../helpers/createPlaylist";
 
 export default function CreatePlaylist() {
     const { firebaseUser, user } = useGetCurrentUser();
@@ -26,33 +26,27 @@ export default function CreatePlaylist() {
     const [openEditPlaylist, setOpenEditPlaylist] = useState<boolean>(false);
 
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
-
-    const playlists_collection = collection(firebaseDatabase, "users_playlists");
+    const [playlistDescription, setPlaylistDescription] = useState<string>("");
 
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
-    const managePlaylistCreation = async (): Promise<void> => {
-        const userPlaylists = await getPlaylists({ playlists_collection, setPlaylistTitle, uid: firebaseUser?.id })
-        await getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
+    const managePlaylistCreation = useCallback(async (): Promise<void> => {
+        const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
+
+        await getPlaylistTitle(firebaseUser?.id, setPlaylistTitle);
+
         const createdPlaylist = await createPlaylist({
-            playlists_collection,
             playlistTitle,
             uid: firebaseUser?.id,
-            snapshotId: userPlaylists?.snapshotId,
-            isEmpty: userPlaylists?.isEmpty
+            snapshotId: userPlaylists?.docs[0]?.id,
+            isEmpty: userPlaylists?.empty
         });
         setCreatedPlaylistId(createdPlaylist?.playlist_id as string);
-    }
-
-
-    useEffect(() => {
-        getPlaylistTitle(firebaseUser?.id, playlists_collection, setPlaylistTitle);
-        console.log(playlistTitle);
-
-    }, [playlists_collection]);
+    }, []);
 
     useEffect(() => {
         managePlaylistCreation();
+        console.log('Playlist created!');
     }, []);
 
     return (
@@ -61,6 +55,8 @@ export default function CreatePlaylist() {
                 open={openEditPlaylist}
                 setOpen={setOpenEditPlaylist}
                 title={playlistTitle}
+                description={playlistDescription}
+                setPlaylistDescription={setPlaylistDescription}
                 setPlaylistTitle={setPlaylistTitle}
                 playlistId={createdPlaylistId}
             />

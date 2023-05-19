@@ -1,16 +1,15 @@
 import { MutableRefObject, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import TopSongsWidget from "./SongWidget";
-import TopArtistsWidget from "./ArtistWidget";
-import Loader from "../UI/Loader";
 import Error from "../UI/Error";
+import Loader from "../UI/Loader";
+import TopArtistsWidget from "./ArtistWidget";
+import TopSongsWidget from "./SongWidget";
 
 import { playPause, setActiveSong } from "../../store/reducers/player";
 
 import { useGetTopChartsQuery } from "../../API/shazamCore";
-import { SongRootObject, SelectorPlayerState } from "../../API/types";
-import { filterEmptySongs } from "../../helpers/filterEmptySongs";
+import { SelectorPlayerState, SongRootObject } from "../../API/types";
 
 function TopChartsWidget() {
   const { data, isFetching, error } = useGetTopChartsQuery(null);
@@ -47,7 +46,11 @@ function TopChartsWidget() {
     >
       <TopSongsWidget
         activeSong={activeSong}
-        topCharts={filterEmptySongs(data).slice(0, 5)}
+        topCharts={[...data].filter(chart => {
+          if (chart?.artists && chart?.hub?.actions) {
+            return chart;
+          }
+        }).slice(0, 5)}
         isPlaying={isPlaying}
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}

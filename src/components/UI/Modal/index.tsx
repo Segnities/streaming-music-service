@@ -13,6 +13,8 @@ interface DefaultModalProps {
 
 interface FitModalProps extends DefaultModalProps {
     tailwindWidth?: string;
+    header?: React.ReactNode;
+
 }
 
 function Modal(props: DefaultModalProps) {
@@ -81,18 +83,22 @@ export function FitModal(props: FitModalProps) {
                                 setOpen(false);
                             }}
                         >
-                            <div className={`${tailwindWidth ? tailwindWidth : "w-4/5 sm:w-3/5 lg:w-2/5"} h-auto p-3 md:p-2 lg:p-6 bg-white rounded-lg animate-fastfade`}
+                            <div className={`${tailwindWidth ? tailwindWidth : "w-4/5 sm:w-3/5 lg:w-2/5"} max-h-[512px] p-3 md:p-2 lg:p-6 bg-white rounded-lg animate-fastfade`}
                                 onClick={(e) => e.stopPropagation()}>
-                                <div className="flex w-full justify-end items-center">
+                                <div className={`flex w-full justify-end items-center ${props.overscroll ? "my-3" : ""}`}>
                                     <GrClose
-                                        fill="black"
                                         size={24}
-                                        className='cursor-pointer'
+                                        className='cursor-pointer text-black self-end'
                                         onClick={() => setOpen(false)}
                                     />
                                 </div>
-                                <div className={`w-full h-5/6  p-1 ${props.overscroll ? "snap-mandatory overflow-y-scroll" : ""}`}>
-                                    {children}
+                                <div className="flex flex-col w-full h-full">
+                                    {
+                                        props?.header
+                                    }
+                                    <div className={`w-full h-5/6  p-1 ${props.overscroll ? "max-h-[328px] snap-mandatory overflow-y-scroll" : ""}`}>
+                                        {children}
+                                    </div>
                                 </div>
                             </div>
                         </div>

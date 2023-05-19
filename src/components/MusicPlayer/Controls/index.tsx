@@ -8,20 +8,20 @@ import {
   BsShuffle,
 } from "react-icons/bs";
 
-interface Props {
+interface ControlProps {
   isPlaying: boolean;
   isActive: boolean;
   repeat: boolean;
-  setRepeat: (prev: any) => void;
+  setRepeat: React.Dispatch<React.SetStateAction<boolean>>;
   shuffle: boolean;
-  setShuffle: (prev: any) => void;
+  setShuffle: React.Dispatch<React.SetStateAction<boolean>>;
   currentSongs: [];
   handlePlayPause: () => void;
   handlePrevSong: () => void;
   handleNextSong: () => void;
 }
 
-function Controls(props: Props) {
+function Controls(props: ControlProps) {
   const {
     isPlaying,
     repeat,
