@@ -6,7 +6,6 @@ interface GetPlaylistOptions {
    uid: string | undefined;
 }
 
-
 export const getPlaylists = async (queryOptions: GetPlaylistOptions): Promise<QuerySnapshot<DocumentData> | undefined> => {
     const { uid } = queryOptions;
 
