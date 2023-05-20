@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import PlaylistCard from "../components/PlaylistCard";
+import MyLibraryList from "../components/MyLibraryList";
+
 import { getPlaylists } from "../helpers/getPlaylists";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import { Playlist } from "../types/playlist";
-import MyLibraryList from "../components/MyLibraryList";
 
 export default function MyLibrary() {
     const [playlists, setPlaylists] = useState<Playlist[]>([]);

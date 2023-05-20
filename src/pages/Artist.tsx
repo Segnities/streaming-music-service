@@ -6,6 +6,11 @@ import { firebaseDatabase } from "../firebase/firebaseConfig";
 
 import Error from "../components/UI/Error";
 import Loader from "../components/UI/Loader";
+import BgDivider from "../components/UI/BgDivider/BgDivider";
+import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
+import AbsoluteFlexWrapper from "../components/UI/Wrapper/AbsoluteFlexWrapper";
+
+
 import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,12 +25,9 @@ import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import { useResizeObserver } from "../hooks/useResizeObserver";
 
 import NoImage from "../assets/no_artist.jpg";
-import BgDivider from "../components/UI/BgDivider/BgDivider";
-import BlockSpace from "../components/UI/BlockSpace/BlockSpace";
 
 import { manageFavouriteArtists } from "../helpers/manageFavouriteArtists";
 import { isArtistInList } from "../utils/isArtistInList";
-
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -92,7 +94,7 @@ function Artist() {
     <div className="flex flex-col" data-testid='artist-page'>
       <div className="relative w-full flex flex-col">
         <BgDivider />
-        <div className="absolute inset-0 flex flex-row items-center">
+        <AbsoluteFlexWrapper>
           <img
             src={artistImage}
             alt="art"
@@ -111,7 +113,7 @@ function Artist() {
               ))}
             </ul>
           </div>
-        </div>
+        </AbsoluteFlexWrapper>
         <BlockSpace />
       </div>
 

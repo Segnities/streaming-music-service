@@ -5,6 +5,10 @@ import { useParams } from "react-router";
 
 import RelatedSongs from "../components/RelatedSongs";
 import Loader from "../components/UI/Loader";
+import AbsoluteFlexWrapper from "../components/UI/Wrapper/AbsoluteFlexWrapper";
+
+import { CgPlayListAdd } from "react-icons/cg";
+
 
 import { playPause, setActiveSong } from "../store/reducers/player";
 
@@ -28,7 +32,6 @@ import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
 
 import { getPlaylists } from "../helpers/getPlaylists";
 
-import { CgPlayListAdd } from "react-icons/cg";
 
 import { Playlist } from "../types/playlist";
 
@@ -123,7 +126,7 @@ function Song() {
           </div>
         )}
 
-        <div className="absolute inset-0 flex items-center">
+        <AbsoluteFlexWrapper>
           <img
             src={songImagePath}
             alt="art"
@@ -138,7 +141,7 @@ function Song() {
               {songData?.genres?.primary}
             </p>
           </div>
-        </div>
+        </AbsoluteFlexWrapper>
         <BlockSpace />
       </div>
       {

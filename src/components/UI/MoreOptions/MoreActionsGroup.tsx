@@ -45,7 +45,6 @@ export function MoreActionsGroup(props: MoreActionsGroupProps) {
             {
                 user?.uid && (
                     <MoreActionsList options={optionsList} showMore={showMore} setShowMore={setShowMore} />
-
                 )
             }
 

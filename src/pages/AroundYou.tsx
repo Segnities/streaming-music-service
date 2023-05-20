@@ -56,7 +56,7 @@ function AroundYou() {
             key={song?.key}
             song={song}
             activeSong={activeSong}
-            data={countrySongs}
+            songs={countrySongs}
             index={index}
             isPlaying={isPlaying}
           />

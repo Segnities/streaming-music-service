@@ -43,7 +43,7 @@ function TopCharts() {
             key={song?.key}
             song={song}
             activeSong={activeSong}
-            data={topCharts}
+            songs={topCharts}
             index={index}
             isPlaying={isPlaying}
           />

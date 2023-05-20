@@ -119,6 +119,8 @@ export default function PlaylistDetailsModal(props: PlaylistDetailsModalProps) {
                                     <PlaylistImage
                                         tailwindWidth="w-48"
                                         tailwindHeight="h-36"
+                                        iconColor="gray"
+                                        tailwindBg="bg-slate-700"
                                         iconSize={48}
                                         setTriggerElement={setTriggerFileInput}
                                         playlistImage={playlistImageUrl}

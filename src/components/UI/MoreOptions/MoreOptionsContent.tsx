@@ -28,7 +28,7 @@ export default function MoreOptionsContent(props: MoreOptionProps) {
                                             ref={ref}
                                             className="w-full text-start flex items-center font-semibold first-letter:uppercase cursor-default text-sm max-h-12 justify-between px-4 py-2 hover:rounded-sm  hover:border-[#7b64e2] hover:text-[#7b64e2] hover:bg-[#110642] my-1 text-white">
                                             {option.title}
-                                            {option?.nested} && <AiFillCaretRight size={18} />
+                                            {option.nested === true && <AiFillCaretRight size={18} />}
                                         </li>
                                     ))
                                 }

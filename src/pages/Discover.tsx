@@ -53,7 +53,7 @@ function Discover() {
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
-            data={filterEmptySongs(data)}
+            songs={filterEmptySongs(data)}
           />
         ))}
       </div>

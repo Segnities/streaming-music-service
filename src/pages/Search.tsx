@@ -45,7 +45,7 @@ function Search() {
                             key={song?.key}
                             activeSong={activeSong}
                             song={song}
-                            data={songs}
+                            songs={songs}
                             index={index}
                             isPlaying={isPlaying}
                         />

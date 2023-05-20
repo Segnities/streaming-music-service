@@ -36,6 +36,9 @@ const playerSlice = createSlice({
 
       state.currentIndex = action.payload?.index;
       state.isActive = true;
+
+      console.log(state.currentSongs);
+
     },
     playPause: (state, action: { payload: boolean }) => {
       state.isPlaying = action.payload;
