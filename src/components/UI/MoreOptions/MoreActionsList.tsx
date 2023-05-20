@@ -18,7 +18,6 @@ export default function MoreActionsList(props: MoreActionsListProps) {
             }}
         >
             <section className="block md:hidden my-5"
-
             >
                 <h5 className="text-white font-bold my-3 text-2xl">Actions:</h5>
                 <ul className="flex flex-col items-start justify-center">
