@@ -20,15 +20,15 @@ interface Props {
 function SongCard(props: Props) {
   const { song, index, activeSong, isPlaying, songs } = props;
   const dispatch = useDispatch();
-
   const handlePlayClick = () => {
-    dispatch(setActiveSong({ song, songs, index }));
+    dispatch(setActiveSong({ song, data: songs, index }));
     dispatch(playPause(true));
   };
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
+
 
   return (
     <div className="flex flex-col w-[150px] h-[240px] sm:w-[220px] lg:w-[230px] lg:h-[300px] p-4 bg-white/5 bg-opacity bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
