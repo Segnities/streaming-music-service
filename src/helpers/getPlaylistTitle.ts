@@ -10,7 +10,6 @@ export async function getPlaylistTitle(
 ): Promise<void> {
     
     const playlists_collection = collection(firebaseDatabase, "users_playlists");
-
     const q: Query<DocumentData> = query(playlists_collection, where("uid", "==", uid));
     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
 

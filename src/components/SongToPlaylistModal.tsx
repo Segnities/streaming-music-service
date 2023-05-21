@@ -49,7 +49,6 @@ export default function SongToPlaylistModal({ open, setOpen, playlists, song }: 
         setOpen(false);
     }
 
-
     return (
         <FitModal
             open={open}

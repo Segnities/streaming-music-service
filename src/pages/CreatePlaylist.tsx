@@ -31,9 +31,9 @@ export default function CreatePlaylist() {
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
     const managePlaylistCreation = useCallback(async (): Promise<void> => {
-        const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
-
         await getPlaylistTitle(firebaseUser?.id, setPlaylistTitle);
+        
+        const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
 
         const createdPlaylist = await createPlaylist({
             playlistTitle,
