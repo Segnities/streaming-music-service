@@ -137,12 +137,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                                 id="confirm-password"
                                 name="confirmPassword"
                                 placeholder="Confirm password"
-                                className={`
-                                                text-base normal-case line my-1 tracking-normal 
-                                                p-3 border-[1px] 
-                                                outline-none
-                                                focus-visible:border-[3px] 
-                                                ${errors.confirmPassword && touched.confirmPassword ? "border-red-700" : "border-gray-800"}`}
+                                className={`text-base normal-case line my-1 tracking-normal p-3 border-[1px] outline-none focus-visible:border-[3px] ${errors.confirmPassword && touched.confirmPassword ? "border-red-700" : "border-gray-800"}`}
                             />
                             {
                                 errors.confirmPassword && touched.confirmPassword ? (
@@ -159,12 +154,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                                 name="username"
                                 id="username"
                                 placeholder="Name of profile"
-                                className={`
-                                                text-base normal-case line my-1 tracking-normal 
-                                                p-3 border-[1px] 
-                                                outline-none
-                                                focus-visible:border-[3px] 
-                                                ${(errors.username || isFieldUnique.username === false) && touched.username ? "border-red-700" : "border-gray-800"}`}
+                                className={`text-base normal-case line my-1 tracking-normal p-3 border-[1px] outline-none focus-visible:border-[3px] ${(errors.username || isFieldUnique.username === false) && touched.username ? "border-red-700" : "border-gray-800"}`}
                             />
                             {
                                 errors.username && touched.username ? (
@@ -194,11 +184,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                                         maxLength={2}
                                         minLength={2}
                                         placeholder="DD"
-                                        className={`
-                                                        p-2 outline-none 
-                                                        border-[1px] hover:border-2 
-                                                        ${errors.day && touched.day ? "border-red-700" : "border-gray-500"}
-                                                        hover:${errors.day ? "border-red-800" : "border-black"}`}
+                                        className={`p-2 outline-none border-[1px] hover:border-2 ${errors.day && touched.day ? "border-red-700" : "border-gray-500"} hover:${errors.day ? "border-red-800" : "border-black"}`}
                                     />
                                 </div>
                                 <div className="flex flex-col w-2/3 px-3">
@@ -207,10 +193,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                                         as="select"
                                         name="month"
                                         id="month"
-                                        className={`
-                                                    p-2 border-[1px] hover:border-2 
-                                                    ${errors.month && touched.month ? "border-red-700" : "border-gray-500"} 
-                                                    hover:${errors.month ? "border-red-700" : "border-black"}`}
+                                        className={`p-2 border-[1px] hover:border-2 ${errors.month && touched.month ? "border-red-700" : "border-gray-500"} hover:${errors.month ? "border-red-700" : "border-black"}`}
                                     >
                                         <option value="" disabled>Month</option>
                                         <option value="January">January</option>
@@ -236,12 +219,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                                         placeholder="YYYY"
                                         minLength={4}
                                         maxLength={4}
-                                        className={`
-                                                        p-2 
-                                                        border-[1px] hover:border-2 
-                                                        ${errors.year && touched.year ? "border-red-700" : "border-gray-500"} 
-                                                        hover:${errors.year ? "border-red-700" : "border-black"} 
-                                                        outline-none`}
+                                        className={`p-2 border-[1px] hover:border-2 ${errors.year && touched.year ? "border-red-700" : "border-gray-500"} hover:${errors.year ? "border-red-700" : "border-black"} outline-none`}
                                     />
                                 </div>
                             </div>
