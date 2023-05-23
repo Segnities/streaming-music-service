@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
+import { isUndefined as _isUndefined } from "lodash";
+
 import getMyPlaylistById from "../helpers/getMyPlaylistById";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import { Playlist } from "../types/playlist";
@@ -37,22 +39,22 @@ export default function MyPlaylist() {
             setPlaylist(plst);
             setPlaylistTitle(plst?.title ?? "");
             setPlaylistDescription(plst?.description ?? "");
-
         });
     }, []);
 
     return (
         <div className="grid grid-flow-row">
-            <PlaylistDetailsModal
-                open={openEditPlaylistModal}
-                setOpen={setOpenEditPlaylistModal}
-                description={playlistDescription}
-                setPlaylistDescription={setPlaylistDescription}
-                playlistId={playlist_id ?? ""}
-                title={playlistTitle}
-                setPlaylistTitle={setPlaylistTitle}
+            {!_isUndefined(playlist) && (
+                <PlaylistDetailsModal
+                    open={openEditPlaylistModal}
+                    setOpen={setOpenEditPlaylistModal}
+                    description={playlistDescription}
+                    setPlaylistDescription={setPlaylistDescription}
+                    playlistId={playlist_id ?? ""}
+                    title={playlistTitle}
+                    setPlaylistTitle={setPlaylistTitle}
+                />)}
 
-            />
             <div className="relative w-full flex flex-col">
                 <BgDivider />
                 <AbsoluteFlexWrapper>
@@ -87,20 +89,25 @@ export default function MyPlaylist() {
                 />
             </div>
             <BlockSpace />
-            <div className="flex flex-row flex-wrap gap-5">
-                {
-                    playlist?.songs.map((song, index) => (
-                        <SongCard
-                            key={song.key}
-                            index={index}
-                            activeSong={activeSong}
-                            song={song}
-                            isPlaying={isPlaying}
-                            songs={playlist.songs}
-                        />
-                    ))
-                }
-            </div>
+            {
+                !_isUndefined(playlist) ? (
+                    <div className="flex flex-row flex-wrap gap-5">
+                        {
+                            playlist?.songs && playlist.songs.map((song, index) => (
+                                <SongCard
+                                    key={song.key}
+                                    index={index}
+                                    activeSong={activeSong}
+                                    song={song}
+                                    isPlaying={isPlaying}
+                                    songs={playlist.songs}
+                                />
+                            ))
+                        }
+                    </div>
+                ) : <p className="text-white text-center text-2xl">No songs in playlist</p>
+            }
+
         </div>
     );
 }

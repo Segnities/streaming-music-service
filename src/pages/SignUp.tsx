@@ -27,7 +27,7 @@ function SignUp() {
                 )
             }
             <p className="font-bold text-2xl">To get started, sign up. It&apos;s free?!</p>
-            <div className="flex flex-col flex-1 mt-2">
+            <div className="w-full md:w-auto flex flex-col flex-1 mt-2">
                 <div className="flex flex-col flex-1 items-center">
                     <GoogleBtn />
                 </div>
@@ -39,7 +39,7 @@ function SignUp() {
                 <div className="mt-2 mb-1">
                     <h2 className="text-xl font-bold text-center">Register via email</h2>
                 </div>
-                <div className="flex flex-col flex-1 mt-4 px-4 sm:px-0">
+                <div className="w-full flex flex-col flex-auto mt-4 px-4 sm:px-0">
                     <SignUpForm
                         isFieldUnique={isFieldUnique}
                         setIsFieldUnique={setIsFieldUnique}

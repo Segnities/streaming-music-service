@@ -9,6 +9,8 @@ import AbsoluteFlexWrapper from "../components/UI/Wrapper/AbsoluteFlexWrapper";
 
 import { CgPlayListAdd } from "react-icons/cg";
 
+import { isUndefined as _isUndefined } from "lodash";
+
 
 import { playPause, setActiveSong } from "../store/reducers/player";
 
@@ -31,7 +33,6 @@ import Error from "../components/UI/Error";
 import YoutubeTrackVideo from "../components/YoutubeTrackVideo";
 
 import { getPlaylists } from "../helpers/getPlaylists";
-
 
 import { Playlist } from "../types/playlist";
 
@@ -58,6 +59,8 @@ function Song() {
   } = useGetSongDetailsQuery(songid);
 
   const songImagePath = songData?.images?.coverart;
+
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState<boolean>(true);
 
   const { user, firebaseUser } = useGetCurrentUser();
 
@@ -92,10 +95,12 @@ function Song() {
   };
 
   useEffect(() => {
-    getUserPlaylistsQuery();
+    getUserPlaylistsQuery().finally(() => {
+      setIsPlaylistLoading(false);
+    });
   }, [])
 
-  if (isFetchingSongs || isFetchingRelatedSongs || isYoutubeTrackDataFetching) {
+  if (isFetchingSongs || isFetchingRelatedSongs || isYoutubeTrackDataFetching || isPlaylistLoading) {
     return <Loader title="Searching songs..." />;
   }
 
@@ -105,12 +110,17 @@ function Song() {
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
-      <SongToPlaylistModal
-        open={addToPlaylistModal}
-        setOpen={setToPlaylistModal}
-        playlists={playlists}
-        song={songData}
-      />
+      {
+        !_isUndefined(playlists) ? null : (
+          <SongToPlaylistModal
+            open={addToPlaylistModal}
+            setOpen={setToPlaylistModal}
+            playlists={playlists}
+            song={songData}
+          />
+        )
+      }
+
       <div className="relative w-full flex flex-col">
         <BgDivider />
 
