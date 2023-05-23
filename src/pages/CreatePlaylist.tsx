@@ -29,7 +29,7 @@ export default function CreatePlaylist() {
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
     useEffect(() => {
-        const managePlaylistCreation = async (isPlaylistCreated: boolean): Promise<void> => {
+        const managePlaylistCreation = async (): Promise<void> => {
             await getPlaylistTitle(firebaseUser?.id, setPlaylistTitle);
 
             const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
@@ -41,8 +41,7 @@ export default function CreatePlaylist() {
         };
         if (isPlaylistCreated == false) {
             console.log(isPlaylistCreated);
-            
-            managePlaylistCreation(isPlaylistCreated);
+            managePlaylistCreation();
             setIsPlaylistCreated(true);
         }
     }, [isPlaylistCreated]);
