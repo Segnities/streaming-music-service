@@ -14,7 +14,9 @@ export function useGetCurrentUser(): { user: User, firebaseUser: UserDoc | undef
     const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: User = JSON.parse(userData as string);
 
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(users.find(usr => usr.data.email === user?.email));
+    const fUser = users.find(usr => usr.data.email === user?.email);
+
+    const [firebaseUser, setFirebaseUser] = useState<UserDoc | undefined>(fUser);
 
     return { user, firebaseUser, setFirebaseUser };
 }

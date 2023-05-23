@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 
-import { User } from "firebase/auth";
+import {User} from "firebase/auth";
 
-import { Query, where, DocumentData, getDocs, query, collection } from "firebase/firestore";
+import {Query, where, DocumentData, getDocs, query, collection} from "firebase/firestore";
 
-import { FirebaseUsersSelectorInterface } from "../store/reducers/firebaseUsers";
-import { UserAuthSelector } from "../store/reducers/auth";
+import {FirebaseUsersSelectorInterface} from "../store/reducers/firebaseUsers";
+import {UserAuthSelector} from "../store/reducers/auth";
 
-import { firebaseDatabase } from "../firebase/firebaseConfig";
-import { UserDoc } from "../utils/getUsers";
+import {firebaseDatabase} from "../firebase/firebaseConfig";
+import {UserDoc} from "../utils/getUsers";
+import {useGetCurrentUser} from "./useGetCurrentUser";
 
 
 export const useGetFavouriteArtists = async () => {
@@ -18,13 +19,12 @@ export const useGetFavouriteArtists = async () => {
 
     const [favouriteArtists, setFavouriteArtists] = useState<DocumentData[] | null>(null);
 
-    const { firebaseUsers: users } = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
+    const {firebaseUsers: users} = useSelector((state: FirebaseUsersSelectorInterface) => state.firebaseUsers);
 
-    const { user: userData } = useSelector((state: UserAuthSelector) => state.userAuth);
+    const {user: userData} = useSelector((state: UserAuthSelector) => state.userAuth);
     const user: User = JSON.parse(userData as string);
 
-
-    const [firebaseUser, setFirebaseUser] = useState<UserDoc>(users.find(usr => usr.data.email === user?.email));
+    const {firebaseUser} = useGetCurrentUser();
 
     useEffect(() => {
         const favouriteArtistsQuery: Query<DocumentData> = query(favouriteArtistsCollection, where('uid', '==', firebaseUser?.id));
