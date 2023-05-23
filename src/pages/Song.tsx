@@ -110,16 +110,12 @@ function Song() {
 
   return (
     <div className="flex flex-col" data-testid='song-page'>
-      {
-        !_isUndefined(playlists) ? null : (
-          <SongToPlaylistModal
-            open={addToPlaylistModal}
-            setOpen={setToPlaylistModal}
-            playlists={playlists}
-            song={songData}
-          />
-        )
-      }
+      <SongToPlaylistModal
+        open={addToPlaylistModal}
+        setOpen={setToPlaylistModal}
+        playlists={playlists}
+        song={songData}
+      />
 
       <div className="relative w-full flex flex-col">
         <BgDivider />
@@ -128,7 +124,7 @@ function Song() {
           <div className="absolute hidden md:block top-10 right-20 cursor-pointer z-30">
             <button
               className="flex flex-1 flex-row items-center justify-around text-white text-sm border-2 py-2 px-3 border-white rounded-full"
-              onClick={() => setToPlaylistModal(true)}
+              onClick={() => { setToPlaylistModal(true) }}
             >
               Add to playlist
               <CgPlayListAdd size={21} className="ml-2" />
