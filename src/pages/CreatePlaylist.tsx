@@ -1,8 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-
-import { collection } from "firebase/firestore";
-
-import { firebaseDatabase } from "../firebase/firebaseConfig";
+import { useEffect, useState } from "react";
 
 import BgDivider from "../components/UI/BgDivider/BgDivider";
 import { MoreActionsGroup } from "../components/UI/MoreOptions/MoreActionsGroup";
@@ -23,6 +19,8 @@ export default function CreatePlaylist() {
     const [showMore, setShowMore] = useState<boolean>(false);
     const [showRecommended, setShowRecommended] = useState<boolean>(false);
 
+    const [isPlaylistCreated, setIsPlaylistCreated] = useState<boolean>(false);
+
     const [openEditPlaylist, setOpenEditPlaylist] = useState<boolean>(false);
 
     const [playlistTitle, setPlaylistTitle] = useState<string>("");
@@ -30,24 +28,27 @@ export default function CreatePlaylist() {
 
     const [createdPlaylistId, setCreatedPlaylistId] = useState<string>("");
 
-    const managePlaylistCreation = useCallback(async (): Promise<void> => {
-        await getPlaylistTitle(firebaseUser?.id, setPlaylistTitle);
-        
-        const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
-
-        const createdPlaylist = await createPlaylist({
-            playlistTitle,
-            uid: firebaseUser?.id,
-            snapshotId: userPlaylists?.docs[0]?.id,
-            isEmpty: userPlaylists?.empty
-        });
-        setCreatedPlaylistId(createdPlaylist?.playlist_id as string);
-    }, []);
-
     useEffect(() => {
-        managePlaylistCreation();
-        console.log('Playlist created!');
-    }, []);
+        const managePlaylistCreation = async (isPlaylistCreated: boolean): Promise<void> => {
+            await getPlaylistTitle(firebaseUser?.id, setPlaylistTitle);
+
+            const userPlaylists = await getPlaylists({ uid: firebaseUser?.id });
+
+            const createdPlaylist = await createPlaylist({
+                uid: firebaseUser?.id,
+            });
+            setCreatedPlaylistId(createdPlaylist?.playlist_id as string);
+        };
+        if (isPlaylistCreated == false) {
+            console.log(isPlaylistCreated);
+            
+            managePlaylistCreation(isPlaylistCreated);
+            setIsPlaylistCreated(true);
+        }
+    }, [isPlaylistCreated]);
+
+
+    console.log('Playlist created!');
 
     return (
         <div className="flex flex-col">
