@@ -69,6 +69,5 @@ export const createPlaylist = async (data: CreatePlaylist | undefined): Promise<
             console.log("Update error");
             console.log(error);
         }
-
     }
 }
