@@ -1,9 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
-import { doc, query, collection, DocumentData, getDocs, Query, updateDoc, where } from "firebase/firestore";
+import {collection, doc, DocumentData, getDocs, query, Query, updateDoc, where} from "firebase/firestore";
 
-import { firebaseDatabase } from "../firebase/firebaseConfig";
+import {firebaseDatabase} from "../firebase/firebaseConfig";
 
-import { getPlaylistPosition } from "./getPlaylistPosition";
+import {getPlaylistPosition} from "./getPlaylistPosition";
 
 export async function updatePlaylist(
     playlistId: string,

@@ -36,7 +36,7 @@ export default function CreatePlaylist() {
 
             const createdPlaylist = await createPlaylist({
                 uid: firebaseUser?.id,
-            });
+            }).finally(()=> setIsPlaylistCreated(true));
             setCreatedPlaylistId(createdPlaylist?.playlist_id as string);
         };
         if (isPlaylistCreated == false) {
